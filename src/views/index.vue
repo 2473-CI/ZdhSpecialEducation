@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useNavStore } from '../store/navs'
-
+import UserHead from '../components/userHead.vue'
 const NavStore = useNavStore()
 NavStore.load()
 </script>
@@ -10,31 +10,31 @@ NavStore.load()
         <div class="top">
             <!-- logo区域 -->
             <router-link to="/index/welcome" id="logo">
-                <el-image style="width: 60px; height: 60px" src="https://cn.vitejs.dev/logo-with-shadow.png" fit="cover" />
+                <el-image style="width: 60px; height: 60px" :src="NavStore.logo" fit="cover" />
                 <h1>七维教育</h1>
             </router-link>
             <!-- 导航栏 -->
-            <el-menu
-                default-active="1" :ellipsis="false"
-                mode="horizontal" background-color="#001529" text-color="hsla(0,0%,100%)" active-text-color="#fff"
-                style="border-bottom: none !important; overflow: hidden; line-height: 64px;" >
-                <el-menu-item  :index="nav.index.toString()" v-for="nav in NavStore.navigation" @click="$router.push(nav.router)">{{ nav.title }}</el-menu-item>
+            <el-menu default-active="1" :ellipsis="false" mode="horizontal" background-color="#001529"
+                text-color="hsla(0,0%,100%)" active-text-color="#fff"
+                style="border-bottom: none !important; overflow: hidden; line-height: 64px;">
+                <el-menu-item :index="nav.index.toString()" v-for="nav in NavStore.navigation"
+                    @click="$router.push(nav.router)">{{ nav.title }}</el-menu-item>
             </el-menu>
 
             <div class="head-picture">
-
+                <UserHead />
             </div>
         </div>
         <!-- 视图渲染 -->
         <div id="main">
             <router-view></router-view>
         </div>
-        
+
     </div>
 </template>
 
 <style scoped>
-#box{
+#box {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -44,6 +44,7 @@ NavStore.load()
     user-select: none;
 
 }
+
 .top {
     display: flex;
     align-items: center;
@@ -52,24 +53,28 @@ NavStore.load()
     padding-left: 50px;
     line-height: 64px;
     box-sizing: border-box;
-    color: rgba(0,0,0,.85);
+    color: rgba(0, 0, 0, .85);
     background: #001529;
 }
-#logo{
-    display: flex; 
+
+#logo {
+    display: flex;
     min-width: 218px;
 }
-h1{
+
+h1 {
     color: #fff;
     display: inline-block;
     margin: 0;
     font-weight: 500;
     box-sizing: border-box;
 }
+
 .el-menu-item:hover {
-    background-color: rgb(24,144,255, 0.5) !important;
+    background-color: rgb(24, 144, 255, 0.5) !important;
     border-bottom: none !important;
 }
+
 .el-menu-item {
     border-bottom: none !important;
     width: 100px;
@@ -77,22 +82,24 @@ h1{
     min-width: 100px;
     max-height: 64px;
 }
+
 .el-menu-item.is-active {
-   background-color: rgb(24,144,255) !important;
-   border-bottom: none !important;
+    background-color: rgb(24, 144, 255) !important;
+    border-bottom: none !important;
 }
-.head-picture{
-    width: 100px;
+
+.head-picture {
+    width: 200px;
     height: 64px;
-    background-color: red;
-    position:absolute;
-    right:50px;
+    /* background-color: red; */
+    position: absolute;
+    right: 0;
 }
-#main{
+
+#main {
     box-sizing: border-box;
     background: #f0f2f5;
     padding: 24px 50px;
     width: 100%;
-    min-height: 80vh!important;
-}
-</style>
+    min-height: 80vh !important;
+}</style>

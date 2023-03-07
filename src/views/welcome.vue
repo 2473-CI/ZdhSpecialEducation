@@ -12,13 +12,10 @@ productStore.loadProductList()
 </script>
 
 <template>
+    <!-- 欢迎模块 -->
     <div class="context">
         <div class="top">
-            <el-image
-            class="head-img"
-            :src="userStore.userInfo.avatar"
-            fit="fit"
-            ></el-image>
+            <el-image class="head-img" :src="userStore.userInfo.avatar" fit="fit"></el-image>
             <div class="hello-text">
                 <div class="hello-top">下午好，{{ userStore.userInfo.name }}，祝你开心每一天！</div>
                 <div class="hello-bottom">
@@ -27,24 +24,41 @@ productStore.loadProductList()
             </div>
         </div>
         <div style="height: 20px; background-color: rgb(240,242,245);"></div>
-        <div class="box">
-            <div class="box-top">产品列表</div>
-            <!-- <hr> -->
+
+        <!-- 产品列表 -->
+        <el-card class="box-card box" body-style="padding:0;">
+            <template #header>
+                <div class="card-header">
+                    <span>产品列表</span>
+                </div>
+            </template>
             <div class="box-bottom">
-                <div class="item" :key="product.id" v-for="product in productStore.ProductList" >
+                <el-card shadow="hover" @click="$router.push(product.router)" class="item" :key="product.id" v-for="product in productStore.ProductList">
                     <el-image class="img" :src="product.img" fit="cover"></el-image>
                     {{ product.title }}
-                </div>
+                </el-card>
             </div>
-        </div>
+        </el-card>
 
+        <!-- 情怀日历 -->
+        <div style="height: 20px; background-color: rgb(240,242,245);"></div>
+        <el-card class="box-card">
+            <template #header>
+                <div class="card-header">
+                    <span>情怀日历</span>
+                </div>
+            </template>
+            <!-- <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div> -->
+            <template style="display: flex;align-items: center;" >
+                <el-image style="width: 30%; " src="https://api.dujin.org/bing/1366.php" fit="fill" />
+                <h1>1997年5月11日，超级计算机“深蓝”首次打败国际象棋世界冠军卡斯帕罗夫</h1>
+            </template>
+        </el-card>
     </div>
 </template>
 
 <style scoped>
 .context {
-    /* width: 93%; */
-    /* height: 20px; */
     background-color: aqua;
     font-size: 14px;
     font-variant: tabular-nums;
@@ -52,42 +66,45 @@ productStore.loadProductList()
     background-color: #fff;
     font-feature-settings: "tnum";
 }
-.top{
+
+.top {
     background-color: #fff;
     box-sizing: border-box;
     padding: 20px 20px;
     display: flex;
 }
-.head-img{
-    /* padding: 20px 20px; */
+
+.head-img {
     height: 90px;
     background-color: aqua;
     width: 90;
 }
-.hello-text{
+
+.hello-text {
     width: 80%;
-    /* background-color: antiquewhite; */
     margin-left: 10px;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
 }
-.hello-top{
+
+.hello-top {
     margin-bottom: 12px;
-    color: rgba(0,0,0,.85);
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 28px;
-}
-.hello-bottom{
-    margin-bottom: 12px;
-    color: rgba(0,0,0,.55);
+    color: rgba(0, 0, 0, .85);
     font-weight: 500;
     font-size: 20px;
     line-height: 28px;
 }
 
-.box-top{
+.hello-bottom {
+    margin-bottom: 12px;
+    color: rgba(0, 0, 0, .55);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 28px;
+}
+
+.box-top {
     height: 50px;
     box-sizing: border-box;
     padding: 0 20px;
@@ -95,59 +112,48 @@ productStore.loadProductList()
     align-items: center;
     background-color: #fff;
 }
-.box-bottom{
-    margin-top: 1px;
-    /* height: 50px; */
-    box-sizing: border-box;
-    padding: 0 20px 20px 20px;
+
+.box-bottom {
     display: flex;
-    /* align-items: center; */
     background-color: #fff;
     flex-wrap: wrap;
-    /* justify-content: space-between; */
 
 }
-/* .item{
-    width: 400px;
-    height: 10px;
-    border:1px solid black;
-    background-color: antiquewhite;
-} */
-.item{
+
+.item {
     height: 250px;
-	border-style:solid;
-	border-width:1px;
-    border-color: rgb(240,242,245);
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgb(240, 242, 245);
     box-sizing: border-box;
     padding: 20px;
 }
-.item>.img{
+
+.item>.img {
     width: 100%;
     height: 90%;
 }
-.item:hover{
-    box-shadow: 2px 0 0 0 #f0f0f0, 0 2px 0 0 #f0f0f0, 2px 2px 0 0 #f0f0f0, inset 2px 0 0 0 #f0f0f0, inset 0 2px 0 0 #f0f0f0;
-    transition: all .3s;
-}
+
 @media screen and (min-width: 300px) {
-    .item{
+    .item {
         width: 100%;
     }
 }
 
-@media screen and (min-width: 600px){
-    .item{
+@media screen and (min-width: 600px) {
+    .item {
         width: 50%;
     }
 }
+
 @media screen and (min-width: 900px) {
-    .item{
+    .item {
         width: 33.33%;
     }
 }
 
 @media screen and (min-width: 1200px) {
-    .item{
+    .item {
         width: 25%;
     }
 }

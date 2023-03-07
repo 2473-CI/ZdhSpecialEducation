@@ -1,11 +1,53 @@
 <script setup lang="ts">
+import { useVideoStore } from '../store/videos'
 
+const videoStore = useVideoStore()
+videoStore.loadVideos()
 </script>
 
 <template>
-<video style="width: 800px; height: 600px;" src="https://qiwi.oss-cn-shanghai.aliyuncs.com/opoc/systemVideo/0%E4%B8%83%E7%BB%B4%E8%BD%AF%E4%BB%B6%E4%BA%A7%E5%93%81%E6%A6%82%E8%A7%88.mp4" ></video>
+    <div id="box">
+        <div class="item" :key="video.id" v-for="video in videoStore.videos">
+            <div>
+                <h1>{{ video.title }}</h1>
+            </div>
+            <video controls :src="video.video" ></video>
+        </div>
+    </div>
 </template>
 
 <style scoped>
+#box{
+    width: 100%;
+    /* height: 20px; */
+    background-color: #fff;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+.item{
+    /* width: 45% !important; */
+    box-sizing: border-box;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
 
+.item>video{
+    width: 100%;
+}
+.item>div{
+    display: inline-block;
+    width: 100%;
+}
+@media screen and (min-width: 100px) {
+    .item{
+        width: 100%;
+    }
+}
+@media screen and (min-width: 800px) {
+    .item{
+        width: 50%;
+    }
+}
 </style>

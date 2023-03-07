@@ -9,7 +9,7 @@ import versionList from '../views/versionList.vue';
 import userProfile from '../views/userProfile.vue';
 import userPwd from '../views/userPwd.vue';
 import v403 from '../views/403.vue';
-
+import management from '../views/management.vue';
 const routes = [
     {
         path: "/",
@@ -69,6 +69,18 @@ const routes = [
                 component: v403,
             },
         ]
+    },
+    {
+        path: "/management",
+        name: "management",
+        component: management,
+        // children: [
+        //     {
+        //         path: "welcome",
+        //         name: "welcome",
+        //         component: welcome
+        //     },
+        // ]
     },
 ]
 
