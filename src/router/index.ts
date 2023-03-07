@@ -10,6 +10,14 @@ import userProfile from '../views/userProfile.vue';
 import userPwd from '../views/userPwd.vue';
 import v403 from '../views/403.vue';
 import management from '../views/management.vue';
+import studentList from '../views/studentList.vue';
+import clsList from '../views/clsList.vue';
+import userList from '../views/userList.vue';
+import activityList from '../views/activityList.vue';
+import about from '../views/about.vue';
+import standard from '../views/standard.vue';
+
+
 const routes = [
     {
         path: "/",
@@ -74,13 +82,44 @@ const routes = [
         path: "/management",
         name: "management",
         component: management,
-        // children: [
-        //     {
-        //         path: "welcome",
-        //         name: "welcome",
-        //         component: welcome
-        //     },
-        // ]
+        children: [
+            {
+                // 学生管理
+                path: "studentList",
+                name: "studentList",
+                component: studentList
+            },
+            {
+                // 班级管理
+                path: "clsList",
+                name: "clsList",
+                component: clsList
+            },
+            {
+                // 用户管理
+                path: "userList",
+                name: "userList",
+                component: userList
+            },
+            {
+                // 系统介绍
+                path: "about",
+                name: "about",
+                component: about
+            },
+            {
+                // 训练活动
+                path: "activityList",
+                name: "activityList",
+                component: activityList
+            },
+            {
+                // 课程标准
+                path: "standard",
+                name: "standard",
+                component: standard
+            },
+        ]
     },
 ]
 

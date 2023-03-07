@@ -23,7 +23,7 @@ const isCollapse = ref(true)
             <el-menu background-color="#001529" text-color="hsla(0,0%,100%)" active-text-color="#fff"
                 style="border-bottom: none !important; overflow: hidden; line-height: 64px;" default-active="1"
                 :collapse="!isCollapse">
-                <el-menu-item :index="nav.index" v-for="nav in NavStore.MMNavs">
+                <el-menu-item @click="$router.push(nav.router)" :index="nav.index" v-for="nav in NavStore.MMNavs">
                     <!-- 此处需要优化 -->
                     <el-icon>
                         <Avatar v-if="nav.icon == 'Avatar'" />
@@ -51,7 +51,7 @@ const isCollapse = ref(true)
                     <p class="titleFont">特殊儿童评估干预系统（随班就读）</p>
                 </div>
                 <!-- 用户头像 和 姓名 -->
-                <UserHead />
+                <UserHead :color="'#000'" />
             </div>
 
             <!-- 内容区域 用于渲染子组件 -->
@@ -87,6 +87,23 @@ const isCollapse = ref(true)
     height: 100%;
 }
 
+.el-menu-item:hover {
+    background-color: rgb(24, 144, 255, 0.5) !important;
+    border-bottom: none !important;
+}
+
+.el-menu-item {
+    border-bottom: none !important;
+    width: 130px;
+    height: 64px;
+    min-width: 100px;
+    max-height: 64px;
+}
+
+.el-menu-item.is-active {
+    background-color: rgb(24, 144, 255) !important;
+    border-bottom: none !important;
+}
 .right-box {
     width: 100%;
 }
@@ -115,11 +132,7 @@ const isCollapse = ref(true)
     margin-left: 20px;
 }
 
-
-
 .leftTopBar {
     display: flex;
 }
-
-
 </style>

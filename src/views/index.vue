@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { useNavStore } from '../store/navs'
 import UserHead from '../components/userHead.vue'
+
+/**
+ * 获取导航栏列表
+ */
 const NavStore = useNavStore()
 NavStore.load()
 </script>
@@ -25,11 +29,11 @@ NavStore.load()
 
             <!-- 头像 和 姓名 -->
             <div class="head-picture">
-                <UserHead />
+                <UserHead :color="'#fff'"/>
             </div>
 
         </div>
-        
+
         <!-- 视图渲染 -->
         <div id="main">
             <router-view></router-view>
