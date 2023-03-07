@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios'
 
-
+// 用户接口
 interface UserInfo {
     _id: string,
     schoolIdList: [],
@@ -33,7 +33,7 @@ interface UserInfo {
 
 
 
-// 定义容器
+// 存储当前用户信息
 export const useUserStore = defineStore('user', {
     state: () => {
         return {
@@ -47,6 +47,7 @@ export const useUserStore = defineStore('user', {
     },
 
     actions: {
+        // 获取UserInfo
         async loadUserInfo() {
             var config = {
                 method: 'post',

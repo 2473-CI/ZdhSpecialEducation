@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { useVideoStore } from '../store/videos'
 
+/**
+ * 从Store中获取视频列表
+ */
 const videoStore = useVideoStore()
 videoStore.loadVideos()
+
 </script>
 
 <template>
     <div id="box">
+        <!-- 遍历视频列表并渲染 -->
         <div class="item" :key="video.id" v-for="video in videoStore.videos">
             <div>
                 <h1>{{ video.title }}</h1>

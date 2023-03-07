@@ -4,10 +4,10 @@ import { ref } from 'vue'
 import { Avatar, Expand, Fold, CopyDocument, UserFilled, Menu, QuestionFilled } from '@element-plus/icons-vue'
 import { useNavStore } from '../store/navs'
 import UserHead from '../components/userHead.vue'
+
 const NavStore = useNavStore()
 NavStore.loadMM()
 const isCollapse = ref(true)
-
 </script>
 
 
@@ -15,9 +15,11 @@ const isCollapse = ref(true)
     <div class="page">
         <!-- 导航栏 -->
         <div class="navs">
+            <!-- 显示logo图片 -->
             <div class="logo">
                 <el-image style="width: 50px; height: 50px" :src="NavStore.logo" fit="fill" />
             </div>
+            <!-- 导航栏列表 -->
             <el-menu background-color="#001529" text-color="hsla(0,0%,100%)" active-text-color="#fff"
                 style="border-bottom: none !important; overflow: hidden; line-height: 64px;" default-active="1"
                 :collapse="!isCollapse">
@@ -34,21 +36,27 @@ const isCollapse = ref(true)
                 </el-menu-item>
             </el-menu>
         </div>
+
+        <!-- 减去导航栏后的区域 -->
         <div class="right-box">
+
+            <!-- 顶部区域 -->
             <div class="topBar">
                 <div class="leftTopBar">
+                    <!-- 点击展开/收起导航栏 -->
                     <el-icon class="ic" size="20px" @click="isCollapse = !isCollapse">
                         <Expand v-if="!isCollapse" />
                         <Fold v-else="isCollapse" />
                     </el-icon>
                     <p class="titleFont">特殊儿童评估干预系统（随班就读）</p>
                 </div>
+                <!-- 用户头像 和 姓名 -->
                 <UserHead />
             </div>
-            <div style="height:91vh;width:100%;background-color:#f8f8f8;overflow: auto;">
-                <div style="width:90%;height:100vh;border:1px solid black;">
 
-                </div>
+            <!-- 内容区域 用于渲染子组件 -->
+            <div style="height:91vh;width:100%;background-color:#f8f8f8;overflow: auto;">
+                <router-view></router-view>
             </div>
         </div>
     </div>

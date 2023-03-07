@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios'
+
+// 单个版本
 interface Version {
     _id: string,
     date: string,
@@ -7,15 +9,11 @@ interface Version {
     createdAt?: string,
     updatedAt?: string,
     __v?: number
-
-
-    // content: string,
-    // timestamp: string,
-    // type?: string,
-    // hollow?: boolean,
 }
 
-// 定义容器
+/**
+ * 所有历史版本列表
+ */
 export const useVersionStore = defineStore('version', {
     state: () => {
         return {
@@ -28,6 +26,7 @@ export const useVersionStore = defineStore('version', {
     },
 
     actions: {
+        // 通过请求初始化版本列表
         async loadVersion() {
 
             var config = {

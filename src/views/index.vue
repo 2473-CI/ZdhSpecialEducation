@@ -8,11 +8,13 @@ NavStore.load()
 <template>
     <div id="box">
         <div class="top">
+
             <!-- logo区域 -->
             <router-link to="/index/welcome" id="logo">
                 <el-image style="width: 60px; height: 60px" :src="NavStore.logo" fit="cover" />
                 <h1>七维教育</h1>
             </router-link>
+
             <!-- 导航栏 -->
             <el-menu default-active="1" :ellipsis="false" mode="horizontal" background-color="#001529"
                 text-color="hsla(0,0%,100%)" active-text-color="#fff"
@@ -21,10 +23,13 @@ NavStore.load()
                     @click="$router.push(nav.router)">{{ nav.title }}</el-menu-item>
             </el-menu>
 
+            <!-- 头像 和 姓名 -->
             <div class="head-picture">
                 <UserHead />
             </div>
+
         </div>
+        
         <!-- 视图渲染 -->
         <div id="main">
             <router-view></router-view>
@@ -102,4 +107,5 @@ h1 {
     padding: 24px 50px;
     width: 100%;
     min-height: 80vh !important;
-}</style>
+}
+</style>

@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia';
 
+/**
+ * 单个视频
+ */
 interface Video {
     id: number,
     title: string,
@@ -7,7 +10,6 @@ interface Video {
 }
 
 
-// 定义容器
 export const useVideoStore = defineStore('video', {
     state: () => {
         return {
@@ -20,6 +22,9 @@ export const useVideoStore = defineStore('video', {
     },
 
     actions: {
+        /**
+         * 通过请求初始化视频列表
+         */
         loadVideos(){
             this.videos = [
                 {id:0, title: "七维软件产品概览", video: "https://qiwi.oss-cn-shanghai.aliyuncs.com/opoc/systemVideo/0%E4%B8%83%E7%BB%B4%E8%BD%AF%E4%BB%B6%E4%BA%A7%E5%93%81%E6%A6%82%E8%A7%88.mp4"},

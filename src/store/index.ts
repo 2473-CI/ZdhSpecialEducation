@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 
-// 定义容器
+// Pinia 容器规范
 export const useMainStore = defineStore('main', {
     state: () => {
         return {
