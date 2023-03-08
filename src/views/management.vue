@@ -1,9 +1,10 @@
 
 <script lang="ts" setup>
-import { ref } from 'vue'
 import { Avatar, Expand, Fold, CopyDocument, UserFilled, Menu, QuestionFilled } from '@element-plus/icons-vue'
 import { useNavStore } from '../store/navs'
 import UserHead from '../components/userHead.vue'
+import { ref } from 'vue';
+
 
 const NavStore = useNavStore()
 NavStore.loadMM()

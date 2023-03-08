@@ -17,7 +17,7 @@ interface Student {
 interface SearchStuImp {
     current?: number,
     pageSize?: number,
-    schoolId?: string[],
+    schoolId: string[],
     clsId?: string,
     name?: string,
     sex?: string,
@@ -31,17 +31,19 @@ export const useStudentStore = defineStore('studentStore', {
         return {
             Students: [],
             Sex: [{name: "男", value: 1}, {name: "女", value: 2}],
-            searchStuImp: {} as SearchStuImp
+            searchStuImp: {schoolId: []} as SearchStuImp
         }
     },
 
     getters: {
-
+        getSex(){
+            
+        }
     },
 
     actions: {
         clear(){
-            this.searchStuImp = {}
+            this.searchStuImp = {schoolId: ["5f4c6b2857852c176c03aacf"]}
         },
         async search() {
             console.log(this.searchStuImp)
@@ -56,7 +58,8 @@ export const useStudentStore = defineStore('studentStore', {
                 data: JSON.stringify(this.searchStuImp)
             };
             const { data: { data } } = await axios(config);            
-            this.Students = data
+            this.Students = data.rows
+            // console.log(this.Students)
         }
     }
 })

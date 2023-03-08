@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, ref } from 'Vue';
+import { reactive, ref } from 'vue';
 import { useSchoolStore } from '../../store/school'
 import { useClsStore } from '../../store/cls'
 import { useStudentStore } from '../../store/student'
@@ -8,20 +8,11 @@ const ClsStore = useClsStore()
 const StudentStore = useStudentStore()
 
 ClsStore.loadClsList(SchoolStore.schoolList[0].schoolId)
-
-console.log(ClsStore.clsList)
-
-const searchBody = reactive({
-    schoolId: "",
-    clsId: "",
-    userName: "",
-}) 
-
+ 
 const isExpansion = ref(false)
+StudentStore.searchStuImp.schoolId.push( SchoolStore.schoolList[0].schoolId)
+StudentStore.search()
 
-const onSubmit = () => {
-    console.log(ClsStore.clsList)
-}
 </script>
 
 <template>

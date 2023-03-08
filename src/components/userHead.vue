@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useUserStore } from '../store/user'
-import { defineProps, toRefs } from 'vue'
+import {  toRefs } from 'vue'
 
 const UserStore = useUserStore()
 UserStore.loadUserInfo()
