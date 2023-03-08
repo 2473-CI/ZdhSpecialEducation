@@ -1,6 +1,15 @@
 <script setup lang="ts">
-
+import { reactive, ref } from 'vue';
+import { useSchoolStore } from '../../store/school'
+import { useClsStore } from '../../store/cls'
+import { useStudentStore } from '../../store/student'
+const SchoolStore = useSchoolStore()
+const ClsStore = useClsStore()
+const StudentStore = useStudentStore()
+ 
 const isExpansion = ref(false)
+StudentStore.searchStuImp.schoolId = SchoolStore.schoolList[0].schoolId
+StudentStore.search()
 
 
 </script>
@@ -8,26 +17,26 @@ const isExpansion = ref(false)
 <template>
     <el-card class="box-card">
         <el-form :inline="true" :model="StudentStore.searchStuImp" class="all-form">
-            <el-form-item label="学校" >
+            <el-form-item label="学校" class="top-item">
                 <el-select v-model="StudentStore.searchStuImp.schoolId" placeholder="请选择">
                     <el-option :label="school.schoolName" :value="school.schoolId" v-for="school in SchoolStore.schoolList"/>
                 </el-select>
             </el-form-item>
-            <el-form-item label="班级">
+            <el-form-item label="班级" class="top-item">
                 <el-select v-model="StudentStore.searchStuImp.clsId" placeholder="请选择">
                     <el-option :label="cls.gradeName+cls.name" :value="cls._id" :key="cls._id" v-for="cls in ClsStore.clsList"/>
                 </el-select>
             </el-form-item>
-            <el-form-item label="姓名" v-show="isExpansion">
+            <el-form-item label="姓名" v-show="isExpansion" class="top-item">
                 <el-input v-model="StudentStore.searchStuImp.name" placeholder="请输入" />
             </el-form-item>
-            <el-form-item label="性别" v-show="isExpansion">
+            <el-form-item label="性别" v-show="isExpansion" class="top-item">
                 <el-select v-model="StudentStore.searchStuImp.sex" placeholder="请选择">
                     <el-option label="男" value="1" />
                     <el-option label="女" value="2" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="障碍类型" v-show="isExpansion">
+            <el-form-item label="障碍类型" v-show="isExpansion" class="top-item">
                 <el-select v-model="StudentStore.searchStuImp.obstacleType" placeholder="请选择">
                     <el-option label="智力障碍" value="智力障碍" />
                     <el-option label="自闭谱系障碍" value="自闭谱系障碍" />
@@ -40,7 +49,7 @@ const isExpansion = ref(false)
                 </el-select>
             </el-form-item>
 
-            <el-form-item label="安置方式" v-show="isExpansion">
+            <el-form-item label="安置方式" v-show="isExpansion" class="top-item">
                 <el-select v-model="StudentStore.searchStuImp.placement" placeholder="请选择">
                     <el-option label="特殊学校" value="特殊学校" />
                     <el-option label="随班就读" value="随班就读" />
@@ -60,6 +69,7 @@ const isExpansion = ref(false)
             </el-form-item>
         </el-form>
     </el-card>
+
 </template>
 
 <style scoped>
@@ -68,7 +78,10 @@ const isExpansion = ref(false)
 }
 .right-bottom{
     position:absolute;
-    right:0px;
+    right:-10px;
 }
-
+.top-item{
+    width:300px;
+}
 </style>
+

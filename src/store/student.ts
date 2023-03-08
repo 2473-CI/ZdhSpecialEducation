@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios'
 
-interface Student {
+export interface Student {
     _id: string, // id
     clsId: string, // 班级ID
     clsName: string,  // 班级名称
@@ -17,7 +17,7 @@ interface Student {
 interface SearchStuImp {
     current?: number,
     pageSize?: number,
-    schoolId: string[],
+    schoolId: string[]|string,
     clsId?: string,
     name?: string,
     sex?: string,
@@ -46,8 +46,11 @@ export const useStudentStore = defineStore('studentStore', {
         clear(){
             this.searchStuImp = {schoolId: ["5f4c6b2857852c176c03aacf"]}
         },
+        async delStu(stuId: string){
+            console.log(stuId+ "被删除")
+        },
         async search() {
-            if(this.searchStuImp.schoolId[0] == undefined ){
+            if(this.searchStuImp.schoolId == undefined || this.searchStuImp.schoolId.length == 0 ){
                 this.searchStuImp.schoolId = ["5f4c6b2857852c176c03aacf"]
             }
             console.log(this.searchStuImp)
