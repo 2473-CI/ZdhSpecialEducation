@@ -31,7 +31,8 @@ export const useStudentStore = defineStore('studentStore', {
         return {
             Students: [],
             Sex: [{name: "男", value: 1}, {name: "女", value: 2}],
-            searchStuImp: {schoolId: []} as SearchStuImp
+            searchStuImp: {schoolId: []} as SearchStuImp,
+            Total: 0
         }
     },
 
@@ -46,6 +47,9 @@ export const useStudentStore = defineStore('studentStore', {
             this.searchStuImp = {schoolId: ["5f4c6b2857852c176c03aacf"]}
         },
         async search() {
+            if(this.searchStuImp.schoolId[0] == undefined ){
+                this.searchStuImp.schoolId = ["5f4c6b2857852c176c03aacf"]
+            }
             console.log(this.searchStuImp)
             var config = {
                 method: 'post',
@@ -59,6 +63,7 @@ export const useStudentStore = defineStore('studentStore', {
             };
             const { data: { data } } = await axios(config);            
             this.Students = data.rows
+            this.Total = data.total
             // console.log(this.Students)
         }
     }

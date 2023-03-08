@@ -1,7 +1,17 @@
 <script setup lang="ts">
+import { reactive, ref } from 'vue';
+import { useSchoolStore } from '../../store/school'
+import { useClsStore } from '../../store/cls'
+import { useStudentStore } from '../../store/student'
+const SchoolStore = useSchoolStore()
+const ClsStore = useClsStore()
+const StudentStore = useStudentStore()
 
+ClsStore.loadClsList(SchoolStore.schoolList[0].schoolId)
+ 
 const isExpansion = ref(false)
-
+StudentStore.searchStuImp.schoolId.push( SchoolStore.schoolList[0].schoolId)
+StudentStore.search()
 
 </script>
 

@@ -1,16 +1,18 @@
 <script setup lang="ts">
-
+import Search from '../components/clsList/search.vue'
+import Table from '../components/clsList/table.vue'
 </script>
 
 <template>
     <div class="box">
-        <h1>待开发</h1>      
+        <Search />
+        <div style="height: 20px"></div>
+        <Table />
     </div>
 </template>
 
 <style scoped>
 .box {
-    padding: 48px 32px;
-    box-sizing: border-box;
+   padding: 2%; 
 }
 </style>

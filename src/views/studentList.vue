@@ -6,13 +6,13 @@ import Table from '../components/studentList/table.vue'
 <template>
     <div class="box">
         <Search />
+        <div style="height: 20px"></div>
         <Table />
     </div>
 </template>
 
 <style scoped>
 .box {
-    padding: 48px 32px;
-    box-sizing: border-box;
+   padding: 2%; 
 }
 </style>
