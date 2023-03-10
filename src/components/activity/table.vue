@@ -36,13 +36,13 @@ const handleCurrentChange = (val: number) => {
         <el-table :data="ActiveStore.activeList" :cell-style="{ textAlign: 'center' }"
             :header-cell-style="{ 'text-align': 'center' }">
             <!-- <el-table-column fixed prop="schoolId" label="学校" width="150" /> -->
-            <el-table-column prop="_id" label="编号" width="120" />
+            <el-table-column prop="no" label="编号" width="120" />
             <el-table-column prop="title" label="标题" width="120" />
-            <el-table-column prop="prepare" label="说明" width="100" />
+            <el-table-column prop="tip" label="说明" width="500" />
 
             <el-table-column label="操作">
                 <template #default="scope">
-                    <el-button type="danger" @click="" text>查看</el-button>
+                    <el-button type="danger" @click="$router.push('/management/activityDetail?_id='+scope.row._id)" text>查看</el-button>
                 </template>
             </el-table-column>
         </el-table>

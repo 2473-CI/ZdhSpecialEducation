@@ -16,7 +16,7 @@ import userList from '../views/userList.vue';
 import activityList from '../views/activityList.vue';
 import about from '../views/about.vue';
 import standard from '../views/standard.vue';
-
+import activityDetail from '../views/activityDetail.vue';
 
 const routes = [
     {
@@ -118,6 +118,12 @@ const routes = [
                 path: "standard",
                 name: "standard",
                 component: standard
+            },
+            {
+                // 活动详情
+                path: "activityDetail",
+                name: "activityDetail",
+                component: activityDetail
             },
         ]
     },

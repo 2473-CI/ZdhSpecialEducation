@@ -42,6 +42,12 @@ interface SearchUserImp {
     pageNo?: string
 }
 
+interface UpdateUserPassword {
+    OriginalPassword: string, // 原来的密码
+    NewPassword: string, // 新密码
+    ConfirmPassword: string // 确认密码
+}
+
 
 // 存储当前用户信息
 export const useUserStore = defineStore('user', {
@@ -51,7 +57,9 @@ export const useUserStore = defineStore('user', {
             count: 1,
             searchUserImp: {} as SearchUserImp,
             userList: [] as UserInfo[],
-            Total: 0
+            Total: 0,
+            userUpdateFrom: {} as UserInfo,
+            password: {} as UpdateUserPassword
         }
     },
 
@@ -72,6 +80,7 @@ export const useUserStore = defineStore('user', {
             };
             const { data: { data } } = await axios(config);
             this.userInfo = data
+            this.userUpdateFrom = {...data}
 
         },
         async searchUserInfo() {

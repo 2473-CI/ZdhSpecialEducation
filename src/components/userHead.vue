@@ -26,8 +26,8 @@ const { color } = toRefs(props)
         <div class="allList" v-show="isTure" @mouseenter="isTure = true" @mouseout="isTure = false">
             <div class="wuyong"></div>
             <div class="bottom-box">
-                <p class="loginList" @mouseenter="isTure = true" @mouseout="isTure = false">个人中心</p>
-                <p class="loginList" @mouseenter="isTure = true" @mouseout="isTure = false">修改密码</p>
+                <p class="loginList" @mouseenter="isTure = true" @mouseout="isTure = false" @click="$router.push('/index/userProfile')">个人中心</p>
+                <p class="loginList" @mouseenter="isTure = true" @mouseout="isTure = false" @click="$router.push('/index/userPwd')">修改密码</p>
                 <p class="loginList" @mouseenter="isTure = true" @mouseout="isTure = false">退出登录</p>
             </div>
         </div>
