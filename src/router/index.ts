@@ -17,6 +17,7 @@ import activityList from '../views/activityList.vue';
 import about from '../views/about.vue';
 import standard from '../views/standard.vue';
 import activityDetail from '../views/activityDetail.vue';
+import { useUserStore } from '../store/user'
 
 const routes = [
     {
@@ -129,7 +130,25 @@ const routes = [
     },
 ]
 
+
+
 export const router = createRouter({
     history: createWebHistory(),
     routes: routes
+})
+
+// 注册一个全局前置守卫
+router.beforeEach((to, from, next) => {
+    
+    if(to.name!="login") {    //判断当前路由是否需要进行权限控制
+        const userStore = useUserStore()
+        console.log(userStore.userInfo.name)
+        if(userStore.userInfo.name != undefined){    //权限控制的具体规则
+            next()
+        }else {
+            router.push("/login")
+        }
+    } else {
+        next() // 放行
+    }
 })

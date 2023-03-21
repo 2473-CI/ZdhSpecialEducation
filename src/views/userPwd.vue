@@ -28,10 +28,6 @@ userStore.loadUserInfo()
                     </el-button>
                 </el-form-item>
             </el-form>
-
-
-
-
         </el-card>
     </div>
 </template>
