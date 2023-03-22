@@ -16,7 +16,7 @@ const input2 = ref("");
 <template>
   <div id="box">
     <div id="from">
-      <p id="title_login">Snake</p>
+      <p id="title_login">登录界面</p>
       <div id="user_info">
         <el-input v-model="input1" placeholder="请输入账号" id="username" />
         <el-input
@@ -26,6 +26,9 @@ const input2 = ref("");
           show-password
         />
         <button id="btn" @click="login">登录</button>
+        <div id="register">
+          <p @click="$router.push('/register')">还没账号？去注册</p>
+        </div>
       </div>
     </div>
   </div>
@@ -72,5 +75,8 @@ const input2 = ref("");
   border: 1px solid transparent;
   height: 32px;
   font-size: 14px;
+}
+#register {
+  text-align: right;
 }
 </style>
