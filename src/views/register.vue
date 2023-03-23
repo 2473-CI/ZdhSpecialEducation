@@ -2,7 +2,7 @@
 import { useUserStore } from "../store/user";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import axios from "axios";
+import Axios from "../request/index";
 import { ElMessage } from "element-plus";
 const userStore = useUserStore();
 const router = useRouter();
@@ -17,10 +17,11 @@ const options = ref("");
 const value1 = ref("");
 const username = ref("");
 const zh = ref("");
-const load = async () => {
-  const { data } = await axios.get("http://192.168.10.144:8080/school/getAll");
 
-  options.value = data.data;
+const load = async () => {
+  const { data } = await Axios.get("http://192.168.10.144:8080/school/getAll");
+  options.value = data;
+  console.log(data);
 };
 load();
 
@@ -32,17 +33,13 @@ const register = () => {
       message: "用户名未填写",
       type: "error",
     });
-  } else {
-    if (username.value.length < 1 || username.value.length >= 5) {
-      ElMessage({
-        showClose: true,
-        message: "用户名格式错误",
-        type: "error",
-      });
-    }
-  }
-
-  if (zh.value.length == 0) {
+  } else if (username.value.length < 1 || username.value.length >= 5) {
+    ElMessage({
+      showClose: true,
+      message: "用户名格式错误",
+      type: "error",
+    });
+  } else if (zh.value.length == 0) {
     ElMessage({
       showClose: true,
       message: "账号不能为零",
@@ -54,9 +51,7 @@ const register = () => {
       message: "账号不符合规范",
       type: "error",
     });
-  }
-
-  if (password.value.length == 0) {
+  } else if (password.value.length == 0) {
     ElMessage({
       showClose: true,
       message: "密码不能为零",
@@ -68,30 +63,29 @@ const register = () => {
       message: "密码不符合规范",
       type: "error",
     });
-  }
-
-  axios
-    .post("http://192.168.10.144:8080/user/register", {
+  } else {
+    Axios.post("http://192.168.10.144:8080/user/register", {
       userAccount: zh.value,
       passWord: password.value,
       userName: username.value,
-    })
-    .then((res) => {
-      if (res.status == 200) {
+    }).then((res) => {
+      console.log(res);
+      if (res.success == true) {
         ElMessage({
           showClose: true,
-          message: "注册成功",
+          message: res.data,
           type: "success",
         });
         router.push("/login");
       } else {
         ElMessage({
           showClose: true,
-          message: "注册失败",
+          message: res.message,
           type: "error",
         });
       }
     });
+  }
 };
 </script>
 
@@ -110,6 +104,7 @@ const register = () => {
           />
         </div>
         <div style="display: flex; align-items: center">
+          &nbsp;&nbsp;&nbsp;
           <span style="white-space: nowrap">账号：</span>
           <el-input
             v-model="zh"

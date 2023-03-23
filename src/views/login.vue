@@ -1,16 +1,46 @@
-<script setup lang="ts">
+<script setup>
 import { useUserStore } from "../store/user";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import Axios from "../request/index";
+import { ElMessage } from "element-plus";
 const userStore = useUserStore();
 const router = useRouter();
 const login = () => {
   userStore.loadUserInfo();
   router.push("/index/welcome");
+  Axios.post("http://192.168.10.144:8080/user/login", {
+    userAccount: account.value,
+    passWord: password.value,
+  }).then((res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: "登录成功",
+        type: "success",
+      });
+      localStorage.setItem(
+        "user",
+        encodeURIComponent(
+          JSON.stringify({
+            userAccount: res.data.userAccount,
+            userRole: res.data.userRole,
+          })
+        )
+      );
+      router.push("/management/studentList");
+    } else {
+      ElMessage({
+        showClose: true,
+        message: "账号或密码不存在",
+        type: "error",
+      });
+    }
+  });
 };
 
-const input1 = ref("");
-const input2 = ref("");
+const account = ref("");
+const password = ref("");
 </script>
 
 <template>
@@ -18,9 +48,9 @@ const input2 = ref("");
     <div id="from">
       <p id="title_login">登录界面</p>
       <div id="user_info">
-        <el-input v-model="input1" placeholder="请输入账号" id="username" />
+        <el-input v-model="account" placeholder="请输入账号" id="username" />
         <el-input
-          v-model="input2"
+          v-model="password"
           placeholder="请输入密码"
           id="password"
           show-password
@@ -42,7 +72,6 @@ const input2 = ref("");
   display: flex;
   align-items: center;
   justify-content: center;
-
   flex-direction: column;
 }
 
