@@ -31,7 +31,7 @@ const isExpansion = ref(false);
 const name = ref("");
 const phone = ref("");
 const postbox = ref("");
-StudentStore.searchStuImp.schoolId = SchoolStore.schoolList[0].schoolId;
+
 StudentStore.search();
 const UserStore = useUserStore();
 </script>

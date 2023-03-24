@@ -4,7 +4,7 @@ import { ref, reactive } from "vue";
 import Axios from "../../request";
 import { useUserStore } from "../../store/user";
 import { ElMessage } from "element-plus";
-
+import { ElMessageBox } from "element-plus";
 const dialogFormVisible = ref(false);
 const form = reactive({
   school: "",
@@ -18,8 +18,26 @@ const form = reactive({
   password: "",
   head: "",
 });
+
 const ob = reactive({});
 const options = ref("");
+const del = async (userId) => {
+  await Axios.delete(`/user/delete?userId=${userId}`).then((res) => {
+    if ((res.success = true)) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "error",
+      });
+    }
+  });
+};
 
 const change = () => {
   console.log(form.sex);
@@ -60,13 +78,23 @@ const newItem = () => {
     userHead: form.head,
     userGender: form.sex,
     userRole: form.type,
-  }).then((res) => {
+  }).then(async (res) => {
     if (res.success == true) {
       ElMessage({
         showClose: true,
         message: "新增成功",
         type: "success",
       });
+      await useUserStore().search();
+      form.account = "";
+      form.address = "";
+      form.password = "";
+      form.name = "";
+      form.school = "";
+      form.phone = "";
+      form.head = "";
+      form.sex = "";
+      form.type = "";
     } else {
       ElMessage({
         showClose: true,
@@ -89,6 +117,22 @@ const handleCurrentChange = (page: number) => {
   console.log("切换页码：", page);
   UserStore.searchUser.page = page;
   UserStore.search();
+};
+
+const handleClose = (userId) => {
+  ElMessageBox.confirm("确认要删除改用户吗?")
+    .then(async (a) => {
+      if (a == "confirm") {
+        await del(userId);
+        close();
+      } else {
+        close();
+      }
+      await UserStore.search();
+    })
+    .catch(() => {
+      // catch error
+    });
 };
 </script>
 
@@ -298,7 +342,9 @@ const handleCurrentChange = (page: number) => {
             >修改</el-button
           >
           <el-button type="danger" @click="" text>重置密码</el-button>
-          <el-button type="danger" @click="" text>删除</el-button>
+          <el-button type="danger" @click="handleClose(scope.row.userId)" text
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
