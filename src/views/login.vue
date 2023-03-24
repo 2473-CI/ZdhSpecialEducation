@@ -1,15 +1,12 @@
 <script setup>
-import { useUserStore } from "../store/user";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import Axios from "../request/index";
 import { ElMessage } from "element-plus";
-const userStore = useUserStore();
+
 const router = useRouter();
 const login = () => {
-  userStore.loadUserInfo();
-  router.push("/index/welcome");
-  Axios.post("http://192.168.10.144:8080/user/login", {
+  Axios.post("/user/login", {
     userAccount: account.value,
     passWord: password.value,
   }).then((res) => {

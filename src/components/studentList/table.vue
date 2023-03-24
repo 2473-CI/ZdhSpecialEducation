@@ -69,6 +69,7 @@ const modify = (stu: Student) => {
       <div class="card-header">
         <!-- <span>Card name</span> -->
         <el-button class="button" text>新建</el-button>
+
         <el-button class="button" text>导入</el-button>
         <el-button class="button" text>下载模板</el-button>
       </div>
