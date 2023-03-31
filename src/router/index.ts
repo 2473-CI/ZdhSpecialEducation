@@ -20,7 +20,14 @@ import activityDetail from "../views/activityDetail.vue";
 import studentCenter from "../views/studentCenter.vue";
 import register from "../views/register.vue";
 import { useUserStore } from "../store/user";
-
+import schoolList from "../views/schoolList.vue";
+import studentDetail from "../views/studentDetail.vue";
+import scale from "../views/scale.vue";
+import question from "../views/question.vue";
+import iepIndex from "../views/iepIndex.vue";
+import iepReport from "../views/iepReport.vue";
+import scaleList from "../views/scaleList.vue";
+import Medical from "../views/Medical.vue";
 const routes = [
   {
     path: "/",
@@ -31,6 +38,11 @@ const routes = [
     path: "/login",
     name: "login",
     component: login,
+  },
+  {
+    path: "/question",
+    name: "question",
+    component: question,
   },
   {
     path: "/register",
@@ -111,6 +123,18 @@ const routes = [
         component: userList,
       },
       {
+        //学校管理
+        path: "schoolList",
+        name: "schoolList",
+        component: schoolList,
+      },
+      //量表管理
+      {
+        path: "scale",
+        name: "scale",
+        component: scale,
+      },
+      {
         // 系统介绍
         path: "about",
         name: "about",
@@ -138,6 +162,31 @@ const routes = [
         path: "studentCenter",
         name: "studentCenter",
         component: studentCenter,
+      },
+      {
+        path: "studentDetail",
+        name: "studentDetail",
+        component: studentDetail,
+      },
+      {
+        path: "iepIndex",
+        name: "iepIndex",
+        component: iepIndex,
+      },
+      {
+        path: "iepReport",
+        name: "iepReport",
+        component: iepReport,
+      },
+      {
+        path: "scaleList",
+        name: "scaleLsit",
+        component: scaleList,
+      },
+      {
+        path: "Medical",
+        name: "Medical",
+        component: Medical,
       },
     ],
   },

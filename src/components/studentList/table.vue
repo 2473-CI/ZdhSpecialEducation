@@ -22,6 +22,26 @@ const handleCurrentChange = (page: number) => {
   search();
 };
 
+const addX = (
+  name: string,
+  studentHead: string,
+  schoolName: string,
+  clazzName: string,
+  studentGender: string,
+  obstacleName: string,
+  studentId: string
+) => {
+  StudentStore.studentQuery.name = name;
+  StudentStore.studentQuery.headUrl = studentHead;
+  StudentStore.studentQuery.schoolName = schoolName;
+  StudentStore.studentQuery.className = clazzName;
+  StudentStore.studentQuery.sex = studentGender;
+  StudentStore.studentQuery.obstacle = obstacleName;
+  StudentStore.studentQuery.studentId = studentId;
+  console.log(StudentStore.studentQuery);
+  StudentStore.getStorage();
+};
+
 const dialogFormVisible = ref(false);
 
 // const studentList = ref([]);
@@ -148,6 +168,79 @@ const newItem = () => {
       form.avge = "";
     }
   });
+};
+const dialogrevFormVisible = ref(false);
+const reviseForm = reactive({
+  schoolName: "",
+  clazzId: "",
+  studentName: "",
+  studentHead: "",
+  studentGender: "",
+  obstacleId: "",
+  arrangeId: "",
+  studentId: "",
+});
+
+const stuId = ref("");
+const giveInfo = (
+  id: string,
+  schoolName: string,
+  className: string,
+  studentName: string,
+  gender: string,
+  ob: string,
+  arrange: string
+) => {
+  stuId.value = id;
+  reviseForm.schoolName = schoolName;
+  reviseForm.clazzId = className;
+  reviseForm.studentName = studentName;
+  reviseForm.studentGender = gender;
+  reviseForm.obstacleId = ob;
+  reviseForm.arrangeId = arrange;
+};
+const revItem = () => {
+  reviseForm.studentId = stuId.value;
+  Axios.put("/student/update", reviseForm).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+      await search();
+      reviseForm.schoolName = "";
+      reviseForm.clazzId = "";
+      reviseForm.studentName = "";
+      reviseForm.studentHead = "";
+      reviseForm.studentGender = "";
+      reviseForm.obstacleId = "";
+      reviseForm.arrangeId = "";
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.message,
+        type: "error",
+      });
+      reviseForm.schoolName = "";
+      reviseForm.clazzId = "";
+      reviseForm.studentName = "";
+      reviseForm.studentHead = "";
+      reviseForm.studentGender = "";
+      reviseForm.obstacleName = "";
+      reviseForm.arrangeName = "";
+    }
+  });
+};
+
+const change2 = () => {
+  if (reviseForm.studentGender == "男") {
+    reviseForm.studentHead =
+      "https://static.yirenyian.com/opoc/sysImg/avatar-boy.png";
+  } else if (reviseForm.studentGender == "女") {
+    reviseForm.studentHead =
+      "https://static.yirenyian.com/opoc/sysImg/avatar-girl.png";
+  }
 };
 </script>
 
@@ -293,41 +386,222 @@ const newItem = () => {
       }"
     >
       <!-- <el-table-column fixed prop="schoolId" label="学校" width="150" /> -->
-      <el-table-column label="学校" width="300" prop="schoolName">
+      <el-table-column
+        label="学校"
+        width="auto"
+        min-width="20%"
+        prop="schoolName"
+      >
       </el-table-column>
-      <el-table-column prop="clazzName" label="班级" width="150" />
-      <el-table-column prop="studentName" label="姓名" width="100" />
-      <el-table-column label="头像" width="80">
+      <el-table-column
+        prop="clazzName"
+        label="班级"
+        width="auto"
+        min-width="10%"
+      />
+      <el-table-column
+        prop="studentName"
+        label="姓名"
+        width="auto"
+        min-width=" 10%"
+      />
+      <el-table-column label="头像" width="auto" min-width="10%">
         <template #default="scope">
           <!-- <div style="display: flex; align-items: center"> -->
           <el-image
-            style="width: 50px; height: 50px"
+            style="width: 70%; height: 70%"
             :src="scope.row.studentHead"
             fit="fill"
           />
           <!-- </div> -->
         </template>
       </el-table-column>
-      <el-table-column label="性别" width="80" prop="studentGender">
+      <el-table-column
+        label="性别"
+        width="auto"
+        min-width="10%"
+        prop="studentGender"
+      >
       </el-table-column>
-      <el-table-column prop="obstacleName" label="障碍类型" width="150" />
-      <el-table-column prop="arrangeName" label="安置方式" width="150" />
-      <el-table-column label="操作">
+      <el-table-column
+        prop="obstacleName"
+        label="障碍类型"
+        width="auto"
+        min-width="15%"
+      />
+      <el-table-column
+        prop="arrangeName"
+        label="安置方式"
+        width="auto"
+        min-width="15%"
+      />
+      <el-table-column
+        label="操作"
+        width="auto"
+        min-width="25%"
+        style="word-wrap: nowrap"
+      >
         <template #default="scope">
-          <el-button
-            type="primary"
-            text
-            @click="$router.push('StudentCenter')"
-            style="margin-left: -15px"
-            >进入主页</el-button
-          >
-          <el-button type="primary" text>修改</el-button>
-          <el-button type="danger" @click="del(scope.row.studentId)" text
-            >删除</el-button
-          >
+          <div style="display: flex; flex-wrap: nowrap">
+            <el-button
+              type="primary"
+              text
+              style="width: 30%"
+              @click="
+                $router.push('StudentCenter'),
+                  addX(
+                    scope.row.studentName,
+                    scope.row.studentHead,
+                    scope.row.schoolName,
+                    scope.row.clazzName,
+                    scope.row.studentGender,
+                    scope.row.obstacleName,
+                    scope.row.studentId
+                  )
+              "
+              >进入主页</el-button
+            >
+            <el-button
+              type="primary"
+              text
+              style="width: 30%"
+              @click="
+                (dialogrevFormVisible = true),
+                  giveInfo(
+                    scope.row.studentId,
+                    scope.row.schoolName,
+                    scope.row.className,
+                    scope.row.studentName,
+                    scope.row.studentGender,
+                    scope.row.obstacleId,
+                    scope.row.arrangeId
+                  )
+              "
+              >修改</el-button
+            >
+
+            <el-button
+              type="danger"
+              style="width: 30%"
+              @click="del(scope.row.studentId)"
+              text
+              >删除</el-button
+            >
+          </div>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-dialog
+      v-model="dialogrevFormVisible"
+      title="修改学生"
+      style="text-align: center; height: 600px; width: 500px"
+    >
+      <el-form :model="reviseForm" style="margin-left: 15px">
+        <el-form-item>
+          <span>学校名称：</span>
+          <el-select
+            v-model="reviseForm.schoolName"
+            :placeholder="reviseForm.schoolName"
+            style="width: 300px"
+            disabled
+          >
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 28px">班级：</span>
+          <el-select
+            v-model="reviseForm.clazzId"
+            placeholder="请选择班级"
+            style="width: 300px"
+          >
+            <el-option
+              v-for="item in options2"
+              :key="item.clazzId"
+              :label="item.clazzName"
+              :value="item.clazzId"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 28px"> 姓名： </span>
+          <el-input
+            v-model="reviseForm.studentName"
+            style="width: 300px"
+            placeholder="请填写姓名"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 28px"> 头像： </span>
+          <img
+            :src="reviseForm.studentHead"
+            style="height: 30px; width: 30px; border-radius: 50px"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <span slot="label" style="margin-left: 28px"> 性别： </span>
+          <el-radio-group
+            v-model="reviseForm.studentGender"
+            class="ml-4"
+            :change="change2()"
+          >
+            <el-radio label="男" size="large">男</el-radio>
+            <el-radio label="女" size="large">女</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+
+      <el-form-item>
+        <span style="margin-left: 15px">障碍类型：</span>
+        <el-select
+          v-model="reviseForm.obstacleId"
+          placeholder="请选择障碍类型"
+          style="width: 300px"
+        >
+          <el-option
+            v-for="item in options3"
+            :key="item.obstacleId"
+            :label="item.obstacleName"
+            :value="item.obstacleId"
+          />
+        </el-select>
+      </el-form-item>
+
+      <el-form-item>
+        <span style="margin-left: 15px">放置方式：</span>
+        <el-select
+          v-model="reviseForm.arrangeName"
+          placeholder="请选择放置方式"
+          style="width: 300px"
+        >
+          <el-option
+            v-for="item in options4"
+            :key="item.arrangeId"
+            :label="item.arrangeName"
+            :value="item.arrangeId"
+          />
+        </el-select>
+      </el-form-item>
+
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogrevFormVisible = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              dialogrevFormVisible = false;
+              revItem();
+            "
+          >
+            确认
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
     <div class="page-split">
       <el-pagination
         :current-page="StudentStore.page"

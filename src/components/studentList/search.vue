@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
-import { useClsStore } from "../../store/cls";
+
 import { useStudentStore } from "../../store/student";
 import Axios from "../../request";
-const ClsStore = useClsStore();
+
 const StudentStore = useStudentStore();
 
 const isExpansion = ref(false);

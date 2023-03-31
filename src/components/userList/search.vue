@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { reactive, ref } from "vue";
 import { useSchoolStore } from "../../store/school";
-import { useClsStore } from "../../store/cls";
+
 import { useStudentStore } from "../../store/student";
 import { useUserStore } from "../../store/user";
 import Axios from "../../request";
 const SchoolStore = useSchoolStore();
-const ClsStore = useClsStore();
+
 const StudentStore = useStudentStore();
 
 const researchUser = reactive({

@@ -7,6 +7,8 @@ import {
   UserFilled,
   Menu,
   QuestionFilled,
+  School,
+  Memo,
 } from "@element-plus/icons-vue";
 import { useNavStore } from "../store/navs";
 import UserHead from "../components/userHead.vue";
@@ -52,6 +54,8 @@ const isCollapse = ref(true);
             <Avatar v-if="nav.icon == 'Avatar'" />
             <CopyDocument v-if="nav.icon == 'CopyDocument'" />
             <UserFilled v-if="nav.icon == 'UserFilled'" />
+            <School v-if="nav.icon == 'School'" />
+            <Memo v-if="nav.icon == 'Memo'" />
             <Menu v-if="nav.icon == 'Menu'" />
             <QuestionFilled v-if="nav.icon == 'QuestionFilled'" />
           </el-icon>
@@ -70,7 +74,7 @@ const isCollapse = ref(true);
             <Expand v-if="!isCollapse" />
             <Fold v-else="isCollapse" />
           </el-icon>
-          <p class="titleFont">特殊儿童评估干预系统（随班就读）</p>
+          <p class="titleFont">特殊儿童评估干预系统</p>
         </div>
         <!-- 用户头像 和 姓名 -->
         <UserHead :color="'#000'" />

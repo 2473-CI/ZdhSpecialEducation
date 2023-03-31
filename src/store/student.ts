@@ -16,6 +16,15 @@ export const useStudentStore = defineStore("student", {
         obstacleId: "",
         arrangeId: "",
       },
+      studentQuery: {
+        headUrl: "",
+        name: "",
+        schoolName: "",
+        className: "",
+        sex: "",
+        obstacle: "",
+        studentId: "",
+      },
     };
   },
 
@@ -29,6 +38,9 @@ export const useStudentStore = defineStore("student", {
       this.total = data.length;
       this.studentList = data.data;
       console.log(this.studentList);
+    },
+    getStorage() {
+      localStorage.setItem("sq", JSON.stringify(this.studentQuery));
     },
   },
 });
