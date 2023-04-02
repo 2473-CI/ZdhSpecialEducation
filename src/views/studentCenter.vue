@@ -64,6 +64,7 @@ console.log(scLsit);
             "
           >
             <svg
+              style="margin-left: 10px"
               t="1679842260816"
               class="icon"
               viewBox="0 0 1024 1024"
@@ -80,7 +81,8 @@ console.log(scLsit);
                 p-id="1086"
               ></path>
             </svg>
-            <el-popover
+            <p class="sc_title">学业水平</p>
+            <!-- <el-popover
               placement="top-start"
               title=""
               :width="200"
@@ -88,7 +90,7 @@ console.log(scLsit);
               content=""
             >
               <template #reference>
-                <p class="sc_title">学业水平</p>
+                
               </template>
               <el-button style="display: block; width: 150px; margin: auto"
                 >开始评估</el-button
@@ -99,7 +101,7 @@ console.log(scLsit);
               <el-button style="display: block; width: 150px; margin: auto"
                 >对比报告</el-button
               >
-            </el-popover>
+            </el-popover> -->
 
             <span style="position: absolute; right: 10px">></span>
           </div>
@@ -124,6 +126,7 @@ console.log(scLsit);
               p-id="1085"
               width="30"
               height="30"
+              style="margin-left: 10px"
             >
               <path
                 class="icon1"
@@ -132,7 +135,8 @@ console.log(scLsit);
                 p-id="1086"
               ></path>
             </svg>
-            <el-popover
+            <p class="sc_title">{{ item.classify2 }}</p>
+            <!-- <el-popover
               placement="top-start"
               title=""
               :width="200"
@@ -140,7 +144,7 @@ console.log(scLsit);
               content=""
             >
               <template #reference>
-                <p class="sc_title">{{ item.classify2 }}</p>
+               
               </template>
               <el-button style="display: block; width: 150px; margin: auto"
                 >开始评估</el-button
@@ -151,7 +155,7 @@ console.log(scLsit);
               <el-button style="display: block; width: 150px; margin: auto"
                 >对比报告</el-button
               >
-            </el-popover>
+            </el-popover> -->
 
             <span style="position: absolute; right: 10px">></span>
           </div>

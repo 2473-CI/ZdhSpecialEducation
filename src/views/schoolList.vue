@@ -5,6 +5,7 @@ import Axios from "../request/index";
 
 const isExpansion = ref(false);
 const dialogFormVisible = ref(false);
+const dialogrevFormVisible = ref(false);
 const options = ref("");
 const getSch = () => {
   Axios.get("/school/getAll").then((res) => {
@@ -37,7 +38,6 @@ Axios.get("/region/getAll").then((res) => {
     });
   console.log(addOb.province);
 });
-
 const changeProvince = (val) => {
   addOb.city = Object.keys(ob)
     .filter(
@@ -122,6 +122,47 @@ const handleClose = (schoolId) => {
       // catch error
     });
 };
+
+const revform = reactive({
+  school: "",
+  province: "",
+  city: "",
+  region: "",
+});
+
+const revise = (id, name, province, city, region) => {
+  console.log(id, name, province, city, region);
+  revform.school = name;
+  revform.province = ob[province];
+  revform.city = ob[city];
+  revform.region = ob[region];
+};
+
+const revItem = () => {
+  let arr = Object.keys(ob).map((k) => {
+    return {
+      name: ob[k],
+      num: k,
+    };
+  });
+  console.log(arr);
+  let res = arr.filter((o) => o.name == revform.province);
+
+  if (res.length > 0) {
+    revform.province = res[0].num;
+  }
+  let res2 = arr.filter((o) => o.name == revform.city);
+  if (res2.length > 0) {
+    revform.city = res2[0].num;
+  }
+  let res3 = arr.filter((o) => o.name == revform.region);
+  if (res3.length > 0) {
+    revform.region = res3[0].num;
+  }
+
+  console.log(arr);
+  console.log(revform);
+};
 </script>
 <template>
   <div style="padding: 1%">
@@ -175,7 +216,7 @@ const handleClose = (schoolId) => {
           >
           <el-dialog
             v-model="dialogFormVisible"
-            title="新建班级"
+            title="添加学校"
             style="text-align: center; width: 500px; height: 600px"
           >
             <el-form :model="form">
@@ -334,6 +375,23 @@ const handleClose = (schoolId) => {
               type="danger"
               text
               style="margin-left: -15px"
+              @click="
+                dialogrevFormVisible = true;
+                revise(
+                  scope.row.schoolId,
+                  scope.row.schoolName,
+                  scope.row.provinceCode,
+                  scope.row.cityCode,
+                  scope.row.regionCode
+                );
+              "
+              >修改</el-button
+            >
+
+            <el-button
+              type="danger"
+              text
+              style="margin-left: -15px"
               @click="handleClose(scope.row.schoolId)"
               >删除</el-button
             >
@@ -341,6 +399,86 @@ const handleClose = (schoolId) => {
         </el-table-column>
       </el-table>
     </el-card>
+    <el-dialog
+      v-model="dialogrevFormVisible"
+      title="修改学校"
+      style="text-align: center; width: 500px; height: 600px"
+    >
+      <el-form :model="revform">
+        <el-form-item>
+          <span style="margin-left: 40px">学校：</span>
+          <el-input
+            v-model="revform.school"
+            style="width: 300px"
+            :placeholder="revform.school"
+          />
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 40px">省份：</span>
+          <el-select
+            v-model="revform.province"
+            placeholder="请选择省份"
+            style="width: 300px"
+            @change="changeProvince"
+          >
+            <el-option
+              v-for="item in addOb.province"
+              :key="item.name"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 54px">市：</span>
+          <el-select
+            v-model="revform.city"
+            placeholder="请选择市"
+            style="width: 300px"
+            @change="changeCity"
+          >
+            <el-option
+              v-for="item in addOb.city"
+              :key="item.name"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <span style="margin-left: 54px">区：</span>
+          <el-select
+            v-model="revform.region"
+            placeholder="请选择区"
+            style="width: 300px"
+          >
+            <el-option
+              v-for="item in addOb.region"
+              :key="item.value"
+              :label="item.name"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="dialogrevFormVisible = false">取消</el-button>
+          <el-button
+            type="primary"
+            @click="
+              dialogrevFormVisible = false;
+              revItem();
+            "
+          >
+            确认
+          </el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 

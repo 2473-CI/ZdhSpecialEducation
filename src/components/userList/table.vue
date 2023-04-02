@@ -28,7 +28,6 @@ const revForm = reactive({
   role: "",
   phone: "",
   address: "",
-  type: "",
   password: "",
   head: "",
   userId: "",
@@ -70,6 +69,34 @@ Axios.get("/school/getAll").then((res) => {
   }
   console.log(ob);
 });
+
+const changeUser = (
+  schoolId,
+  userAccount,
+  userName,
+  passWord,
+  userRole,
+  userHead,
+  userGender,
+  userPhone,
+  userMail,
+  userId
+) => {
+  revForm.school = schoolId;
+  revForm.name = userName;
+  revForm.account = userAccount;
+  revForm.sex = userGender;
+  revForm.role = userRole;
+  revForm.phone = userPhone;
+  revForm.address = userMail;
+  revForm.password = passWord;
+  revForm.head = userHead;
+  revForm.userId = userId;
+};
+
+const revItem = () => {
+  console.log(revForm);
+};
 
 const options2 = [
   {
@@ -475,7 +502,21 @@ const handleClose = (userId) => {
               type="primary"
               text
               style="width: 33%"
-              @click="dialogrevFormVisible = true"
+              @click="
+                (dialogrevFormVisible = true),
+                  changeUser(
+                    scope.row.schoolId,
+                    scope.row.userAccount,
+                    scope.row.userName,
+                    scope.row.passWord,
+                    scope.row.userRole,
+                    scope.row.userHead,
+                    scope.row.userGender,
+                    scope.row.userPhone,
+                    scope.row.userMail,
+                    scope.row.userId
+                  )
+              "
               >修改</el-button
             >
             <el-button type="danger" @click="" text style="width: 33%"
@@ -547,7 +588,7 @@ const handleClose = (userId) => {
             类型：
           </span>
           <el-select
-            v-model="revForm.type"
+            v-model="revForm.role"
             placeholder="请选择类型"
             style="width: 300px"
           >
@@ -614,7 +655,10 @@ const handleClose = (userId) => {
       <template #footer>
         <span class="dialog-footer" style="position: relative; bottom: 40px">
           <el-button @click="dialogrevFormVisible = false">取消</el-button>
-          <el-button type="primary" @click="dialogrevFormVisible = false">
+          <el-button
+            type="primary"
+            @click="(dialogrevFormVisible = false), revItem()"
+          >
             确定
           </el-button>
         </span>

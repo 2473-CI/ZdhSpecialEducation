@@ -21,6 +21,7 @@ Axios.interceptors.request.use(
 );
 
 Axios.interceptors.response.use((response) => {
+  console.log(response);
   const res = response.data;
   if (res.code == 401) {
     localStorage.clear();

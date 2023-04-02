@@ -166,6 +166,33 @@ const addSelect = (index) => {
     name: String.fromCharCode(65 + from.qyestionList[index].select.length),
   });
 };
+
+const del = (index, ind) => {
+  console.log(index, ind);
+  from.qyestionList[index].select.splice(ind, 1);
+  from.qyestionList[index].select = from.qyestionList[index].select.map(
+    (k, index) => {
+      return {
+        name: String.fromCharCode(65 + index),
+        value: k.value,
+      };
+    }
+  );
+};
+
+const del2 = (index, ind) => {
+  console.log(index, ind);
+  from.qyestionList[index].select.splice(ind, 1);
+  from.qyestionList[index].select = from.qyestionList[index].select.map(
+    (k, index) => {
+      return {
+        name: String.fromCharCode(65 + index),
+        value: k.value,
+      };
+    }
+  );
+};
+
 const addSelect2 = (index) => {
   from.qyestionList[index].select.push({
     value: "",
@@ -713,8 +740,8 @@ const seachDetail = () => {
                       "
                     >
                       <el-radio
-                        :key="index"
-                        v-for="(sel, index) in question.select"
+                        :key="ind"
+                        v-for="(sel, ind) in question.select"
                         :label="sel.name"
                         size="large"
                       >
@@ -723,16 +750,19 @@ const seachDetail = () => {
                           >{{ sel.name }}</span
                         >
 
-                        <div
-                          style="
-                            display: flex;
-                            flex-wrap: wrap;
-                            margin-bottom: 20px;
-                            margin-left: 10px;
-                          "
-                        >
+                        <div>
                           <el-input v-model="sel.value"> </el-input>
                         </div>
+                        <span
+                          @click="del(index, ind)"
+                          style="
+                            color: red;
+                            position: relative;
+                            left: 100%;
+                            top: -25px;
+                          "
+                          >-删除</span
+                        >
                       </el-radio>
                     </el-radio-group>
                     <el-button
@@ -745,7 +775,7 @@ const seachDetail = () => {
 
                 <div
                   v-if="question.qyestionType == '多选'"
-                  style="margin-top: 30px; display: flex"
+                  style="margin-top: 20px; display: flex"
                 >
                   <div style="position: relative">
                     <el-checkbox-group
@@ -758,21 +788,29 @@ const seachDetail = () => {
                     >
                       <el-checkbox
                         :label="sel.name"
-                        v-for="(sel, index) in question.select"
+                        v-for="(sel, ind) in question.select"
                         size="larg"
                         :key="index"
                         style="margin-top: 10px"
                       >
-                        <div style="display: flex; flex-wrap: wrap">
-                          <span
-                            style="position: relative; right: 35px; top: 9px"
-                          >
-                            {{ sel.name }}
-                          </span>
-                          <div style="display: flex; flex-wrap: wrap">
-                            <el-input v-model="sel.value"> </el-input>
-                          </div>
+                        <span
+                          style="position: relative; right: 35px; top: 23px"
+                        >
+                          {{ sel.name }}
+                        </span>
+                        <div style="">
+                          <el-input v-model="sel.value"> </el-input>
                         </div>
+                        <span
+                          @click="del2(index, ind)"
+                          style="
+                            color: red;
+                            position: relative;
+                            left: 100%;
+                            top: -25px;
+                          "
+                          >-删除</span
+                        >
                       </el-checkbox>
                       <el-button
                         @click="addSelect2(index)"

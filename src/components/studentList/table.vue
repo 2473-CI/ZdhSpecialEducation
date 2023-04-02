@@ -109,22 +109,22 @@ const change = () => {
   }
 };
 
-const options = ref("");
+const options = ref([]);
 Axios.get("/school/getAll").then((res) => {
   options.value = res.data;
 });
 
-const options2 = ref("");
+const options2 = ref([]);
 Axios.get("/clazz/getAll").then((res) => {
   options2.value = res.data;
 });
 
-const options3 = ref("");
+const options3 = ref([]);
 Axios.get("/obstacle/getAll").then((res) => {
   options3.value = res.data;
 });
 
-const options4 = ref("");
+const options4 = ref([]);
 Axios.get("/arrange/getAll").then((res) => {
   options4.value = res.data;
 });
@@ -198,9 +198,33 @@ const giveInfo = (
   reviseForm.studentGender = gender;
   reviseForm.obstacleId = ob;
   reviseForm.arrangeId = arrange;
+  console.log(ob, arrange);
 };
+
 const revItem = () => {
   reviseForm.studentId = stuId.value;
+  console.log(options3.value);
+  console.log(reviseForm.arrangeId);
+
+  let res = options2.value.filter((o) => o.clazzName == reviseForm.clazzId);
+  if (res.length > 0) {
+    reviseForm.clazzId = res[0].clazzId;
+  }
+
+  let res1 = options4.value.filter(
+    (o) => o.arrangeName == reviseForm.arrangeId
+  );
+  if (res1.length > 0) {
+    reviseForm.arrangeId = res1[0].arrangeId;
+  }
+
+  let res2 = options3.value.filter(
+    (o) => o.obstacleName == reviseForm.obstacleId
+  );
+  if (res2.length > 0) {
+    reviseForm.obstacleId = res2[0].obstacleId;
+  }
+
   Axios.put("/student/update", reviseForm).then(async (res) => {
     if (res.success == true) {
       ElMessage({
@@ -470,11 +494,11 @@ const change2 = () => {
                   giveInfo(
                     scope.row.studentId,
                     scope.row.schoolName,
-                    scope.row.className,
+                    scope.row.clazzName,
                     scope.row.studentName,
                     scope.row.studentGender,
-                    scope.row.obstacleId,
-                    scope.row.arrangeId
+                    scope.row.obstacleName,
+                    scope.row.arrangeName
                   )
               "
               >修改</el-button
@@ -574,7 +598,7 @@ const change2 = () => {
       <el-form-item>
         <span style="margin-left: 15px">放置方式：</span>
         <el-select
-          v-model="reviseForm.arrangeName"
+          v-model="reviseForm.arrangeId"
           placeholder="请选择放置方式"
           style="width: 300px"
         >

@@ -21,47 +21,15 @@ const isShow = ref(false);
 const isTrue = ref(false);
 const form = reactive({});
 const form1 = reactive({});
-const load5 = async () => {
-  const { data } = await Axios.get(
-    `/studentBasic/get?studentId=${
-      JSON.parse(localStorage.getItem("sq")).studentId
-    }`
-  );
 
-  for (let key of Object.keys(data.studentBasic)) {
-    form[key] = data.studentBasic[key];
-  }
-  for (let key1 of Object.keys(data.student)) {
-    form1[key1] = data.student[key1];
-  }
-};
-load5();
-console.log(form1);
-console.log(form);
-const basic = () => {
-  Axios.put("/studentBasic/update", form).then((res) => {
-    if (res.success == true) {
-      ElMessage({
-        showClose: true,
-        message: res.data,
-        type: "success",
-      });
-      load5();
-    } else if (res.success == false) {
-      ElMessage({
-        showClose: true,
-        message: res.message,
-        type: "error",
-      });
-    }
-  });
-  form1.arrangeId = 1;
-  Axios.put("/student/update", form1).then((res) => {
-    if (res.success == true) {
-      load5();
-    }
-  });
-};
+const options2 = ref([]);
+const options4 = ref([]);
+const options5 = ref([]);
+Axios.get("/obstacle/getAll").then((res) => {
+  options2.value = res.data;
+  options4.value = res.data;
+  options5.value = res.data;
+});
 
 const form2 = reactive({});
 const load4 = async () => {
@@ -87,6 +55,7 @@ const load4 = async () => {
   }
 };
 load4();
+
 const preserve3 = () => {
   if (form2.livingResources) {
     form2.livingResources = JSON.stringify(form2.livingResources);
@@ -102,6 +71,7 @@ const preserve3 = () => {
   if (form2.employmentResources) {
     form2.employmentResources = JSON.stringify(form2.employmentResources);
   }
+
   Axios.post("/familyBasic/update", form2).then((res) => {
     if (res.success == true) {
       ElMessage({
@@ -156,15 +126,12 @@ const load3 = async () => {
   if (data.atChildbirth) {
     form3.atChildbirth = JSON.parse(data.atChildbirth);
   }
-  if (data.isSmokeOrDrink == "") {
-    form3.isSmokeOrDrink = false;
-  }
-  if (data.isTakeMedicine == "") {
-    form3.isTakeMedicine = false;
-  }
-  if (data.isTimeDifference == "") {
-    form3.isTimeDifference = false;
-  }
+
+  form3.isSmokeOrDrink = eval(data.isSmokeOrDrink.toLowerCase());
+
+  form3.isTakeMedicine = eval(data.isTakeMedicine.toLowerCase());
+
+  form3.isTimeDifference = eval(data.isTimeDifference.toLowerCase());
 };
 load3();
 
@@ -201,7 +168,6 @@ const preserve2 = () => {
         type: "success",
       });
       load3();
-
       console.log(form4);
     } else if (res.success == false) {
       ElMessage({
@@ -359,15 +325,6 @@ const options = [
   },
 ];
 
-const options2 = ref("");
-const options4 = ref("");
-const options5 = ref("");
-Axios.get("/obstacle/getAll").then((res) => {
-  options2.value = res.data;
-  options4.value = res.data;
-  options5.value = res.data;
-});
-
 const options3 = [
   {
     value: "疑似",
@@ -459,7 +416,7 @@ Axios.get("/region/getAll").then((res) => {
     });
   console.log(addOb.province);
 });
-
+console.log(ob);
 const changeProvince = (val) => {
   isTrue.value = true;
   addOb.city = Object.keys(ob)
@@ -501,6 +458,13 @@ const changeCity = (val) => {
   console.log(addOb.region);
 };
 
+const obArr = Object.keys(ob).map((k) => {
+  return {
+    name: ob[k],
+    num: k,
+  };
+});
+console.log(addOb);
 const optionsCome = [
   {
     value: "3万以下",
@@ -1147,6 +1111,72 @@ const del3 = (index) => {
 const del4 = (index) => {
   addRecure.value.splice(index, 1);
 };
+
+const load5 = () => {
+  Axios.get(
+    `/studentBasic/get?studentId=${
+      JSON.parse(localStorage.getItem("sq")).studentId
+    }`
+  ).then((res) => {
+    for (let key of Object.keys(res.data.studentBasic)) {
+      form[key] = res.data.studentBasic[key];
+    }
+    for (let key1 of Object.keys(res.data.student)) {
+      form1[key1] = res.data.student[key1];
+    }
+
+    form1.obstacleId = res.data.student.obstacleName;
+
+    let res2 = options2.value.filter((o) => o.obstacleName == form1.obstacleId);
+    if (res2.length > 0) {
+      form1.obstacleId = res2[0].obstacleId;
+    }
+
+    let res3 = options5.value.filter(
+      (o) => o.obstacleId == form.otherObstacleId
+    );
+    if (res3.length > 0) {
+      form.otherObstacleName = res3[0].obstacleName;
+    }
+
+    console.log(res.data.studentBasic.registeredResidence);
+
+    form1.clazzName = res.data.student.clazzName;
+
+    // let prov = res.data.studentBasic.registeredResidence.slice(0, 2) + "0000";
+    // let cit = res.data.studentBasic.registeredResidence.slice(0, 4) + "00";
+    // let regio = res.data.studentBasic.registeredResidence;
+  });
+};
+load5();
+
+console.log(form1);
+console.log(form);
+const basic = () => {
+  Axios.put("/studentBasic/update", form).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+
+      await load5();
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.message,
+        type: "error",
+      });
+    }
+  });
+  form1.arrangeId = 1;
+  Axios.put("/student/update", form1).then((res) => {
+    if (res.success == true) {
+      load5();
+    }
+  });
+};
 </script>
 
 <template>
@@ -1231,7 +1261,6 @@ const del4 = (index) => {
               <el-select
                 v-model="form1.obstacleId"
                 style="margin-top: 10px; width: 100%"
-                :placeholder="form1.obstacleName"
               >
                 <el-option
                   v-for="item in options2"
@@ -1263,7 +1292,6 @@ const del4 = (index) => {
               <el-select
                 v-model="form.otherObstacleName"
                 style="margin-top: 10px; width: 100%"
-                :placeholder="form.otherObstacleName"
               >
                 <el-option
                   v-for="item in options5"
@@ -1296,7 +1324,7 @@ const del4 = (index) => {
             <div class="box mar_box">
               <p style="font-size: 14px">就读班级</p>
               <el-select
-                v-model="form.clazzName"
+                v-model="form1.clazzName"
                 style="margin-top: 10px; width: 100%"
               >
                 <el-option
@@ -1412,7 +1440,7 @@ const del4 = (index) => {
                 />
               </el-select>
               <el-select
-                v-model="form.registeredResidence"
+                v-model="form.region"
                 placeholder="请选择区"
                 style="width: 100%"
                 v-if="addOb.region.length != 0 && isTrue"
@@ -1456,7 +1484,7 @@ const del4 = (index) => {
                 />
               </el-select>
               <el-select
-                v-model="form.birthplace"
+                v-model="form.region2"
                 placeholder="请选择区"
                 style="width: 100%"
                 v-if="addOb.region.length != 0 && isShow"
@@ -1514,7 +1542,7 @@ const del4 = (index) => {
             <div class="box mar_box">
               <p style="font-size: 14px">家庭语言环境</p>
               <el-select
-                v-model="form.languageEnvironment"
+                v-model="form2.languageEnvironment"
                 style="margin-top: 10px; width: 100%"
                 placeholder="请选择家庭语言环境"
               >
@@ -1532,7 +1560,7 @@ const del4 = (index) => {
             <div class="box">
               <p style="font-size: 14px">教养方式</p>
               <el-select
-                v-model="form.parentingStyle"
+                v-model="form2.parentingStyle"
                 style="margin-top: 10px; width: 100%"
                 placeholder="教养方式"
               >
@@ -1983,7 +2011,7 @@ const del4 = (index) => {
                 placeholder="请输入体长"
                 style="margin-top: 10px; width: 100%"
               >
-                <template #append>kg</template>
+                <template #append>cm</template>
               </el-input>
             </div>
 
@@ -2176,7 +2204,13 @@ const del4 = (index) => {
             <el-table-column label="日期" width="auto" min-width="25%">
               <!-- <el-input text v-model="addList[scope.$index].order"></el-input> -->
               <template #default="scope">
-                <el-input text v-model="scope.row.date"></el-input>
+                <!-- <el-input text v-model="scope.row.date"></el-input> -->
+                <el-date-picker
+                  v-model="scope.row.date"
+                  type="date"
+                  placeholder="请选择日期"
+                  :size="size"
+                />
               </template>
             </el-table-column>
 
@@ -2205,7 +2239,7 @@ const del4 = (index) => {
           <p style="display: flex; justify-content: space-between; width: 90%">
             <span style="font-weight: bolder; font-size: 20px">康复训练史</span>
             <el-button type="primary" @click="addRecureHis()"
-              >+新增教育经历</el-button
+              >+新增康复训练经历</el-button
             >
           </p>
 
@@ -2228,7 +2262,13 @@ const del4 = (index) => {
             <el-table-column label="日期" width="auto" min-width="25%">
               <!-- <el-input text v-model="addList[scope.$index].order"></el-input> -->
               <template #default="scope">
-                <el-input text v-model="scope.row.date"></el-input>
+                <!-- <el-input text v-model="scope.row.date"></el-input> -->
+                <el-date-picker
+                  v-model="scope.row.date"
+                  type="date"
+                  placeholder="请选择日期"
+                  :size="size"
+                />
               </template>
             </el-table-column>
 

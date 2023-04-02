@@ -178,7 +178,9 @@ const revise = () => {
         >
           <el-form :model="form">
             <el-form-item>
-              <span style="margin-left: 20px">所属学校：</span>
+              <span style="margin-left: 20px">
+                <span style="color: red">*</span> 所属学校：</span
+              >
               <el-select
                 v-model="form.school"
                 placeholder="请选择学校"
@@ -193,7 +195,9 @@ const revise = () => {
               </el-select>
             </el-form-item>
             <el-form-item>
-              <span style="margin-left: 48px">年级：</span>
+              <span style="margin-left: 48px"
+                ><span style="color: red">*</span> 年级：</span
+              >
               <el-select
                 v-model="form.grade"
                 placeholder="请选择年级"
@@ -209,7 +213,9 @@ const revise = () => {
             </el-form-item>
 
             <el-form-item>
-              <span style="margin-left: 34px"> 班级名： </span>
+              <span style="margin-left: 34px">
+                <span style="color: transparent">*</span> 班级名：
+              </span>
               <el-input
                 v-model="form.class"
                 style="width: 300px"
@@ -218,7 +224,9 @@ const revise = () => {
             </el-form-item>
 
             <el-form-item>
-              <span style="margin-left: 48px">描述：</span>
+              <span style="margin-left: 48px"
+                ><span style="color: transparent">**</span>描述：</span
+              >
               <el-input
                 v-model="form.textarea"
                 :rows="3"
@@ -309,7 +317,7 @@ const revise = () => {
             style="
               display: -webkit-box;
               -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
+              -webkit-line-clamp: 3;
               overflow: hidden;
               text-overflow: ellipsis;
             "

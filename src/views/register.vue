@@ -19,7 +19,7 @@ const username = ref("");
 const zh = ref("");
 
 const load = async () => {
-  const { data } = await Axios.get("http://192.168.10.144:8080/school/getAll");
+  const { data } = await Axios.get("/school/getAll");
   options.value = data;
   console.log(data);
 };
@@ -64,7 +64,7 @@ const register = () => {
       type: "error",
     });
   } else {
-    Axios.post("http://192.168.10.144:8080/user/register", {
+    Axios.post("/user/register", {
       userAccount: zh.value,
       passWord: password.value,
       userName: username.value,
@@ -139,7 +139,7 @@ const register = () => {
             <el-radio label="系统管理" size="small" border>系统管理</el-radio>
             <el-radio label="学校管理" size="small" border>学校管理</el-radio>
             <el-radio label="教师" size="small" border>教师</el-radio>
-            <el-radio label="学生" size="small" border>学生</el-radio>
+            <el-radio label="委员会" size="small" border>委员会</el-radio>
           </el-radio-group>
         </div>
         <div style="white-space: nowrap">

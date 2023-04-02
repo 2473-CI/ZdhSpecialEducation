@@ -1,11 +1,28 @@
 <script setup>
 import { House } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, watch } from "vue";
 import Axios from "../request/index.ts";
 import { useRouter } from "vue-router";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Document } from "@element-plus/icons-vue";
 const route = useRouter();
 const list = ref([{}, {}, {}, {}]);
 const radio1 = ref([]);
+const radio2 = ref([]);
+const scoreSelf = ref("");
+const isShow = ref(false);
+
+const scalarArrayEquals = (array1, array2) => {
+  return (
+    array1.length === array2.length &&
+    array1.every((ele) => array2.includes(ele))
+  );
+};
+
+const num = ref(0);
+const handleChange = (value) => {
+  console.log(value);
+};
 
 const form = reactive({
   classify1: "",
@@ -20,22 +37,25 @@ const optionsTitle = ref("");
 if (route.currentRoute.value.query.classify1) {
   form.classify1 = route.currentRoute.value.query.classify1;
   Axios.post("/scale/search", form).then((res) => {
+    res.data = [...new Set(res.data.map((k) => k.classify2))];
+    console.log(res.data);
     optionsTwo.value = res.data.map((k) => {
       return {
-        classify2: k.classify2,
+        classify2: k,
       };
     });
   });
-  optionsTwo.value = [
-    ...new Set(optionsTwo.value.map((o) => JSON.stringify(o))),
-  ].map((o) => JSON.parse(o));
-  console.log(optionsTwo);
+  // optionsTwo.value = [
+  //   ...new Set(optionsTwo.value.map((o) => JSON.stringify(o))),
+  // ].map((o) => JSON.parse(o));
+  // console.log(optionsTwo);
 } else if (route.currentRoute.value.query.classify2) {
   form.classify2 = route.currentRoute.value.query.classify2;
   Axios.post("/scale/search", form).then((res) => {
+    res.data = [...new Set(res.data.map((k) => k.classify3))];
     optionsTwo.value = res.data.map((k) => {
       return {
-        classify3: k.classify3,
+        classify3: k,
       };
     });
   });
@@ -43,10 +63,13 @@ if (route.currentRoute.value.query.classify1) {
 
 const findThree = () => {
   if (route.currentRoute.value.query.classify1) {
+    form.classify3 = "";
+    form.title = "";
     Axios.post("/scale/search", form).then((res) => {
+      res.data = [...new Set(res.data.map((k) => k.classify3))];
       optionsThree.value = res.data.map((k) => {
         return {
-          classify3: k.classify3,
+          classify3: k,
         };
       });
     });
@@ -74,10 +97,102 @@ const findTitle = () => {
 };
 const showNum = ref(false);
 const content = ref([]);
+const textTitle = ref("");
 const setTheme = () => {
   showNum.value = true;
   Axios.get(`/scale/getById?scaleId=${form.title}`).then((res) => {
+    console.log(JSON.parse(res.data.context));
     content.value = JSON.parse(res.data.context);
+    textTitle.value = res.data.title;
+    for (let item of content.value) {
+      item["isFalse"] = [];
+      item["remarks"] = "";
+    }
+  });
+};
+// watch(content.value, (newValue, oldValue) => {
+//   console.log(">>>", newValue, oldValue);
+// });
+
+const allScore = ref("");
+const score = ref(0);
+const number = ref("");
+const time = ref(0);
+const isSure = () => {
+  isShow.value = true;
+  if (time.value < content.value.length) {
+    for (let item of content.value) {
+      if (item.isFalse == [] || item.isFalse == 0) {
+        ElMessage({
+          showClose: true,
+          message: "题目未作答完整！",
+          type: "error",
+        });
+        break;
+      } else if (item.isFalse != [] && item.isFalse != 0) {
+        time.value++;
+        console.log(time.value);
+        if (item.qyestionType == "单选") {
+          if (item.isFalse == item.isTrue) {
+            score.value += item.qyestionScore;
+          }
+        } else if (item.qyestionType == "多选") {
+          if (scalarArrayEquals(item.isFalse, item.isTrue)) {
+            score.value += item.qyestionScore;
+          }
+        } else if (item.qyestionType == "主观") {
+          score.value += item.isFalse;
+        }
+      } else if (time.value == content.value.length) {
+        ElMessage({
+          showClose: true,
+          message: "提交成功!",
+          type: "success",
+        });
+      }
+    }
+  } else {
+    ElMessage({
+      showClose: true,
+      message: "已经提交过了！",
+      type: "error",
+    });
+  }
+};
+
+const t = ref([]);
+
+const degree = ref("");
+const textarea1 = ref("");
+const textarea2 = ref("");
+
+const draft = () => {
+  number.value = 0;
+  for (let item of content.value) {
+    if (item.isFalse == []) {
+      number.value++;
+    } else if (item.isFalse == 0) {
+      number.value++;
+    }
+  }
+  console.log(number.value);
+  if (number.value > 0) {
+    degree.value = "未完成";
+  } else {
+    degree.value = "已完成";
+  }
+
+  console.log(content);
+  Axios.post("/answer/add", {
+    scaleId: form.title,
+    studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+    title: textTitle.value,
+    context: JSON.stringify(content),
+    degree: degree.value,
+    evaluation1: textarea1.value,
+    evaluation2: textarea2.value,
+  }).then((res) => {
+    console.log(res);
   });
 };
 </script>
@@ -235,7 +350,10 @@ const setTheme = () => {
           </p>
           <div style="display: flex">
             <div>
-              <el-radio-group v-model="radio1" class="ml-4">
+              <el-radio-group
+                v-model="item.isFalse"
+                v-if="item.qyestionType == '单选'"
+              >
                 <el-radio
                   :label="it.name"
                   size="large"
@@ -248,9 +366,85 @@ const setTheme = () => {
                 </el-radio>
               </el-radio-group>
             </div>
+
+            <div>
+              <el-checkbox-group
+                v-model="item.isFalse"
+                v-if="item.qyestionType == '多选'"
+              >
+                <el-checkbox
+                  :label="sel.name"
+                  v-for="(sel, i) in item.select"
+                  size="larg"
+                  :key="i"
+                  style="margin-top: 10px"
+                >
+                  <span> {{ sel.name }}.{{ sel.value }}</span>
+                </el-checkbox>
+              </el-checkbox-group>
+            </div>
+
+            <div v-if="item.qyestionType == '主观'">
+              <el-input-number
+                v-model="item.isFalse"
+                :min="0"
+                :max="item.qyestionScore"
+                @change="handleChange"
+              />
+            </div>
           </div>
         </div>
       </div>
+      <div
+        style="width: 80%; text-align: right; margin-top: 10px"
+        v-show="showNum"
+      >
+        <div style="display: flex; justify-content: space-between">
+          <span style="margin-left: 20px">
+            得分：<span v-if="isShow">{{ score }}</span>
+          </span>
+          <el-button
+            type="primary"
+            style="width: 10%; font-size: 1vw"
+            @click="isSure()"
+            >提交</el-button
+          >
+        </div>
+
+        <div
+          style="display: flex; justify-content: space-around; margin-top: 20px"
+        >
+          <el-input
+            v-model="textarea1"
+            :rows="10"
+            type="textarea"
+            placeholder="Please input"
+            style="width: 45%"
+          />
+          <el-input
+            v-model="textarea2"
+            :rows="10"
+            type="textarea"
+            placeholder="Please input"
+            style="width: 45%"
+          />
+        </div>
+      </div>
+      <el-button
+        @click="draft()"
+        v-show="showNum"
+        type="primary"
+        style="
+          height: 40px;
+          width: 40px;
+          border-radius: 50px;
+          position: fixed;
+          top: 60%;
+          right: 7%;
+        "
+      >
+        <el-icon><Document /></el-icon>
+      </el-button>
     </div>
   </div>
 </template>
