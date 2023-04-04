@@ -5,10 +5,13 @@ import Axios from "../request/index";
 import { ElMessage } from "element-plus";
 
 const router = useRouter();
+const role = ref("");
+
 const login = () => {
   Axios.post("/user/login", {
-    userAccount: account.value,
+    account: account.value,
     passWord: password.value,
+    role: role.value,
   }).then((res) => {
     if (res.success == true) {
       ElMessage({
@@ -18,12 +21,12 @@ const login = () => {
       });
       localStorage.setItem(
         "user",
-        encodeURIComponent(
-          JSON.stringify({
-            userAccount: res.data.userAccount,
-            userRole: res.data.userRole,
-          })
-        )
+        res.data
+        // encodeURIComponent(
+        //   JSON.stringify({
+        //     token: res.data,
+        //   })
+        // )
       );
       router.push("/management/studentList");
     } else {
@@ -52,6 +55,17 @@ const password = ref("");
           id="password"
           show-password
         />
+
+        <el-radio-group v-model="role" style="display: flex">
+          <el-radio label="系统管理员" size="small" border>系统管理员</el-radio>
+          <el-radio label="委员会" size="small" border>委员会</el-radio>
+          <el-radio label="学校管理" size="small" border>学校管理</el-radio>
+          <el-radio label="教师" size="small" border>教师</el-radio>
+          <el-radio label="学生" size="small" border style="margin-left: 36px"
+            >学生</el-radio
+          >
+        </el-radio-group>
+
         <button id="btn" @click="login">登录</button>
         <div id="register">
           <p @click="$router.push('/register')">还没账号？去注册</p>
@@ -74,7 +88,7 @@ const password = ref("");
 
 #from {
   width: 500px;
-  height: 300px;
+  height: 400px;
   background-color: aliceblue;
 }
 
@@ -88,7 +102,7 @@ const password = ref("");
 #user_info {
   width: 368px;
   margin: 20px auto;
-  height: 180px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;

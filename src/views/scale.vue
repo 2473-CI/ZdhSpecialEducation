@@ -695,7 +695,7 @@ const seachDetail = () => {
                   <el-select
                     v-model="question.qyestionType"
                     placeholder="请选择题目类型"
-                    size="large"
+                    size="default"
                     style="width: 10%"
                   >
                     <el-option
@@ -708,7 +708,7 @@ const seachDetail = () => {
                   <el-select
                     v-model="question.qyestionScore"
                     placeholder="请选择题目分值"
-                    size="large"
+                    size="default"
                     style="width: 13%"
                   >
                     <el-option
@@ -718,11 +718,19 @@ const seachDetail = () => {
                       :value="item.value"
                     />
                   </el-select>
-                  <el-input
+                  <!-- <el-input
                     v-model="question.qyestionContent"
                     placeholder="请输入题目内容："
                     style="width: 60%"
-                    size="large"
+                    size="large"  
+                  /> -->
+
+                  <el-input
+                    v-model="question.qyestionContent"
+                    :rows="1"
+                    type="textarea"
+                    placeholder="请输入题目内容："
+                    input-style="width:80%;"
                   />
                 </div>
 

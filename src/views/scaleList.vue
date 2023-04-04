@@ -4,13 +4,36 @@ import { ref, reactive, onMounted, watch } from "vue";
 import Axios from "../request/index.ts";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Document } from "@element-plus/icons-vue";
+import { Document, EditPen } from "@element-plus/icons-vue";
 const route = useRouter();
 const list = ref([{}, {}, {}, {}]);
 const radio1 = ref([]);
 const radio2 = ref([]);
 const scoreSelf = ref("");
 const isShow = ref(false);
+const hisList = ref([]);
+const per = ref([]);
+
+Axios.get("/answer/getAll").then((res) => {
+  hisList.value = res.data;
+
+  for (let item of hisList.value) {
+    item["percentage"] = "";
+    let alone = 0;
+    per.value = JSON.parse(item.context)["_value"];
+    // console.log(Array.isArray(per.value));
+    if (Array.isArray(per.value)) {
+      for (let it of per.value) {
+        if (it.isFalse == [] || it.isFalse == 0) {
+          alone++;
+        }
+      }
+      item["percentage"] = parseInt(
+        ((per.value.length - alone) / per.value.length) * 100
+      );
+    }
+  }
+});
 
 const scalarArrayEquals = (array1, array2) => {
   return (
@@ -118,37 +141,48 @@ const allScore = ref("");
 const score = ref(0);
 const number = ref("");
 const time = ref(0);
+const timer = ref(0);
 const isSure = () => {
   isShow.value = true;
+  timer.value = 0;
   if (time.value < content.value.length) {
     for (let item of content.value) {
       if (item.isFalse == [] || item.isFalse == 0) {
+        timer.value++;
+      }
+    }
+
+    for (let item of content.value) {
+      if (timer.value != 0) {
         ElMessage({
           showClose: true,
-          message: "题目未作答完整！",
+          message: "题目未完成！",
           type: "error",
         });
         break;
-      } else if (item.isFalse != [] && item.isFalse != 0) {
-        time.value++;
-        console.log(time.value);
-        if (item.qyestionType == "单选") {
-          if (item.isFalse == item.isTrue) {
-            score.value += item.qyestionScore;
+      } else if (timer.value == 0) {
+        {
+          time.value++;
+          if (time.value == content.value.length) {
+            ElMessage({
+              showClose: true,
+              message: "提交成功",
+              type: "success",
+            });
           }
-        } else if (item.qyestionType == "多选") {
-          if (scalarArrayEquals(item.isFalse, item.isTrue)) {
-            score.value += item.qyestionScore;
+          console.log(time.value);
+          if (item.qyestionType == "单选") {
+            if (item.isFalse == item.isTrue) {
+              score.value += item.qyestionScore;
+            }
+          } else if (item.qyestionType == "多选") {
+            if (scalarArrayEquals(item.isFalse, item.isTrue)) {
+              score.value += item.qyestionScore;
+            }
+          } else if (item.qyestionType == "主观") {
+            score.value += item.isFalse;
           }
-        } else if (item.qyestionType == "主观") {
-          score.value += item.isFalse;
         }
-      } else if (time.value == content.value.length) {
-        ElMessage({
-          showClose: true,
-          message: "提交成功!",
-          type: "success",
-        });
       }
     }
   } else {
@@ -165,9 +199,10 @@ const t = ref([]);
 const degree = ref("");
 const textarea1 = ref("");
 const textarea2 = ref("");
-
+const percentage1 = ref("");
 const draft = () => {
   number.value = 0;
+  console.log(content.value);
   for (let item of content.value) {
     if (item.isFalse == []) {
       number.value++;
@@ -175,14 +210,13 @@ const draft = () => {
       number.value++;
     }
   }
-  console.log(number.value);
+
   if (number.value > 0) {
     degree.value = "未完成";
   } else {
     degree.value = "已完成";
   }
 
-  console.log(content);
   Axios.post("/answer/add", {
     scaleId: form.title,
     studentId: JSON.parse(localStorage.getItem("sq")).studentId,
@@ -192,13 +226,53 @@ const draft = () => {
     evaluation1: textarea1.value,
     evaluation2: textarea2.value,
   }).then((res) => {
-    console.log(res);
+    ElMessage({
+      showClose: true,
+      message: "保存成功！",
+      type: "success",
+    });
+  });
+};
+
+const open = (index) => {
+  ElMessageBox.prompt("备注", "添加备注", {
+    confirmButtonText: "确认",
+    cancelButtonText: "取消",
+    inputErrorMessage: "",
+  })
+    .then(({ value }) => {
+      console.log(index);
+
+      content.value[index].remarks = value;
+
+      ElMessage({
+        type: "success",
+        message: "添加备注成功",
+      });
+    })
+    .catch(() => {
+      ElMessage({
+        type: "info",
+        message: "已取消",
+      });
+    });
+};
+
+const toHistory = (answerId) => {
+  showNum.value = true;
+  Axios.get(`/answer/get?answerId=${answerId}`).then((res) => {
+    console.log(JSON.parse(res.data.context)["_value"]);
+    content.value = JSON.parse(res.data.context)["_value"];
+    textTitle.value = res.data.title;
+    textarea1.value = res.data.evaluation1;
+    textarea2.value = res.data.evaluation2;
   });
 };
 </script>
 
 <template>
   <p
+    v-if="showNum == false"
     style="
       color: #1677ff;
       font-size: 14px;
@@ -210,6 +284,21 @@ const draft = () => {
   >
     <el-icon><House /></el-icon>返回学生主页
   </p>
+
+  <p
+    v-if="showNum"
+    style="
+      color: #1677ff;
+      font-size: 14px;
+      margin-left: 20px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+    "
+    @click="showNum = false"
+  >
+    <el-icon><House /></el-icon>返回
+  </p>
+
   <div style="display: flex; justify-content: center; width: 100%">
     <div style="width: 97%; background-color: #fff">
       <div
@@ -237,7 +326,7 @@ const draft = () => {
           v-model="form.classify2"
           class="m-2"
           placeholder="请选择二级分类"
-          size="large"
+          size="default"
           @change="findThree()"
           style="width: 30%"
         >
@@ -255,7 +344,7 @@ const draft = () => {
           v-model="form.classify3"
           class="m-2"
           placeholder="请选择三级分类"
-          size="large"
+          size="default"
           @change="findTitle()"
         >
           <el-option
@@ -271,7 +360,7 @@ const draft = () => {
           v-model="form.classify3"
           class="m-2"
           placeholder="请选择三级分类"
-          size="large"
+          size="default"
           @change="findThree()"
           style="width: 30%"
         >
@@ -288,7 +377,7 @@ const draft = () => {
           v-model="form.title"
           class="m-2"
           placeholder="请选择试卷"
-          size="large"
+          size="default"
         >
           <el-option
             v-for="item in optionsTitle"
@@ -314,27 +403,82 @@ const draft = () => {
           >查看报告</el-button
         >
       </div>
+
+      <div v-if="!showNum" style="width: 80%; display: flex; flex-wrap: wrap">
+        <!-- <div
+          @click="toHistory(item.answerId)"
+          class="shaDow"
+          v-for="(item, index) in hisList"
+          :key="index"
+          style="
+            height: 10vh;
+            width: 100%;
+            border: 1px solid #e6e8eb;
+            margin-top: 10px;
+          "
+        >
+          <div style="height: 20%; display: flex; font-size: 12px">
+            <p style="margin-left: 10px; margin-top: 10px">{{ item.title }}</p>
+            <span
+              style="margin-left: 20px; margin-top: 10px"
+              :style="{ color: item.degree == '未完成' ? 'red' : 'green' }"
+            >
+              {{ item.degree }}</span
+            >
+          </div>
+        </div> -->
+
+        <el-card
+          @click="toHistory(item.answerId)"
+          class="box-card"
+          style="background-color: #e6fffb"
+          v-for="(item, index) in hisList"
+          shadow="hover"
+        >
+          <p style="font-size: 12px; position: relative">
+            {{ item.title }}
+            <span
+              style="font-size: 10px; color: #909090; margin-left: 10px"
+              :style="{ color: item.degree == '未完成' ? 'red' : 'green' }"
+              >{{ item.degree }}</span
+            >
+            <span style="position: absolute; right: 0">
+              <el-icon style="color: blue"><EditPen /></el-icon>
+            </span>
+          </p>
+          <div
+            style="display: flex; justify-content: center; align-items: center"
+          >
+            <el-progress
+              type="circle"
+              :percentage="item.percentage"
+              width="100"
+            />
+          </div>
+        </el-card>
+      </div>
+
       <div
         style="
-          height: 10vh;
+          /* height: 10vh; */
           background-color: #fff;
           display: flex;
           align-items: center;
           width: 40%;
           justify-content: center;
           font-size: 1vw;
+          margin-top: 10px;
         "
       >
-        <span v-show="showNum"
+        <span v-show="showNum" v-if="content"
           >评估目录（该套评估量表一共有{{ content.length }}道题目）</span
         >
       </div>
-      <div style="width: 80%; background-color: #fff">
+      <div style="width: 80%; background-color: #fff" v-show="showNum">
         <div
           v-for="(item, index) in content"
           :key="index"
           style="
-            height: 10vh;
             width: 100%;
             margin-left: 20px;
             font-size: 1vw;
@@ -347,13 +491,15 @@ const draft = () => {
         >
           <p style="color: #1677ff">
             {{ index + 1 }}.{{ item.qyestionContent }}
+            <span>
+              <el-button text @click="open(index)"
+                ><el-icon style="color: blue"><EditPen /></el-icon
+              ></el-button>
+            </span>
           </p>
           <div style="display: flex">
-            <div>
-              <el-radio-group
-                v-model="item.isFalse"
-                v-if="item.qyestionType == '单选'"
-              >
+            <div v-if="item.qyestionType == '单选'">
+              <el-radio-group v-model="item.isFalse" style="position: relative">
                 <el-radio
                   :label="it.name"
                   size="large"
@@ -366,7 +512,6 @@ const draft = () => {
                 </el-radio>
               </el-radio-group>
             </div>
-
             <div>
               <el-checkbox-group
                 v-model="item.isFalse"
@@ -393,6 +538,9 @@ const draft = () => {
               />
             </div>
           </div>
+          <span style="color: #909090; font-size: 12px" v-if="item.remarks">
+            备注：{{ item.remarks }}
+          </span>
         </div>
       </div>
       <div
@@ -414,20 +562,44 @@ const draft = () => {
         <div
           style="display: flex; justify-content: space-around; margin-top: 20px"
         >
-          <el-input
-            v-model="textarea1"
-            :rows="10"
-            type="textarea"
-            placeholder="Please input"
-            style="width: 45%"
-          />
-          <el-input
-            v-model="textarea2"
-            :rows="10"
-            type="textarea"
-            placeholder="Please input"
-            style="width: 45%"
-          />
+          <!-- <div
+            style="
+              width: 45%;
+              display: flex;
+              flex-direction: column;
+              justify-content: left;
+            "
+          >
+            <p>自动计算结果</p>
+            <el-input
+              v-model="textarea1"
+              :rows="10"
+              type="textarea"
+              placeholder=""
+              input-style="width: 100%"
+              disabled
+              resize="none"
+            />
+          </div> -->
+
+          <div
+            style="
+              width: 45%;
+              display: flex;
+              flex-direction: column;
+              justify-content: left;
+            "
+          >
+            <p>最终评估结果</p>
+            <el-input
+              v-model="textarea2"
+              :rows="10"
+              type="textarea"
+              placeholder=""
+              input-style="width: 100%"
+              resize="none"
+            />
+          </div>
         </div>
       </div>
       <el-button
@@ -449,4 +621,18 @@ const draft = () => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.shaDow:hover {
+  box-shadow: 0px 5px 10px rgba(125, 125, 125, 0.5);
+}
+.shaDwo {
+  transition: 0.2s;
+}
+
+.box-card {
+  width: 400px;
+  height: 180px;
+  margin-top: 10px;
+  margin-left: 10px;
+}
+</style>

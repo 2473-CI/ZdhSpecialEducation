@@ -49,7 +49,7 @@ console.log(scLsit);
           </div>
         </div>
       </div>
-      <div id="left_box_bottom" style="margin-top: 20px">
+      <div id="left_box_bottom" style="">
         <p class="font_first">教育评估</p>
         <div id="bottom_box">
           <div
@@ -566,9 +566,9 @@ console.log(scLsit);
 }
 .sc_box {
   background-color: #fff;
-  height: 60px;
+  height: 55px;
   width: 100%;
-  /* margin-top: 15px; */
+  margin-top: 15px;
   display: flex;
   align-items: center;
   position: relative;

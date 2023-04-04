@@ -2,8 +2,8 @@ import axios from "axios";
 import { router } from "../router";
 
 const Axios = axios.create({
-  // baseURL: "http://192.168.10.142:8080",
-  baseURL: "http://47.115.207.245:8080",
+  baseURL: "http://192.168.10.142:8080",
+  // baseURL: "http://47.115.207.245:8080",
   timeout: 5000,
 });
 
