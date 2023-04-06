@@ -365,7 +365,7 @@ const seachDetail = () => {
               >
               <el-dialog
                 v-model="dialogFormVisible"
-                title="新建班级"
+                title="新建量表分类"
                 style="text-align: center; width: 500px; height: 600px"
               >
                 <el-form :model="addForm">
@@ -463,25 +463,25 @@ const seachDetail = () => {
               color: 'black',
             }"
           >
-            <el-table-column label="一级分类" width="auto" min-width="20%">
+            <el-table-column label="一级分类" width="auto" min-width="25%">
               <template #default="scope">
                 {{ scope.row.classify1 }}
               </template>
             </el-table-column>
-            <el-table-column label="二级分类" width="auto" min-width="20%">
+            <el-table-column label="二级分类" width="auto" min-width="25%">
               <template #default="scope">
                 {{ scope.row.classify2 }}
               </template>
             </el-table-column>
-            <el-table-column label="三级分类" width="auto" min-width="20%">
+            <el-table-column label="三级分类" width="auto" min-width="25%">
               <template #default="scope">
                 {{ scope.row.classify3 }}
               </template>
             </el-table-column>
-            <el-table-column label="量表数量" width="auto" min-width="20%">
+            <!-- <el-table-column label="量表数量" width="auto" min-width="20%">
               <template #default="scope"> </template>
-            </el-table-column>
-            <el-table-column label="操作" width="auto" min-width="20%">
+            </el-table-column> -->
+            <el-table-column label="操作" width="auto" min-width="25%">
               <template #default="scope">
                 <el-button type="danger" text style="margin-left: -15px"
                   >删除</el-button
@@ -705,7 +705,10 @@ const seachDetail = () => {
                       :value="item.value"
                     />
                   </el-select>
-                  <el-select
+
+                  <el-input-number v-model="question.qyestionScore" :min="0" />
+
+                  <!-- <el-select
                     v-model="question.qyestionScore"
                     placeholder="请选择题目分值"
                     size="default"
@@ -717,7 +720,7 @@ const seachDetail = () => {
                       :label="item.name"
                       :value="item.value"
                     />
-                  </el-select>
+                  </el-select> -->
                   <!-- <el-input
                     v-model="question.qyestionContent"
                     placeholder="请输入题目内容："

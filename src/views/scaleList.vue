@@ -4,6 +4,7 @@ import { ref, reactive, onMounted, watch } from "vue";
 import Axios from "../request/index.ts";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { h } from "vue";
 import { Document, EditPen } from "@element-plus/icons-vue";
 const route = useRouter();
 const list = ref([{}, {}, {}, {}]);
@@ -14,26 +15,29 @@ const isShow = ref(false);
 const hisList = ref([]);
 const per = ref([]);
 
-Axios.get("/answer/getAll").then((res) => {
-  hisList.value = res.data;
+const getAllHis = () => {
+  Axios.get("/answer/getAll").then((res) => {
+    hisList.value = res.data;
 
-  for (let item of hisList.value) {
-    item["percentage"] = "";
-    let alone = 0;
-    per.value = JSON.parse(item.context)["_value"];
-    // console.log(Array.isArray(per.value));
-    if (Array.isArray(per.value)) {
-      for (let it of per.value) {
-        if (it.isFalse == [] || it.isFalse == 0) {
-          alone++;
+    for (let item of hisList.value) {
+      item["percentage"] = "";
+      let alone = 0;
+      per.value = JSON.parse(item.context)["_value"];
+      // console.log(Array.isArray(per.value));
+      if (Array.isArray(per.value)) {
+        for (let it of per.value) {
+          if (it.isFalse == [] || it.isFalse == 0) {
+            alone++;
+          }
         }
+        item["percentage"] = parseInt(
+          ((per.value.length - alone) / per.value.length) * 100
+        );
       }
-      item["percentage"] = parseInt(
-        ((per.value.length - alone) / per.value.length) * 100
-      );
     }
-  }
-});
+  });
+};
+getAllHis();
 
 const scalarArrayEquals = (array1, array2) => {
   return (
@@ -225,12 +229,14 @@ const draft = () => {
     degree: degree.value,
     evaluation1: textarea1.value,
     evaluation2: textarea2.value,
-  }).then((res) => {
+  }).then(async (res) => {
     ElMessage({
       showClose: true,
       message: "保存成功！",
       type: "success",
     });
+    await getAllHis();
+    //
   });
 };
 
@@ -267,6 +273,50 @@ const toHistory = (answerId) => {
     textarea1.value = res.data.evaluation1;
     textarea2.value = res.data.evaluation2;
   });
+};
+
+const open2 = () => {
+  ElMessageBox({
+    title: "课程标准评估",
+    message: h("p", null, [
+      h("p", null, "一、评估内容"),
+      h(
+        "span",
+        null,
+        "评估包括生活语文、生活数学、生活适应和康复训练四个科目，条目参考国家2016年颁布的培智学校义务教育课程标准以及人民教育出版社配套教材、教师教学用书的内容进行编写。其中生活语文、生活数学、生活适应的评估阶段分为1-3学段、4-6学段、7-9学段、一年级上、一年级下、二年级上、二年级上，康复训练不分评估阶段。"
+      ),
+      h("p", null, "二、评分方法"),
+      h(
+        "p",
+        null,
+        "评估条目对应有A、B、C、D四个选项（部分生活数学评估条目仅有A和D选项）。评估人根据儿童的实际情况，选择对应选项，其中A选项记3分（表示儿童通过该条目），B选项记2分，C选项记1分，D选项记0分（B、C、D均记为儿童未通过该条目），即通过率为该领域中勾选了选项A的条目数量/该领域的总题数。"
+      ),
+      h("p", null, "三、评估报告"),
+      h("p", null, "评估报告包括各领域通过率情况和具体条目得分情况两部分。"),
+      h("p", null, "四、使用说明"),
+      h(
+        "p",
+        null,
+        "1.选择“评估类别”和“评估阶段”，点击“开始评估”可以开始相应评估。评估过程中支持保存，点击“保存”按钮，下次登陆时可以继续评估。完成一个科目某阶段的所有评估条目后，点击“提交并生成报告”按钮，会形成相应报告。"
+      ),
+      h(
+        "p",
+        null,
+        "2.点击“查询报告”，选择“评估工具”、“评估领域”和“评估次数”查看相应评估报告。待报告显示完整后，点击“导出报告”下载报告。"
+      ),
+      h(
+        "p",
+        null,
+        "3.评估条目中选择B、C、D选项的，即未通过的条目会被自动导入平台IEP模块，作为教师制定IEP计划的参考。"
+      ),
+      h(
+        "p",
+        null,
+        "4.选择“一年级上”/“一年级下”/“二年级上”/“二年级下”进行评估，教案模块可以根据“学期”、“学科”、“课名”和“班级”筛出某学期某科目某课某班所有学生的评估条目通过情况，作为教师备课参考。"
+      ),
+    ]),
+    confirmButtonText: "我知道了",
+  }).then((action) => {});
 };
 </script>
 
@@ -402,6 +452,42 @@ const toHistory = (answerId) => {
         <el-button type="primary" style="width: 10%; font-size: 1vw"
           >查看报告</el-button
         >
+
+        <el-tooltip
+          class="box-item"
+          effect="dark"
+          content="评估说明"
+          placement="top"
+        >
+          <svg
+            @click="open2"
+            t="1680606875171"
+            class="icon"
+            viewBox="0 0 1024 1024"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            p-id="2602"
+            width="20"
+            height="20"
+            style="margin-top: -15px; margin-left: 10px"
+          >
+            <path
+              d="M463.99957 784.352211c0 26.509985 21.490445 48.00043 48.00043 48.00043s48.00043-21.490445 48.00043-48.00043c0-26.509985-21.490445-48.00043-48.00043-48.00043S463.99957 757.842226 463.99957 784.352211z"
+              fill="#1296db"
+              p-id="2603"
+            ></path>
+            <path
+              d="M512 960c-247.039484 0-448-200.960516-448-448S264.960516 64 512 64 960 264.960516 960 512 759.039484 960 512 960zM512 128.287273c-211.584464 0-383.712727 172.128262-383.712727 383.712727 0 211.551781 172.128262 383.712727 383.712727 383.712727 211.551781 0 383.712727-172.159226 383.712727-383.712727C895.712727 300.415536 723.551781 128.287273 512 128.287273z"
+              fill="#1296db"
+              p-id="2604"
+            ></path>
+            <path
+              d="M512 673.695256c-17.664722 0-32.00086-14.336138-32.00086-31.99914l0-54.112297c0-52.352533 39.999785-92.352318 75.32751-127.647359 25.887273-25.919957 52.67249-52.67249 52.67249-74.016718 0-53.343368-43.07206-96.735385-95.99914-96.735385-53.823303 0-95.99914 41.535923-95.99914 94.559333 0 17.664722-14.336138 31.99914-32.00086 31.99914s-32.00086-14.336138-32.00086-31.99914c0-87.423948 71.775299-158.559333 160.00086-158.559333s160.00086 72.095256 160.00086 160.735385c0 47.904099-36.32028 84.191695-71.424378 119.295794-27.839699 27.776052-56.575622 56.511974-56.575622 82.3356l0 54.112297C544.00086 659.328155 529.664722 673.695256 512 673.695256z"
+              fill="#1296db"
+              p-id="2605"
+            ></path>
+          </svg>
+        </el-tooltip>
       </div>
 
       <div v-if="!showNum" style="width: 80%; display: flex; flex-wrap: wrap">

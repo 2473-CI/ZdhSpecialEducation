@@ -13,25 +13,41 @@ import {
 import { useNavStore } from "../store/navs";
 import UserHead from "../components/userHead.vue";
 import { ref } from "vue";
+import Axios from "../request";
 
 const NavStore = useNavStore();
 NavStore.loadMM();
 const isCollapse = ref(true);
+const isShowG = ref(false);
+const isShowW = ref(false);
+const isShowX = ref(false);
+const isShowJ = ref(false);
+Axios.get("/user/getRole").then((res) => {
+  console.log(res);
+  if (res.data == "系统管理员") {
+    isShowG.value = true;
+  } else if (res.data == "委员会") {
+    isShowW.value = true;
+  } else if (res.data == "学校管理员") {
+    isShowX.value = true;
+  } else if (res.data == "教师") {
+    isShowJ.value = true;
+  }
+});
 </script>
 
 <template>
   <div class="page">
     <!-- 导航栏 -->
     <div class="navs">
-      <!-- 显示logo图片 -->
-      <div class="logo">
+      <div class="logo" style="background-color: #001529">
         <el-image
           style="width: 50px; height: 50px"
           :src="NavStore.logo"
           fit="fill"
         />
       </div>
-      <!-- 导航栏列表 -->
+
       <el-menu
         background-color="#001529"
         text-color="hsla(0,0%,100%)"
@@ -43,13 +59,13 @@ const isCollapse = ref(true);
         "
         default-active="1"
         :collapse="!isCollapse"
+        router
       >
-        <el-menu-item
+        <!-- <el-menu-item
           @click="$router.push(nav.router)"
           :index="nav.index"
           v-for="nav in NavStore.MMNavs"
         >
-          <!-- 此处需要优化 -->
           <el-icon>
             <Avatar v-if="nav.icon == 'Avatar'" />
             <CopyDocument v-if="nav.icon == 'CopyDocument'" />
@@ -60,7 +76,79 @@ const isCollapse = ref(true);
             <QuestionFilled v-if="nav.icon == 'QuestionFilled'" />
           </el-icon>
           <template #title>{{ nav.title }}</template>
-        </el-menu-item>
+        </el-menu-item> -->
+
+        <el-sub-menu index="1" v-if="isShowW || isShowG">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>委员会</span>
+          </template>
+          <el-menu-item index="/management/committee" v-if="isShowG"
+            >委员会管理</el-menu-item
+          >
+          <el-menu-item index="/management/ComBers" v-if="isShowG || isShowW"
+            >委员会成员</el-menu-item
+          >
+        </el-sub-menu>
+        <el-sub-menu index="2" v-if="isShowG || isShowJ || isShowX">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>学校</span>
+          </template>
+          <el-menu-item index="/management/schoolList" v-if="isShowG"
+            >学校管理</el-menu-item
+          >
+          <el-menu-item index="/management/clsList" v-if="isShowG || isShowX"
+            >班级管理</el-menu-item
+          >
+          <el-menu-item index="/management/userList" v-if="isShowG || isShowX"
+            >教师管理</el-menu-item
+          >
+          <el-menu-item
+            index="/management/studentList"
+            v-if="isShowG || isShowX || isShowJ"
+            >学生管理</el-menu-item
+          >
+        </el-sub-menu>
+
+        <el-sub-menu index="3">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>资源</span>
+          </template>
+          <el-menu-item
+            index="/management/scale"
+            v-if="isShowG || isShowX || isShowJ"
+            >量表资源</el-menu-item
+          >
+          <el-menu-item
+            index="/management/PerResources"
+            v-if="isShowG || isShowJ"
+            >个人资源</el-menu-item
+          >
+          <el-menu-item
+            index="/management/sharedResources"
+            v-if="isShowG || isShowW || isShowX || isShowJ"
+            >共享资源</el-menu-item
+          >
+        </el-sub-menu>
+
+        <el-sub-menu index="4">
+          <template #title>
+            <el-icon><location /></el-icon>
+            <span>审批</span>
+          </template>
+          <el-menu-item
+            index="/management/Transition"
+            v-if="isShowG || isShowW || isShowX || isShowJ"
+            >转衔审批</el-menu-item
+          >
+          <el-menu-item
+            index="/management/enroll"
+            v-if="isShowG || isShowW || isShowX"
+            >注册审批</el-menu-item
+          >
+        </el-sub-menu>
       </el-menu>
     </div>
 
@@ -129,6 +217,13 @@ const isCollapse = ref(true);
   height: 64px;
   min-width: 100px;
   max-height: 64px;
+}
+.el-sub-menu {
+  width: 130px;
+}
+
+.el-menu-item-group {
+  width: 130px;
 }
 
 .el-menu-item.is-active {

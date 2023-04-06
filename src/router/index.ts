@@ -28,6 +28,13 @@ import iepIndex from "../views/iepIndex.vue";
 import iepReport from "../views/iepReport.vue";
 import scaleList from "../views/scaleList.vue";
 import Medical from "../views/Medical.vue";
+import committee from "../views/committee.vue";
+import ComBers from "../views/ComBers.vue";
+import Transition from "../views/Transition.vue";
+import enroll from "../views/enroll.vue";
+import PerResources from "../views/PerResources.vue";
+import sharedResources from "../views/sharedResources.vue";
+
 const routes = [
   {
     path: "/",
@@ -134,6 +141,43 @@ const routes = [
         name: "scale",
         component: scale,
       },
+      //委员会管理
+      {
+        path: "committee",
+        name: "committee",
+        component: committee,
+      },
+      //委员会成员管理
+      {
+        path: "ComBers",
+        name: "ComBers",
+        component: ComBers,
+      },
+      //转衔审批
+      {
+        path: "Transition",
+        name: "Transition",
+        component: Transition,
+      },
+      //注册审批
+      {
+        path: "enroll",
+        name: "enroll",
+        component: enroll,
+      },
+      //个人资源
+      {
+        path: "PerResources",
+        name: "PerResources",
+        component: PerResources,
+      },
+      //共享资源
+      {
+        path: "sharedResources",
+        name: "sharedResources",
+        component: sharedResources,
+      },
+
       {
         // 系统介绍
         path: "about",

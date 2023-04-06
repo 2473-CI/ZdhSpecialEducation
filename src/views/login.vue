@@ -56,14 +56,12 @@ const password = ref("");
           show-password
         />
 
-        <el-radio-group v-model="role" style="display: flex">
+        <el-radio-group v-model="role" style="display: flex; width: 100%">
           <el-radio label="系统管理员" size="small" border>系统管理员</el-radio>
           <el-radio label="委员会" size="small" border>委员会</el-radio>
-          <el-radio label="学校管理" size="small" border>学校管理</el-radio>
+          <el-radio label="学生" size="small" border>学生</el-radio>
+          <el-radio label="学校管理" size="small" border>学校管理员</el-radio>
           <el-radio label="教师" size="small" border>教师</el-radio>
-          <el-radio label="学生" size="small" border style="margin-left: 36px"
-            >学生</el-radio
-          >
         </el-radio-group>
 
         <button id="btn" @click="login">登录</button>

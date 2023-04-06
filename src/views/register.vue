@@ -33,9 +33,14 @@ const load = async () => {
 };
 load();
 
+Axios.get("/committee/").then((res) => {
+  console.log(res);
+  optionsCommit.value = res.data;
+});
+
 const change = () => {
   console.log(role.value);
-  if (role.value == "学校管理或教师") {
+  if (role.value == "学校管理员或教师") {
     showRoleSchool.value = true;
     showRoleCommit.value = false;
     showRoleStudent.value = false;
@@ -101,9 +106,9 @@ const register = () => {
       type: "error",
     });
   } else {
-    if (role.value == "学校管理或教师") {
+    if (role.value == "学校管理员或教师") {
       if (whether.value == "是") {
-        role.value = "管理员";
+        role.value = "学校管理员";
       } else if (whether.value == "否") {
         role.value = "教师";
       }
@@ -179,8 +184,8 @@ const register = () => {
           <span style="white-space: nowrap">身份：</span>
           <el-radio-group v-model="role" @change="change()">
             <!-- <el-radio label="系统管理" size="small" border>系统管理</el-radio> -->
-            <el-radio label="学校管理或教师" size="small" border
-              >学校管理或教师</el-radio
+            <el-radio label="学校管理员或教师" size="small" border
+              >学校管理员或教师</el-radio
             >
             <el-radio label="委员会" size="small" border>委员会</el-radio>
             <!-- <el-radio label="学生" size="small" border>学生</el-radio> -->
@@ -308,9 +313,9 @@ const register = () => {
           >
             <el-option
               v-for="item in optionsCommit"
-              :key="item.committeeId"
+              :key="item.id"
               :label="item.committeeName"
-              :value="item.committeeId"
+              :value="item.id"
             />
           </el-select>
         </div>
