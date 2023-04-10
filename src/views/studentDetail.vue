@@ -1,9 +1,13 @@
 <script setup>
 import { House } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted } from "vue";
+import { ref, reactive, onMounted, onBeforeUnmount, shallowRef } from "vue";
 import Axios from "../request/index";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
+import myEditor from "../components/editor/myEditor.vue";
+
+const showEditor = ref(false);
+
 const activeName = ref("first");
 const route = useRouter();
 if (route.currentRoute.value.query.id == "2") {
@@ -1501,6 +1505,22 @@ const basic = () => {
           <div style="text-align: right">
             <el-button type="primary" @click="basic()">保存</el-button>
           </div>
+
+          <el-button
+            type="info"
+            v-show="!showEditor"
+            plain
+            @click="showEditor = true"
+            >上传</el-button
+          >
+          <el-button
+            type="info"
+            v-show="showEditor"
+            plain
+            @click="showEditor = false"
+            >取消</el-button
+          >
+          <myEditor v-if="showEditor"> </myEditor>
         </el-tab-pane>
 
         <el-tab-pane label="家庭信息" name="second">

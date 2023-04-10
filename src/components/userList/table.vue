@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { clamp, kebabCase } from "lodash";
 import { ref, reactive } from "vue";
 import Axios from "../../request";
@@ -12,7 +12,6 @@ const form = reactive({
   name: "",
   account: "",
   sex: "",
-  role: "",
   phone: "",
   address: "",
   type: "",
@@ -25,24 +24,29 @@ const revForm = reactive({
   name: "",
   account: "",
   sex: "",
-  role: "",
   phone: "",
   address: "",
   password: "",
   head: "",
-  userId: "",
+  teacherId: "",
+  type: "",
 });
 
 const ob = reactive({});
 const options = ref("");
-const del = async (userId) => {
-  await Axios.delete(`/user/delete?userId=${userId}`).then((res) => {
+const del = async (Id) => {
+  await Axios.delete(`/teacher/delete`, {
+    data: {
+      teacherId: Id,
+    },
+  }).then(async (res) => {
     if ((res.success = true)) {
       ElMessage({
         showClose: true,
         message: res.data,
         type: "success",
       });
+      await useUserStore().getAll();
     } else if (res.success == false) {
       ElMessage({
         showClose: true,
@@ -60,6 +64,11 @@ const change = () => {
   } else if (form.sex == "女") {
     form.head = "https://static.yirenyian.com/opoc/sysImg/avatar-girl.png";
   }
+  if (revForm.sex == "男") {
+    revForm.head = "https://static.yirenyian.com/opoc/sysImg/avatar-boy.png";
+  } else if (revForm.sex == "女") {
+    revForm.head = "https://static.yirenyian.com/opoc/sysImg/avatar-girl.png";
+  }
 };
 
 Axios.get("/school/getAll").then((res) => {
@@ -75,27 +84,53 @@ const changeUser = (
   userAccount,
   userName,
   passWord,
-  userRole,
   userHead,
   userGender,
   userPhone,
   userMail,
-  userId
+  teacherId,
+  schoolAdmin
 ) => {
   revForm.school = schoolId;
   revForm.name = userName;
   revForm.account = userAccount;
   revForm.sex = userGender;
-  revForm.role = userRole;
   revForm.phone = userPhone;
   revForm.address = userMail;
   revForm.password = passWord;
   revForm.head = userHead;
-  revForm.userId = userId;
+  revForm.teacherId = teacherId;
+  revForm.type = schoolAdmin;
 };
 
 const revItem = () => {
-  console.log(revForm);
+  Axios.put("/teacher/update", {
+    teacherId: revForm.teacherId,
+    schoolId: revForm.school,
+    account: revForm.account,
+    userName: revForm.name,
+    passWord: revForm.password,
+    userHead: revForm.head,
+    userGender: revForm.sex,
+    userPhone: revForm.phone,
+    userMail: revForm.address,
+    schoolAdmin: revForm.type,
+  }).then(async (res) => {
+    if ((res.success = true)) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+      await useUserStore().getAll();
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "error",
+      });
+    }
+  });
 };
 
 const options2 = [
@@ -110,8 +145,8 @@ const options2 = [
   },
 ];
 const newItem = () => {
-  Axios.post("/user/register", {
-    userAccount: form.account,
+  Axios.post("/teacher/add", {
+    account: form.account,
     userMail: form.address,
     passWord: form.password,
     userName: form.name,
@@ -119,7 +154,7 @@ const newItem = () => {
     userPhone: form.phone,
     userHead: form.head,
     userGender: form.sex,
-    userRole: form.type,
+    schoolAdmin: form.type,
   }).then(async (res) => {
     if (res.success == true) {
       ElMessage({
@@ -127,7 +162,7 @@ const newItem = () => {
         message: "新增成功",
         type: "success",
       });
-      await useUserStore().search();
+      await useUserStore().getAll();
       form.account = "";
       form.address = "";
       form.password = "";
@@ -149,23 +184,24 @@ const newItem = () => {
 
 const UserStore = useUserStore();
 UserStore.search();
-const handleSizeChange = (size: number) => {
+UserStore.getAll();
+const handleSizeChange = (size) => {
   console.log("切换每页数量：", size);
   UserStore.searchUser.size = size;
   UserStore.search();
 };
 
-const handleCurrentChange = (page: number) => {
+const handleCurrentChange = (page) => {
   console.log("切换页码：", page);
   UserStore.searchUser.page = page;
   UserStore.search();
 };
 
-const handleClose = (userId) => {
+const handleClose = (teacherId) => {
   ElMessageBox.confirm("确认要删除改用户吗?")
     .then(async (a) => {
       if (a == "confirm") {
-        await del(userId);
+        await del(teacherId);
         close();
       } else {
         close();
@@ -245,18 +281,10 @@ const handleClose = (userId) => {
                 <span class="redLogo" style="margin-left: 27px">*</span>
                 类型：
               </span>
-              <el-select
-                v-model="form.type"
-                placeholder="请选择类型"
-                style="width: 300px"
-              >
-                <el-option
-                  v-for="item in options2"
-                  :key="item.userRole"
-                  :label="item.userRole"
-                  :value="item.userRole"
-                />
-              </el-select>
+              <el-radio-group v-model="form.type" class="ml-4">
+                <el-radio label="否" size="large">否</el-radio>
+                <el-radio label="是" size="large">是</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item>
               <span slot="label">
@@ -332,13 +360,13 @@ const handleClose = (userId) => {
             </span>
           </template>
         </el-dialog>
-
+        <!-- 
         <el-button class="button" text>导入</el-button>
-        <el-button class="button" text type="primary">下载模板</el-button>
+        <el-button class="button" text type="primary">下载模板</el-button> -->
       </div>
     </template>
     <el-table
-      :data="UserStore.userList"
+      :data="UserStore.teacherList"
       :cell-style="{
         textAlign: 'left',
         marginLeft: '0px',
@@ -372,12 +400,12 @@ const handleClose = (userId) => {
             style="
               display: -webkit-box;
               -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
+              -webkit-line-clamp: 2;
               overflow: hidden;
               text-overflow: ellipsis;
             "
           >
-            {{ scope.row.userAccount }}
+            {{ scope.row.account }}
           </div>
         </template>
       </el-table-column>
@@ -387,7 +415,7 @@ const handleClose = (userId) => {
             style="
               display: -webkit-box;
               -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
+              -webkit-line-clamp: 2;
               overflow: hidden;
               text-overflow: ellipsis;
             "
@@ -411,7 +439,7 @@ const handleClose = (userId) => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="类型" width="auto" min-width="7%">
+      <el-table-column label="学校管理员" width="auto" min-width="9%">
         <template #default="scope">
           <div
             style="
@@ -422,7 +450,7 @@ const handleClose = (userId) => {
               text-overflow: ellipsis;
             "
           >
-            {{ scope.row.userRole }}
+            {{ scope.row.schoolAdmin }}
           </div>
         </template>
       </el-table-column>
@@ -437,20 +465,18 @@ const handleClose = (userId) => {
           <!-- </div> -->
         </template>
       </el-table-column>
-      <el-table-column
-        prop="userGender"
-        label="性别"
-        width="auto"
-        min-width="5%"
-      />
-
-      <el-table-column label="手机号码" width="auto" min-width="8%">
+      <el-table-column label="性别" width="auto" min-width="5%">
+        <template #default="scope">
+          {{ scope.row.userGender }}
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号码" width="auto" min-width="10%">
         <template #default="scope">
           <div
             style="
               display: -webkit-box;
               -webkit-box-orient: vertical;
-              -webkit-line-clamp: 1;
+              -webkit-line-clamp: 2;
               overflow: hidden;
               text-overflow: ellipsis;
             "
@@ -459,7 +485,7 @@ const handleClose = (userId) => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="邮箱" width="auto" min-width="8%">
+      <el-table-column label="邮箱" width="auto" min-width="9%">
         <template #default="scope">
           <div
             style="
@@ -474,7 +500,7 @@ const handleClose = (userId) => {
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="最近访问时间" width="auto" min-width="11%">
+      <!-- <el-table-column label="授权" width="auto" min-width="8%">
         <template #default="scope">
           <div
             style="
@@ -485,47 +511,38 @@ const handleClose = (userId) => {
               text-overflow: ellipsis;
             "
           >
-            {{ scope.row.loginTime }}
+            {{ scope.row.authorization }}
           </div>
         </template>
-      </el-table-column>
-      <el-table-column
-        prop="userExperience"
-        label="经验值"
-        width="auto"
-        min-width="8%"
-      />
+      </el-table-column> -->
       <el-table-column label="操作" width="auto" min-width="18%">
         <template #default="scope">
           <div style="display: flex; flex-wrap: nowrap">
             <el-button
               type="primary"
               text
-              style="width: 33%"
+              style="width: 33%; margin-left: -15px"
               @click="
-                (dialogrevFormVisible = true),
-                  changeUser(
-                    scope.row.schoolId,
-                    scope.row.userAccount,
-                    scope.row.userName,
-                    scope.row.passWord,
-                    scope.row.userRole,
-                    scope.row.userHead,
-                    scope.row.userGender,
-                    scope.row.userPhone,
-                    scope.row.userMail,
-                    scope.row.userId
-                  )
+                dialogrevFormVisible = true;
+                changeUser(
+                  scope.row.schoolId,
+                  scope.row.account,
+                  scope.row.userName,
+                  scope.row.passWord,
+                  scope.row.userHead,
+                  scope.row.userGender,
+                  scope.row.userPhone,
+                  scope.row.userMail,
+                  scope.row.teacherId,
+                  scope.row.schoolAdmin
+                );
               "
               >修改</el-button
-            >
-            <el-button type="danger" @click="" text style="width: 33%"
-              >重置密码</el-button
             >
             <el-button
               style="width: 33%"
               type="danger"
-              @click="handleClose(scope.row.userId)"
+              @click="handleClose(scope.row.teacherId)"
               text
               >删除</el-button
             >
@@ -552,6 +569,7 @@ const handleClose = (userId) => {
             v-model="revForm.school"
             placeholder="请选择学校"
             style="width: 300px"
+            disabled
           >
             <el-option
               v-for="item in options"
@@ -577,6 +595,7 @@ const handleClose = (userId) => {
             <span class="redLogo" style="margin-left: 32px">*</span>密码：
           </span>
           <el-input
+            disabled
             v-model="revForm.password"
             placeholder="请设置密码"
             style="width: 300px"
@@ -585,20 +604,12 @@ const handleClose = (userId) => {
         <el-form-item>
           <span slot="label">
             <span class="redLogo" style="margin-left: 27px">*</span>
-            类型：
+            管理员：
           </span>
-          <el-select
-            v-model="revForm.role"
-            placeholder="请选择类型"
-            style="width: 300px"
-          >
-            <el-option
-              v-for="item in options2"
-              :key="item.userRole"
-              :label="item.userRole"
-              :value="item.userRole"
-            />
-          </el-select>
+          <el-radio-group v-model="revForm.type">
+            <el-radio label="否" size="large">否</el-radio>
+            <el-radio label="是" size="large">是</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item>
           <span slot="label">
@@ -665,7 +676,7 @@ const handleClose = (userId) => {
       </template>
     </el-dialog>
 
-    <div class="page-split">
+    <!-- <div class="page-split">
       <el-pagination
         :current-page="UserStore.searchUser.page"
         :page-size="UserStore.searchUser.size"
@@ -676,7 +687,7 @@ const handleClose = (userId) => {
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-    </div>
+    </div> -->
   </el-card>
 </template>
 

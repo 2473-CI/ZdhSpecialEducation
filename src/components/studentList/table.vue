@@ -1,35 +1,37 @@
-<script setup lang="ts">
+<script setup>
 import { storeToRefs } from "pinia";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { ref, reactive } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import { useStudentStore } from "../../store/student";
 
 import Axios from "../../request/index";
+import * as XLSX from "xlsx";
+import { FileSaver } from "file-saver";
 
 const { studentList } = storeToRefs(useStudentStore());
 const StudentStore = useStudentStore();
 const { search } = useStudentStore();
-
-const handleSizeChange = (size: number) => {
+const lastShow = ref(false);
+const handleSizeChange = (size) => {
   StudentStore.size = size;
   console.log("切换每页数量：", StudentStore.size);
   search();
 };
 
-const handleCurrentChange = (page: number) => {
+const handleCurrentChange = (page) => {
   StudentStore.page = page;
   console.log("切换页码：", StudentStore.page);
   search();
 };
 
 const addX = (
-  name: string,
-  studentHead: string,
-  schoolName: string,
-  clazzName: string,
-  studentGender: string,
-  obstacleName: string,
-  studentId: string
+  name,
+  studentHead,
+  schoolName,
+  clazzName,
+  studentGender,
+  obstacleName,
+  studentId
 ) => {
   StudentStore.studentQuery.name = name;
   StudentStore.studentQuery.headUrl = studentHead;
@@ -69,7 +71,7 @@ console.log(studentList);
 
 const dialogVisible = ref(false);
 
-const del = (stuId: string) => {
+const del = (stuId) => {
   ElMessageBox.confirm("确定要删除嘛？", "警告", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",
@@ -139,6 +141,7 @@ const newItem = () => {
     obstacleId: form.pro,
     arrangeId: form.avge,
   }).then(async (res) => {
+    console.log(res);
     if (res.success == true) {
       ElMessage({
         showClose: true,
@@ -183,13 +186,13 @@ const reviseForm = reactive({
 
 const stuId = ref("");
 const giveInfo = (
-  id: string,
-  schoolName: string,
-  className: string,
-  studentName: string,
-  gender: string,
-  ob: string,
-  arrange: string
+  id,
+  schoolName,
+  className,
+  studentName,
+  gender,
+  ob,
+  arrange
 ) => {
   stuId.value = id;
   reviseForm.schoolName = schoolName;
@@ -266,13 +269,135 @@ const change2 = () => {
       "https://static.yirenyian.com/opoc/sysImg/avatar-girl.png";
   }
 };
+
+function exportExcel() {
+  let arrAll = [];
+  let header = [...document.querySelectorAll(".el-table__header th .cell")].map(
+    (th) => th.textContent
+  );
+  console.log();
+  const workbook = XLSX.utils.book_new();
+
+  const worksheetName = "SheetJS";
+  const worksheetData = [header, arrAll];
+  const worksheet = XLSX.utils.aoa_to_sheet(worksheetData);
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, worksheetName);
+  XLSX.writeFile(workbook, "out.xls");
+}
+
+const headers = ref([]);
+const rows = ref([]);
+function onFileChange(e) {
+  lastShow.value = true;
+  // console.log("e", e);
+  // 获取上传的文件
+  // let e_ = e;
+  const file = e.target.files[0];
+  console.log("fileName", file);
+  // 读取Excel文件
+  const reader = new FileReader();
+  // console.log(reader);
+  console.log(1);
+  reader.onload = (e) => {
+    console.log("flie", file);
+    console.log(2);
+    const data = new Uint8Array(e.target.result);
+    const workbook = XLSX.read(data, { type: "array" });
+
+    // 获取第一个工作表
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    console.log(sheetName, worksheet);
+    // 将Excel数据转换成对象数组
+    const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+    console.log(jsonData);
+    // 设置表头和数据
+    headers.value = jsonData[0];
+    rows.value = jsonData.slice(1);
+    console.log(headers.value);
+    console.log(rows.value);
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+const num = ref(0);
+const num2 = ref(0);
+const showMe = () => {
+  let schoolArr = options.value.map((k) => {
+    num.value = 0;
+    num2.value = 0;
+    return {
+      schoolName: k.schoolName,
+      schoolId: k.schoolId,
+    };
+  });
+
+  let classArr = options2.value.map((k) => {
+    return {
+      classId: k.clazzId,
+      className: k.clazzName,
+    };
+  });
+  for (let item of rows.value) {
+    item.forEach((element, index) => {
+      // console.log(index, element);
+      const id = schoolArr.filter((k) => k.schoolName == item[0])[0].schoolId;
+      const id2 = classArr.filter((k) => k.className == item[1])[0].classId;
+      const id3 = options3.value.filter((k) => k.obstacleName == item[5])[0]
+        .obstacleId;
+      const id4 = options4.value.filter((k) => k.arrangeName == item[6])[0]
+        .arrangeId;
+
+      if (item[4] == "男") {
+        item[3] = "https://static.yirenyian.com/opoc/sysImg/avatar-boy.png";
+      } else if (item[4] == "女") {
+        item[3] = "https://static.yirenyian.com/opoc/sysImg/avatar-girl.png";
+      }
+
+      // console.log(id2);
+      if (index == 0) {
+        Axios.post("/student/add", {
+          schoolId: id,
+          clazzId: id2,
+          studentName: item[2],
+          studentHead: item[3],
+          studentGender: item[4],
+          obstacleId: id3,
+          arrangeId: id4,
+        }).then(async (res) => {
+          if (res.success == true) {
+            num.value++;
+            if (num.value == 1) {
+              ElMessage({
+                showClose: true,
+                message: res.data,
+                type: "success",
+              });
+            }
+            await search();
+            lastShow.value = false;
+          } else if (res.success == false) {
+            num2.value++;
+            if (num2.value == 1) {
+              ElMessage({
+                showClose: true,
+                message: res.message,
+                type: "error",
+              });
+            }
+          }
+        });
+      }
+    });
+  }
+};
 </script>
 
 <template>
   <el-card class="box-card">
     <template #header>
       <div class="card-header">
-        <!-- <span>Card name</span> -->
         <el-button
           class="button"
           style="background-color: #1677ff; color: #fff"
@@ -396,8 +521,30 @@ const change2 = () => {
             </span>
           </template>
         </el-dialog>
-        <el-button class="button" text>导入</el-button>
-        <el-button class="button" text>下载模板</el-button>
+        <el-button
+          type="primary"
+          @click="exportExcel"
+          style="margin-left: 10px; margin-right: 10px"
+          >下载模板</el-button
+        >
+        <input
+          type="file"
+          @change="onFileChange"
+          style="
+            border: 1px solid transparent;
+            margin-right: -70px;
+            background-color: #fff;
+          "
+        />
+        <el-button
+          class="button"
+          style="background-color: #1677ff; color: #fff"
+          text
+          v-show="lastShow"
+          @click="showMe"
+          >确认导入</el-button
+        >
+        <!-- <el-button class="button" text>下载模板</el-button> -->
       </div>
     </template>
     <el-table
@@ -649,5 +796,9 @@ const change2 = () => {
 }
 .card-header {
   text-align: right;
+}
+
+#file-upload-button {
+  background-color: #fff;
 }
 </style>

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import {
   Avatar,
   Expand,
@@ -14,6 +14,10 @@ import { useNavStore } from "../store/navs";
 import UserHead from "../components/userHead.vue";
 import { ref } from "vue";
 import Axios from "../request";
+import { useStudentStore } from "../store/student";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const StudentStore = useStudentStore();
 
 const NavStore = useNavStore();
 NavStore.loadMM();
@@ -22,16 +26,34 @@ const isShowG = ref(false);
 const isShowW = ref(false);
 const isShowX = ref(false);
 const isShowJ = ref(false);
-Axios.get("/user/getRole").then((res) => {
+Axios.get("/user/getRole").then(async (res) => {
   console.log(res);
   if (res.data == "系统管理员") {
     isShowG.value = true;
+    // $router.push("/management/committee");
   } else if (res.data == "委员会") {
     isShowW.value = true;
   } else if (res.data == "学校管理员") {
     isShowX.value = true;
   } else if (res.data == "教师") {
     isShowJ.value = true;
+  } else if (res.data == "学生") {
+    isShowG.value = false;
+    isShowW.value = false;
+    isShowX.value = false;
+    isShowJ.value = false;
+    const { data } = await Axios.get("/student/getStudent");
+    console.log(data);
+    StudentStore.studentQuery.name = data.studentName;
+    StudentStore.studentQuery.headUrl = data.studentHead;
+    StudentStore.studentQuery.schoolName = data.schoolName;
+    StudentStore.studentQuery.className = data.clazzName;
+    StudentStore.studentQuery.sex = data.studentGender;
+    StudentStore.studentQuery.obstacle = data.obstacleName;
+    StudentStore.studentQuery.studentId = data.studentId;
+    console.log(StudentStore.studentQuery);
+    StudentStore.getStorage();
+    router.replace("StudentCenter");
   }
 });
 </script>
@@ -39,7 +61,7 @@ Axios.get("/user/getRole").then((res) => {
 <template>
   <div class="page">
     <!-- 导航栏 -->
-    <div class="navs">
+    <div class="navs" v-if="isShowG || isShowW || isShowX || isShowJ">
       <div class="logo" style="background-color: #001529">
         <el-image
           style="width: 50px; height: 50px"
@@ -111,7 +133,7 @@ Axios.get("/user/getRole").then((res) => {
           >
         </el-sub-menu>
 
-        <el-sub-menu index="3">
+        <el-sub-menu index="3" v-if="isShowG || isShowW || isShowX || isShowJ">
           <template #title>
             <el-icon><location /></el-icon>
             <span>资源</span>
@@ -133,7 +155,7 @@ Axios.get("/user/getRole").then((res) => {
           >
         </el-sub-menu>
 
-        <el-sub-menu index="4">
+        <el-sub-menu index="4" v-if="isShowG || isShowW || isShowX || isShowJ">
           <template #title>
             <el-icon><location /></el-icon>
             <span>审批</span>

@@ -6,10 +6,11 @@ export const useUserStore = defineStore("user", {
   state: () => {
     return {
       userList: [],
+      teacherList: [],
       total: 0,
       searchUser: {
-        page: 1,
-        size: 10,
+        // page: 1,
+        // size: 10,
         schoolId: "",
         userName: "",
         userPhone: "",
@@ -30,6 +31,15 @@ export const useUserStore = defineStore("user", {
       this.total = data.length;
       this.userList = data.data;
       console.log(data);
+    },
+
+    // async newSearch(){
+    //   const data = await Axios.post(`/teacher/`)
+    // }
+
+    async getAll() {
+      const data = await Axios.get("/teacher/");
+      this.teacherList = data.data;
     },
   },
 });

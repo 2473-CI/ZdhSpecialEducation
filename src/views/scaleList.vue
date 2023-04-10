@@ -14,11 +14,16 @@ const scoreSelf = ref("");
 const isShow = ref(false);
 const hisList = ref([]);
 const per = ref([]);
+const ansId = ref("");
 
 const getAllHis = () => {
-  Axios.get("/answer/getAll").then((res) => {
+  Axios.get(
+    `/answer/getAll?studentId=${
+      JSON.parse(localStorage.getItem("sq")).studentId
+    }`
+  ).then((res) => {
     hisList.value = res.data;
-
+    console.log(hisList.value);
     for (let item of hisList.value) {
       item["percentage"] = "";
       let alone = 0;
@@ -38,7 +43,6 @@ const getAllHis = () => {
   });
 };
 getAllHis();
-
 const scalarArrayEquals = (array1, array2) => {
   return (
     array1.length === array2.length &&
@@ -140,7 +144,6 @@ const setTheme = () => {
 // watch(content.value, (newValue, oldValue) => {
 //   console.log(">>>", newValue, oldValue);
 // });
-
 const allScore = ref("");
 const score = ref(0);
 const number = ref("");
@@ -156,6 +159,12 @@ const isSure = () => {
       }
     }
 
+    if (timer.value > 0) {
+      degree.value = "未完成";
+    } else {
+      degree.value = "已完成";
+    }
+
     for (let item of content.value) {
       if (timer.value != 0) {
         ElMessage({
@@ -168,10 +177,23 @@ const isSure = () => {
         {
           time.value++;
           if (time.value == content.value.length) {
-            ElMessage({
-              showClose: true,
-              message: "提交成功",
-              type: "success",
+            Axios.post(`/answer/add`, {
+              scaleId: form.title,
+              studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+              title: textTitle.value,
+              context: JSON.stringify(content),
+              degree: degree.value,
+              evaluation1: textarea1.value,
+              evaluation2: textarea2.value,
+              answerId: ansId.value,
+            }).then(async (res) => {
+              ElMessage({
+                showClose: true,
+                message: "提交成功",
+                type: "success",
+              });
+              await getAllHis();
+              //
             });
           }
           console.log(time.value);
@@ -229,6 +251,7 @@ const draft = () => {
     degree: degree.value,
     evaluation1: textarea1.value,
     evaluation2: textarea2.value,
+    answerId: ansId.value,
   }).then(async (res) => {
     ElMessage({
       showClose: true,
@@ -272,6 +295,7 @@ const toHistory = (answerId) => {
     textTitle.value = res.data.title;
     textarea1.value = res.data.evaluation1;
     textarea2.value = res.data.evaluation2;
+    ansId.value = answerId;
   });
 };
 

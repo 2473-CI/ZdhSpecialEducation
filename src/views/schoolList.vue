@@ -295,8 +295,8 @@ const revItem = () => {
             </template>
           </el-dialog>
 
-          <el-button class="button" text>导入</el-button>
-          <el-button class="button" text>下载模板</el-button>
+          <!-- <el-button class="button" text>导入</el-button>
+          <el-button class="button" text>下载模板</el-button> -->
         </div>
       </template>
 

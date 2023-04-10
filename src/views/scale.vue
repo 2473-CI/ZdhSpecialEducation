@@ -9,6 +9,7 @@ const isExpansion = ref(false);
 const dialogFormVisible = ref(false);
 const dialogdetFormVisible = ref(false);
 const twoInput = ref(false);
+const showDetail = ref(false);
 
 const toWhere = () => {
   activeName.value = "third";
@@ -294,6 +295,58 @@ const seachDetail = () => {
     detailOptions.value = res.data;
   });
 };
+
+const viewList = ref([]);
+const viewTitle = ref("");
+const toDetail = (scaleId) => {
+  console.log(scaleId);
+  Axios.get(`/scale/getById?scaleId=${scaleId}`).then((res) => {
+    console.log(res);
+    viewTitle.value = res.data.title;
+    viewList.value = JSON.parse(res.data.context);
+    console.log(viewList.value);
+  });
+};
+
+const rePreserve = () => {
+  console.log(viewList.value);
+};
+
+const delType = (id) => {
+  Axios.delete(`/scaleClassify/delete?id=${id}`).then((res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+      Axios.post("/scaleClassify/search", {}).then((res) => {
+        options.value = res.data;
+      });
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.message,
+        type: "error",
+      });
+    }
+  });
+};
+
+const handleClose2 = (id) => {
+  ElMessageBox.confirm("确认要删除该量表分类吗?")
+    .then(async (a) => {
+      if (a == "confirm") {
+        await delType(id);
+        close();
+      } else {
+        close();
+      }
+    })
+    .catch(() => {
+      // catch error
+    });
+};
 </script>
 
 <template>
@@ -450,8 +503,8 @@ const seachDetail = () => {
                 </template>
               </el-dialog>
 
-              <el-button class="button" text>导入</el-button>
-              <el-button class="button" text>下载模板</el-button>
+              <!-- <el-button class="button" text>导入</el-button>
+              <el-button class="button" text>下载模板</el-button> -->
             </div>
           </template>
           <el-table
@@ -483,7 +536,11 @@ const seachDetail = () => {
             </el-table-column> -->
             <el-table-column label="操作" width="auto" min-width="25%">
               <template #default="scope">
-                <el-button type="danger" text style="margin-left: -15px"
+                <el-button
+                  type="danger"
+                  text
+                  style="margin-left: -15px"
+                  @click="handleClose2(scope.row.id)"
                   >删除</el-button
                 >
               </template>
@@ -493,7 +550,7 @@ const seachDetail = () => {
       </div>
     </el-tab-pane>
     <el-tab-pane label="量表详情" name="second">
-      <div style="padding: 1%">
+      <div style="padding: 1%" v-if="!showDetail">
         <el-card class="box-card">
           <el-form :inline="true" class="all-form">
             <el-form-item label="一级分类">
@@ -599,9 +656,147 @@ const seachDetail = () => {
                   @click="handleClose(scope.row.scaleId)"
                   >删除</el-button
                 >
+                <el-button
+                  type="danger"
+                  text
+                  style=""
+                  @click="
+                    showDetail = true;
+                    toDetail(scope.row.scaleId);
+                  "
+                  >查看</el-button
+                >
               </template>
             </el-table-column>
           </el-table>
+        </el-card>
+      </div>
+
+      <div v-if="showDetail" style="display: flex; justify-content: center">
+        <el-card class="box-card" style="width: 98%; display: flex">
+          <div style="width: 90%; display: flex; align-items: center">
+            <span style="width: 80px">标题：</span
+            ><el-input
+              v-model="viewTitle"
+              style="width: 400px"
+              resize="none"
+              type="textarea"
+              :rows="2"
+            />
+          </div>
+          <div
+            v-for="(item, index) in viewList"
+            :key="index"
+            style="margin-top: 60px"
+          >
+            <p style="display: flex; align-items: center">
+              <span style="font-weight: bold"
+                >{{ index + 1 }}.&nbsp;&nbsp;</span
+              >
+
+              <el-input
+                v-model="item.qyestionContent"
+                type="textarea"
+                resize="none"
+                :rows="2"
+                style="width: 400px"
+              />
+
+              <el-input-number
+                v-model="item.qyestionScore"
+                :min="1"
+                style="margin-left: 10px"
+                size="large"
+              />
+            </p>
+
+            <div v-if="item.qyestionType == '单选'">
+              <el-radio-group
+                v-model="item.isTrue"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  text-align: left;
+                  margin-left: -100px;
+                "
+              >
+                <el-radio
+                  :label="sel.name"
+                  v-for="(sel, ind) in item.select"
+                  size="larg"
+                  :key="index"
+                  :style="{
+                    marginLeft: ind == item.select.length - 1 ? '-30px' : '0px',
+                  }"
+                  style="margin-top: 30px"
+                >
+                  <span style="position: relative; right: 35px; top: 25px">
+                    {{ sel.name }}
+                  </span>
+                  <div style="">
+                    <el-input
+                      v-model="sel.value"
+                      type="textarea"
+                      resize="none"
+                      :rows="2"
+                      style="width: 400px"
+                    >
+                    </el-input>
+                  </div>
+                </el-radio>
+              </el-radio-group>
+            </div>
+
+            <div v-if="item.qyestionType == '主观'">
+              <el-input
+                v-model="item.value"
+                type="textarea"
+                resize="none"
+                :rows="2"
+                style="width: 400px; margin-left: 20px; margin-top: 20px"
+              >
+              </el-input>
+            </div>
+
+            <div v-if="item.qyestionType == '多选'">
+              <el-checkbox-group
+                v-model="item.isTrue"
+                style="display: flex; flex-direction: column; text-align: left"
+              >
+                <el-checkbox
+                  :label="sel.name"
+                  v-for="(sel, ind) in item.select"
+                  size="larg"
+                  :key="index"
+                  style="margin-top: 30px; margin-left: 25px"
+                >
+                  <span style="position: relative; right: 35px; top: 25px">
+                    {{ sel.name }}
+                  </span>
+                  <div style="">
+                    <el-input
+                      v-model="sel.value"
+                      type="textarea"
+                      resize="none"
+                      :rows="2"
+                      style="width: 400px"
+                    >
+                    </el-input>
+                  </div>
+                </el-checkbox>
+              </el-checkbox-group>
+            </div>
+          </div>
+          <div
+            style="
+              margin-top: 30px;
+              display: flex;
+              justify-content: space-evenly;
+            "
+          >
+            <el-button @click="showDetail = !showDetail">返回</el-button>
+            <el-button type="primary" @click="rePreserve">提交</el-button>
+          </div>
         </el-card>
       </div>
     </el-tab-pane>

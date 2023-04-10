@@ -5,7 +5,6 @@ import Table from "../components/userList/table.vue";
 
 <template>
   <div class="box">
-    <Search />
     <div style="height: 20px"></div>
     <Table />
   </div>

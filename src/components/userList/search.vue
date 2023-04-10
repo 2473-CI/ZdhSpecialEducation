@@ -48,18 +48,19 @@ const UserStore = useUserStore();
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="姓名" v-show="isExpansion">
+      <el-form-item label="姓名">
         <el-input
           v-model="UserStore.searchUser.userName"
           placeholder="请输入"
         />
       </el-form-item>
-      <el-form-item label="手机号" v-show="isExpansion">
+      <el-form-item label="手机号">
         <el-input
           v-model="UserStore.searchUser.userPhone"
           placeholder="请输入"
         />
       </el-form-item>
+      <br />
       <el-form-item label="邮箱" v-show="isExpansion">
         <el-input
           v-model="UserStore.searchUser.userMail"
@@ -85,5 +86,6 @@ const UserStore = useUserStore();
 .right-bottom {
   position: absolute;
   right: 0px;
+  top: 10px;
 }
 </style>
