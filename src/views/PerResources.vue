@@ -84,7 +84,7 @@ const isAdd = () => {
 
   axios({
     method: "post",
-    url: "http://192.168.10.142:8080/file/source",
+    url: "http://47.98.50.217:82/file/source",
     data: addForm,
 
     headers: {

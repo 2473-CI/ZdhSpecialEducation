@@ -129,16 +129,30 @@ const showNum = ref(false);
 const content = ref([]);
 const textTitle = ref("");
 const scoring = ref("");
+const optionScore = ref([]);
 const setTheme = () => {
   showNum.value = true;
   ansId.value = "";
+  let s = [];
   Axios.get(`/scale/getById?scaleId=${form.title}`).then((res) => {
     console.log(JSON.parse(res.data.context));
     content.value = JSON.parse(res.data.context);
     textTitle.value = res.data.title;
     scoring.value = res.data.scoring;
+    for (let item of content.value) {
+      s.push(item["qyestionScore"]);
+    }
+    console.log(s);
     console.log(res.data);
     console.log(scoring.value);
+
+    for (let item of s) {
+      for (let i = 0; i < item + 1; i++) {
+        console.log(i);
+        optionScore.value.push({ value: i, label: i });
+      }
+    }
+    console.log(optionScore.value);
     for (let item of content.value) {
       item["isFalse"] = [];
       item["remarks"] = "";
@@ -154,17 +168,18 @@ const number = ref("");
 const time = ref(0);
 const timer = ref(0);
 const isZero = ref(false);
-const noMake = ref(false);
 const isSure = () => {
   isShow.value = true;
   timer.value = 0;
   if (time.value < content.value.length) {
     for (let item of content.value) {
-      if (item.isFalse == [] || item.isFalse == 0) {
+      item["noMake"] = 0;
+      if (item.isFalse == [] || item.isFalse == "") {
         timer.value++;
+        item["noMake"] = 1;
       }
     }
-
+    console.log(content.value);
     if (timer.value > 0) {
       degree.value = "未完成";
     } else {
@@ -178,7 +193,6 @@ const isSure = () => {
           message: "题目未完成！",
           type: "error",
         });
-        noMake.value = true;
         break;
       } else if (timer.value == 0) {
         {
@@ -569,7 +583,7 @@ const open2 = () => {
             margin-top: 5px;
           "
         >
-          <p style="color: #1677ff">
+          <p :style="{ color: item.noMake == 1 ? 'red' : '#1677ff' }">
             {{ index + 1 }}.{{ item.qyestionContent }}
             <span>
               <el-button text @click="open(index)"
@@ -629,12 +643,25 @@ const open2 = () => {
               >
               </el-input> -->
               <p>{{ item.subjectivity }}</p>
-              <el-input-number
+              <!-- <el-input-number
                 v-model="item.isFalse"
                 :min="0"
                 :max="item.qyestionScore"
                 @change="handleChange"
-              />
+              /> -->
+              <el-select
+                v-model="item.isFalse"
+                class="m-2"
+                placeholder="请选择分数"
+              >
+                <el-option
+                  v-for="item in optionScore"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
+              {{ item.isFalse }}
             </div>
           </div>
           <span style="color: #909090; font-size: 12px" v-if="item.remarks">
