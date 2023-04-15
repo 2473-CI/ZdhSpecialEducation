@@ -153,6 +153,8 @@ const score = ref(0);
 const number = ref("");
 const time = ref(0);
 const timer = ref(0);
+const isZero = ref(false);
+const noMake = ref(false);
 const isSure = () => {
   isShow.value = true;
   timer.value = 0;
@@ -176,6 +178,7 @@ const isSure = () => {
           message: "题目未完成！",
           type: "error",
         });
+        noMake.value = true;
         break;
       } else if (timer.value == 0) {
         {

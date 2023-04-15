@@ -122,7 +122,25 @@ Axios.get(
   `/answer/getAll?studentId=${JSON.parse(localStorage.getItem("sq")).studentId}`
 ).then((res) => {
   console.log(res);
+  console.log(JSON.parse(res.data[1].context)._value[0].qyestionContent);
+  for (let item of res.data) {
+    item["context"] = JSON.parse(item["context"])._value;
+    if (item.isFalse == item.isTrue) {
+      item["isPass"] = "是";
+    } else {
+      item["isPass"] = "否";
+    }
+    for (let it of item["context"]) {
+      if (it["subjectivity"]) {
+        it["subjectivity"] = it["subjectivity"]
+          .split("\n")
+          .filter((k) => k != "");
+      }
+    }
+  }
+
   his.value = res.data;
+  console.log(his.value);
 });
 </script>
 
@@ -463,7 +481,7 @@ Axios.get(
           >
             <div>
               <el-table
-                :data="tableData"
+                :data="item.context"
                 style="width: 98%"
                 :cell-style="{
                   textAlign: 'left',
@@ -480,20 +498,46 @@ Axios.get(
                 }"
               >
                 <el-table-column label="长期目标" width="auto" min-width="15%">
-                  <template #default="scope">
-                    {{ scope.row }}
-                  </template>
+                  <template #default="scope">{{
+                    scope.row.qyestionContent
+                  }}</template>
                 </el-table-column>
                 <el-table-column label="短期目标" width="auto" min-width="70%">
-                  <template #default="scope"></template>
+                  <template #default="scope">
+                    <p
+                      v-for="(it, ind) in scope.row.select"
+                      v-if="!scope.row.subjectivity"
+                    >
+                      {{ it.value }}
+                    </p>
+                    <p
+                      v-if="scope.row.subjectivity"
+                      v-for="(ite, inde) in scope.row.subjectivity"
+                      :key="inde"
+                    >
+                      {{ ite }}
+                    </p>
+                  </template>
                 </el-table-column>
                 <el-table-column label="是否通过" width="auto" min-width="15%">
-                  <template #default="scope"></template>
+                  <template #default="scope">{{ item.isPass }}</template>
                 </el-table-column>
               </el-table>
             </div>
           </el-collapse-item>
         </el-collapse>
+      </div>
+      <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
+        随班就读儿童评估干预
+      </h3>
+      <div style="margin-top: 10px; color: #8c8c8c; margin-bottom: 20px">
+        <p style="margin-left: 20px">无</p>
+      </div>
+      <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
+        送教上门儿童评估干预
+      </h3>
+      <div style="margin-top: 10px; color: #8c8c8c; margin-bottom: 20px">
+        <p style="margin-left: 20px">无</p>
       </div>
     </div>
   </div>
