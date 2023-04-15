@@ -9,17 +9,27 @@ const ob = JSON.parse(localStorage.getItem("sq"));
 const scLsit = ref([]);
 
 const getAllType = () => {
-  Axios.post("/scaleClassify/search", {
-    id: 1,
-    classify1: "基础疾病",
-    classify2: "",
-    classify3: "",
-  }).then((res) => {
-    scLsit.value = res.data.map((k) => {
+  // Axios.post("/scaleClassify/search", {
+  //   // id: ,
+  //   classify1: "",
+  //   classify2: "",
+  //   classify3: "",
+  // }).then((res) => {
+  //   console.log(res);
+  //   scLsit.value = res.data.map((k) => {
+  //     return {
+  //       classify1: k.classify1,
+  //     };
+  //   });
+  // });
+  Axios.get("/scaleClassify/getAll").then((res) => {
+    scLsit.value = [...new Set(res.data.map((k) => k["classify1"]))];
+    scLsit.value = scLsit.value.map((k) => {
       return {
-        classify2: k.classify2,
+        classify1: k,
       };
     });
+    console.log(scLsit.value);
   });
 };
 getAllType();
@@ -52,7 +62,7 @@ console.log(scLsit);
       <div id="left_box_bottom" style="">
         <p class="font_first">教育评估</p>
         <div id="bottom_box">
-          <div
+          <!-- <div
             class="sc_box shaDow icon"
             @click="
               $router.push({
@@ -80,9 +90,9 @@ console.log(scLsit);
                 fill="#1296db"
                 p-id="1086"
               ></path>
-            </svg>
-            <p class="sc_title">学业水平</p>
-            <!-- <el-popover
+            </svg> -->
+          <!-- <p class="sc_title">学业水平</p> -->
+          <!-- <el-popover
               placement="top-start"
               title=""
               :width="200"
@@ -103,8 +113,8 @@ console.log(scLsit);
               >
             </el-popover> -->
 
-            <span style="position: absolute; right: 10px">></span>
-          </div>
+          <!-- <span style="position: absolute; right: 10px">></span>
+          </div> -->
           <div
             v-for="(item, index) in scLsit"
             class="sc_box shaDow icon"
@@ -112,7 +122,7 @@ console.log(scLsit);
               $router.push({
                 path: '/management/scaleList',
                 query: {
-                  classify2: item.classify2,
+                  classify1: item.classify1,
                 },
               })
             "
@@ -135,7 +145,7 @@ console.log(scLsit);
                 p-id="1086"
               ></path>
             </svg>
-            <p class="sc_title">{{ item.classify2 }}</p>
+            <p class="sc_title">{{ item.classify1 }}</p>
             <!-- <el-popover
               placement="top-start"
               title=""
@@ -276,7 +286,7 @@ console.log(scLsit);
           </div>
           <div
             class="long_info shaDow icon"
-            @click="$router.push('/management/iepReport')"
+            @click="$router.push('/management/report')"
           >
             <svg
               t="1679842020004"
@@ -428,12 +438,13 @@ console.log(scLsit);
         </div>
       </div>
       <div id="">
-        <p class="font_first">走在成长路上</p>
+        <p class="font_first">训练活动</p>
         <div
           style="height: 130px; display: flex; justify-content: space-between"
+          @click="$router.push('/management/exercise')"
         >
           <div class="road shaDow">
-            <p class="no_wrap">成长之路</p>
+            <p class="no_wrap">训练活动</p>
           </div>
         </div>
       </div>

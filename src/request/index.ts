@@ -30,8 +30,8 @@ Axios.interceptors.response.use(
   },
   (error) => {
     console.log("拦截响应失败");
-    console.log(error);
-    console.log(error.response.status);
+    // console.log(error);
+    // console.log(error.response.status);
     return Promise.reject(error);
   }
 );

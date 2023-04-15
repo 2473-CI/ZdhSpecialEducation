@@ -1,12 +1,21 @@
 <script setup>
 import { House } from "@element-plus/icons-vue";
-import { ref, reactive, onMounted, onBeforeUnmount, shallowRef } from "vue";
+import {
+  ref,
+  reactive,
+  onMounted,
+  onBeforeUnmount,
+  shallowRef,
+  watch,
+} from "vue";
 import Axios from "../request/index";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useRouter } from "vue-router";
 import myEditor from "../components/editor/myEditor.vue";
 
 const showEditor = ref(false);
+const showSecond = ref(false);
+const showThird = ref(false);
 
 const activeName = ref("first");
 const route = useRouter();
@@ -1181,6 +1190,51 @@ const basic = () => {
     }
   });
 };
+
+const getFileList = ref([{}, {}]);
+const getAllFile = () => {
+  Axios.get(
+    `/studentDevelopment/getAll?studentId=${
+      JSON.parse(localStorage.getItem("sq")).studentId
+    }`
+  ).then((res) => {
+    getFileList.value = res.data;
+    console.log(getFileList.value);
+  });
+};
+
+getAllFile();
+
+const testcomRef = ref();
+const getSonHander = () => {
+  showEditor.value = false;
+  console.log("获取子组件中的性别", testcomRef.value.valueHtml);
+  Axios.post("/studentDevelopment/add", {
+    studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+    richText: testcomRef.value.valueHtml,
+  }).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+      await getAllFile();
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.message,
+        type: "error",
+      });
+    }
+  });
+};
+const parentVal = ref("");
+const todetail = (content) => {
+  parentVal.value = "";
+  parentVal.value = content;
+  console.log(parentVal.value);
+};
 </script>
 
 <template>
@@ -1520,7 +1574,56 @@ const basic = () => {
             @click="showEditor = false"
             >取消</el-button
           >
-          <myEditor v-if="showEditor"> </myEditor>
+          <myEditor v-if="showEditor" ref="testcomRef"> </myEditor>
+          <el-button v-if="showEditor" @click="getSonHander">保存</el-button>
+          <div style="display: flex; flex-wrap: wrap">
+            <el-card
+              class="box-card"
+              shadow="hover"
+              style="margin-top: 10px; margin-left: 10px"
+              v-for="(item, index) in getFileList"
+              :key="index"
+              v-show="!showSecond"
+              @click="
+                todetail(item.richText);
+                showSecond = true;
+              "
+            >
+              <p>创建时间：</p>
+              <p
+                style="
+                  display: -webkit-box;
+                  -webkit-line-clamp: 2;
+                  -webkit-box-orient: vertical;
+                  text-overflow: ellipsis;
+                  overflow: hidden;
+                "
+              >
+                {{ item.createTime }}
+              </p>
+              <p>
+                内容简略：<span
+                  v-html="item.richText"
+                  style="
+                    display: -webkit-box;
+                    -webkit-line-clamp: 2;
+                    -webkit-box-orient: vertical;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                  "
+                ></span>
+              </p>
+            </el-card>
+          </div>
+          <myEditor
+            v-if="showSecond"
+            :value="parentVal"
+            style="margin-top: 10px"
+          >
+          </myEditor>
+          <el-button v-if="showSecond" @click="showSecond = false"
+            >取消</el-button
+          >
         </el-tab-pane>
 
         <el-tab-pane label="家庭信息" name="second">
@@ -2528,5 +2631,18 @@ const basic = () => {
   .mar_box {
     margin-left: 0px;
   }
+}
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  padding: 18px 0;
+}
+
+.box-card {
+  width: 270px;
+  height: 150px;
 }
 </style>

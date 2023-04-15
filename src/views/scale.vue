@@ -8,8 +8,11 @@ const classStore = useClassStore();
 const isExpansion = ref(false);
 const dialogFormVisible = ref(false);
 const dialogdetFormVisible = ref(false);
+const oneInput = ref(false);
 const twoInput = ref(false);
 const showDetail = ref(false);
+const dialogTableVisible = ref(false);
+const dialogTableVisible2 = ref(false);
 
 const toWhere = () => {
   activeName.value = "third";
@@ -25,16 +28,24 @@ Axios.get("/scale/getAll").then((res) => {
   detailOptions.value = res.data;
 });
 
-const optionsOne = [
-  {
-    value: "学业水平",
-    label: "学业水平",
-  },
-  {
-    value: "基础疾病",
-    label: "基础疾病",
-  },
-];
+const optionsOne = ref([]);
+const optionsOne2 = ref([]);
+Axios.get("/scaleClassify/getAll").then((res) => {
+  optionsOne.value = [...new Set(res.data.map((k) => k["classify1"]))];
+  optionsOne.value = optionsOne.value.map((k) => {
+    return {
+      label: k,
+      value: k,
+    };
+  });
+  optionsOne2.value = [...new Set(res.data.map((k) => k["classify1"]))];
+  optionsOne2.value = optionsOne2.value.map((k) => {
+    return {
+      label: k,
+      value: k,
+    };
+  });
+});
 
 const form = reactive({
   classify1: "",
@@ -56,7 +67,9 @@ const formQues = reactive({
 });
 
 const optionsTwo = ref([]);
+const optionsTwo2 = ref([]);
 const optionsThree = ref([]);
+const optionsThree2 = ref([]);
 const optionsFour = ref([]);
 const optionsFive = ref([]);
 
@@ -68,10 +81,24 @@ const change = () => {
   });
 };
 
+const change5 = () => {
+  formDetail.classify2 = "";
+  formDetail.classify3 = "";
+  Axios.post("/scaleClassify/search", formDetail).then((res) => {
+    optionsTwo2.value = [...new Set(res.data.map((k) => k.classify2))];
+  });
+};
+
 const change2 = () => {
   console.log(form);
   Axios.post("/scaleClassify/search", form).then((res) => {
     optionsThree.value = [...new Set(res.data.map((k) => k.classify3))];
+  });
+};
+
+const change6 = () => {
+  Axios.post("/scaleClassify/search", formDetail).then((res) => {
+    optionsThree2.value = [...new Set(res.data.map((k) => k.classify3))];
   });
 };
 
@@ -136,6 +163,7 @@ const isAdd = () => {
 const from = reactive({
   paperType: "",
   paperTitle: "",
+  scoring: "",
   qyestionList: [],
 });
 
@@ -146,6 +174,7 @@ const addQuestion = () => {
     qyestionContent: "",
     select: [],
     isTrue: [],
+    subjectivity: "",
   });
 };
 
@@ -221,6 +250,7 @@ const c = () => {
       studentBasicId: scaleId.value,
       context: JSON.stringify(from.qyestionList),
       title: from.paperTitle,
+      scoring: from.scoring,
     }).then(async (res) => {
       if (res.success == true) {
         ElMessage({
@@ -235,6 +265,7 @@ const c = () => {
         from.paperType = "";
         from.qyestionList = [];
         from.paperTitle = "";
+        from.scoring = "";
         formQues.classify1 = "";
         formQues.classify2 = "";
         formQues.classify3 = "";
@@ -288,8 +319,8 @@ const handleClose = (id) => {
 const seachDetail = () => {
   Axios.post("/scale/search", {
     classify1: formDetail.classify1,
-    classify1: formDetail.classify2,
-    classify1: formDetail.classify3,
+    classify2: formDetail.classify2,
+    classify3: formDetail.classify3,
     title: formDetail.context,
   }).then((res) => {
     detailOptions.value = res.data;
@@ -298,12 +329,14 @@ const seachDetail = () => {
 
 const viewList = ref([]);
 const viewTitle = ref("");
+const Scoring = ref("");
 const toDetail = (scaleId) => {
   console.log(scaleId);
   Axios.get(`/scale/getById?scaleId=${scaleId}`).then((res) => {
     console.log(res);
     viewTitle.value = res.data.title;
     viewList.value = JSON.parse(res.data.context);
+    Scoring.value = res.data.scoring;
     console.log(viewList.value);
   });
 };
@@ -346,6 +379,13 @@ const handleClose2 = (id) => {
     .catch(() => {
       // catch error
     });
+};
+
+const reset = () => {
+  formDetail.classify1 = "";
+  formDetail.classify2 = "";
+  formDetail.classify3 = "";
+  formDetail.context = "";
 };
 </script>
 
@@ -425,6 +465,7 @@ const handleClose2 = (id) => {
                   <el-form-item>
                     <span style="margin-left: 40px">一级分类</span>
                     <el-select
+                      v-show="!oneInput"
                       v-model="addForm.classify1"
                       placeholder="请选择一级分类"
                       style="width: 300px"
@@ -437,6 +478,27 @@ const handleClose2 = (id) => {
                         :value="item.value"
                       />
                     </el-select>
+
+                    <el-input
+                      v-show="oneInput"
+                      v-model="addForm.classify1"
+                      placeholder="请输入一级分类"
+                      style="width: 300px"
+                    />
+                    <el-button
+                      style="
+                        background-color: #fff;
+                        border: 2px solid #f8f8f8;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 50px;
+                        color: blue;
+                        font-weight: bolder;
+                      "
+                      @click="oneInput = !oneInput"
+                    >
+                      +
+                    </el-button>
                   </el-form-item>
 
                   <el-form-item>
@@ -557,13 +619,13 @@ const handleClose2 = (id) => {
               <el-select
                 v-model="formDetail.classify1"
                 placeholder="请选择"
-                @change="change"
+                @change="change5"
               >
                 <el-option
                   :label="item.label"
                   :value="item.value"
                   :key="item.value"
-                  v-for="item in optionsOne"
+                  v-for="item in optionsOne2"
                 />
               </el-select>
             </el-form-item>
@@ -571,13 +633,13 @@ const handleClose2 = (id) => {
               <el-select
                 v-model="formDetail.classify2"
                 placeholder="请选择"
-                @change="change2"
+                @change="change6"
               >
                 <el-option
                   :label="item"
                   :value="item"
                   :key="item"
-                  v-for="item in optionsTwo"
+                  v-for="item in optionsTwo2"
                 />
               </el-select>
             </el-form-item>
@@ -587,7 +649,7 @@ const handleClose2 = (id) => {
                   :label="item"
                   :value="item"
                   :key="item"
-                  v-for="item in optionsThree"
+                  v-for="item in optionsThree2"
                 />
               </el-select>
             </el-form-item>
@@ -602,7 +664,7 @@ const handleClose2 = (id) => {
             </el-form-item>
 
             <el-form-item class="right-bottom">
-              <el-button>重置</el-button>
+              <el-button @click="reset()">重置</el-button>
               <el-button type="primary" @click="seachDetail">查询</el-button>
             </el-form-item>
           </el-form>
@@ -683,6 +745,34 @@ const handleClose2 = (id) => {
               type="textarea"
               :rows="2"
             />
+            <el-button
+              text
+              @click="dialogTableVisible2 = true"
+              style="background-color: #e6e8eb"
+            >
+              评分标准
+            </el-button>
+
+            <el-dialog
+              v-model="dialogTableVisible2"
+              title="评分标准"
+              style="text-align: center"
+            >
+              <el-input
+                v-model="Scoring"
+                autosize
+                type="textarea"
+                placeholder="请输入评分标准："
+                input-style="width:80%;"
+                style="margin-left: 100px"
+              />
+              <el-button
+                type="primary"
+                style="margin-top: 20px"
+                @click="dialogTableVisible2 = false"
+                >确认</el-button
+              >
+            </el-dialog>
           </div>
           <div
             v-for="(item, index) in viewList"
@@ -704,7 +794,7 @@ const handleClose2 = (id) => {
 
               <el-input-number
                 v-model="item.qyestionScore"
-                :min="1"
+                :min="0"
                 style="margin-left: 10px"
                 size="large"
               />
@@ -748,11 +838,18 @@ const handleClose2 = (id) => {
             </div>
 
             <div v-if="item.qyestionType == '主观'">
-              <el-input
+              <!-- <el-input
                 v-model="item.value"
                 type="textarea"
                 resize="none"
-                :rows="2"
+                autosize
+                style="width: 400px; margin-left: 20px; margin-top: 20px"
+              >
+              </el-input> -->
+              <el-input
+                v-model="item.subjectivity"
+                type="textarea"
+                autosize
                 style="width: 400px; margin-left: 20px; margin-top: 20px"
               >
               </el-input>
@@ -868,6 +965,35 @@ const handleClose2 = (id) => {
               placeholder="请输入试卷名称"
               style="width: 400px"
             />
+
+            <el-button
+              text
+              @click="dialogTableVisible = true"
+              style="background-color: #e6e8eb"
+            >
+              评分标准
+            </el-button>
+
+            <el-dialog
+              v-model="dialogTableVisible"
+              title="评分标准"
+              style="text-align: center"
+            >
+              <el-input
+                v-model="from.scoring"
+                autosize
+                type="textarea"
+                placeholder="请输入评分标准："
+                input-style="width:80%;"
+                style="margin-left: 100px"
+              />
+              <el-button
+                type="primary"
+                style="margin-top: 20px"
+                @click="dialogTableVisible = false"
+                >确认</el-button
+              >
+            </el-dialog>
           </div>
           <div
             style="display: flex; flex-direction: column; align-items: center"
@@ -1030,7 +1156,16 @@ const handleClose2 = (id) => {
                 <div
                   v-if="question.qyestionType == '主观'"
                   style="margin-top: 30px"
-                ></div>
+                >
+                  <el-input
+                    v-model="question.subjectivity"
+                    autosize
+                    type="textarea"
+                    placeholder="请输入内容："
+                    input-style="width:80%;"
+                    style="margin-left: 100px"
+                  />
+                </div>
               </div>
             </div>
           </div>

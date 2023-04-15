@@ -14,22 +14,25 @@
       @onCreated="handleCreated"
     />
   </div>
+  <!-- <el-button @click="giveFaVal" type="primary">保存</el-button> -->
 </template>
 
 <script>
 import "@wangeditor/editor/dist/css/style.css"; // 引入 css
-
-import { onBeforeUnmount, ref, shallowRef, onMounted } from "vue";
+import { onBeforeUnmount, ref, shallowRef, onMounted, defineExpose } from "vue";
 import { Editor, Toolbar } from "@wangeditor/editor-for-vue";
 
 export default {
   components: { Editor, Toolbar },
-  setup() {
+  props: ["value"],
+  setup(props) {
     // 编辑器实例，必须用 shallowRef
     const editorRef = shallowRef();
-
+    console.log(props);
     // 内容 HTML
-    const valueHtml = ref("<p>hello</p>");
+    const valueHtml = ref("");
+    console.log(props.value);
+    valueHtml.value = props.value;
 
     // 模拟 ajax 异步获取内容
     onMounted(() => {
@@ -55,6 +58,8 @@ export default {
     const handleCreated = (editor) => {
       editorRef.value = editor; // 记录 editor 实例，重要！
     };
+
+    defineExpose({ valueHtml });
 
     return {
       editorRef,

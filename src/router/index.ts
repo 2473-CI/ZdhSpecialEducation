@@ -34,6 +34,8 @@ import Transition from "../views/Transition.vue";
 import enroll from "../views/enroll.vue";
 import PerResources from "../views/PerResources.vue";
 import sharedResources from "../views/sharedResources.vue";
+import report from "../views/report.vue";
+import exercise from "../views/exercise.vue";
 
 const routes = [
   {
@@ -231,6 +233,16 @@ const routes = [
         path: "Medical",
         name: "Medical",
         component: Medical,
+      },
+      {
+        path: "report",
+        name: "report",
+        component: report,
+      },
+      {
+        path: "exercise",
+        name: "exercise",
+        component: exercise,
       },
     ],
   },
