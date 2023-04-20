@@ -1,6 +1,7 @@
 import App from "./App.vue";
 import ElementPlus from "element-plus";
 
+import mitt from "mitt";
 import { createApp } from "vue";
 import { router } from "./router/index";
 import { createPinia } from "pinia";
@@ -11,6 +12,10 @@ import "element-plus/dist/index.css";
 // import 'element-plus/theme-chalk/dark/css-vars.css'
 
 const app = createApp(App);
+// const bus = mitt();
+
+const bus = mitt();
+app.config.globalProperties.$bus = bus;
 
 app.use(router);
 app.use(ElementPlus);

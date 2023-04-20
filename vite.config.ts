@@ -12,7 +12,7 @@ export default defineConfig({
     host: "0.0.0.0",
     proxy: {
       "/file": {
-        target: "http://192.168.10.142:8080", // 后台接口
+        target: "http://47.98.50.217:82", // 后台接口
         changeOrigin: true,
         secure: false, // 如果是https接口，需要配置这个参数
         // ws: true, //websocket支持

@@ -103,6 +103,8 @@ const change6 = () => {
 };
 
 const change3 = () => {
+  formQues.classify2 = "";
+  formQues.classify3 = "";
   Axios.post("/scaleClassify/search", formQues).then((res) => {
     optionsFour.value = [...new Set(res.data.map((k) => k.classify2))];
   });
@@ -175,11 +177,13 @@ const addQuestion = () => {
     select: [],
     isTrue: [],
     subjectivity: "",
+    Single: [],
   });
 };
 
 const qyestionTypeSelect = [
   { value: "单选" },
+  { value: "单选判断" },
   { value: "多选" },
   { value: "主观" },
 ];
@@ -195,6 +199,7 @@ const addSelect = (index) => {
     value: "",
     name: String.fromCharCode(65 + from.qyestionList[index].select.length),
   });
+  from.qyestionList[index].Single.push(0);
 };
 
 const del = (index, ind) => {
@@ -208,6 +213,7 @@ const del = (index, ind) => {
       };
     }
   );
+  from.qyestionList[index].Single.splice(ind, 1);
 };
 
 const del2 = (index, ind) => {
@@ -386,6 +392,10 @@ const reset = () => {
   formDetail.classify2 = "";
   formDetail.classify3 = "";
   formDetail.context = "";
+};
+const delQues = (question, index) => {
+  // console.log(question, index, from.qyestionList);
+  from.qyestionList.splice(index, 1);
 };
 </script>
 
@@ -883,6 +893,52 @@ const reset = () => {
                 </el-checkbox>
               </el-checkbox-group>
             </div>
+
+            <div v-if="item.qyestionType == '单选判断'">
+              <el-radio-group
+                v-model="item.isTrue"
+                style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: normal;
+                "
+              >
+                <el-radio
+                  :key="ind"
+                  v-for="(sel, ind) in item.select"
+                  :label="sel.name"
+                  size="large"
+                >
+                  <span style="position: relative; right: 35px; top: 25px">{{
+                    sel.name
+                  }}</span>
+                  <div>
+                    <el-input v-model="sel.value"> </el-input>
+                    <el-input-number
+                      v-model="item.Single[ind]"
+                      :min="0"
+                      :max="item.qyestionScore"
+                    />
+                  </div>
+
+                  <span
+                    @click="del(index, ind)"
+                    style="
+                      color: red;
+                      position: relative;
+                      left: 150%;
+                      top: -25px;
+                    "
+                    >-删除</span
+                  >
+                </el-radio>
+                <el-button
+                  @click="addSelect(index)"
+                  style="width: 95px; height: 32px; margin-top: 30px"
+                  >+添加选项</el-button
+                >
+              </el-radio-group>
+            </div>
           </div>
           <div
             style="
@@ -1106,6 +1162,58 @@ const reset = () => {
                 </div>
 
                 <div
+                  v-if="question.qyestionType == '单选判断'"
+                  style="margin-top: 30px; display: flex"
+                >
+                  <div>
+                    <el-radio-group
+                      v-model="question.isTrue"
+                      style="
+                        display: flex;
+                        flex-direction: column;
+                        align-items: normal;
+                      "
+                    >
+                      <el-radio
+                        :key="ind"
+                        v-for="(sel, ind) in question.select"
+                        :label="sel.name"
+                        size="large"
+                      >
+                        <span
+                          style="position: relative; right: 35px; top: 25px"
+                          >{{ sel.name }}</span
+                        >
+                        <div>
+                          <el-input v-model="sel.value"> </el-input>
+                          <el-input-number
+                            v-model="question.Single[ind]"
+                            :min="0"
+                            :max="question.qyestionScore"
+                          />
+                        </div>
+
+                        <span
+                          @click="del(index, ind)"
+                          style="
+                            color: red;
+                            position: relative;
+                            left: 150%;
+                            top: -25px;
+                          "
+                          >-删除</span
+                        >
+                      </el-radio>
+                      <el-button
+                        @click="addSelect(index)"
+                        style="width: 95px; height: 32px; margin-top: 30px"
+                        >+添加选项</el-button
+                      >
+                    </el-radio-group>
+                  </div>
+                </div>
+
+                <div
                   v-if="question.qyestionType == '多选'"
                   style="margin-top: 20px; display: flex"
                 >
@@ -1166,6 +1274,14 @@ const reset = () => {
                     style="margin-left: 100px"
                   />
                 </div>
+
+                <el-button
+                  type="danger"
+                  style="width: 95px; margin-top: 15px"
+                  @click="delQues(question, index)"
+                >
+                  删除该题
+                </el-button>
               </div>
             </div>
           </div>

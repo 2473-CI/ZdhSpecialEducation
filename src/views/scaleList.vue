@@ -29,9 +29,21 @@ const getAllHis = () => {
       let alone = 0;
       per.value = JSON.parse(item.context)["_value"];
       // console.log(Array.isArray(per.value));
+      // console.log(per.value);
       if (Array.isArray(per.value)) {
         for (let it of per.value) {
-          if (it.isFalse == [] || it.isFalse == 0) {
+          console.log(it, it.isFalse, typeof it.isFalse, it.isFalse.length);
+          // if (typeof it.isFalse != "number" && it["qyestionType"] == "主观") {
+          //   alone++;
+          // } else if (it["qyestionType"] != "主观" && it.isFalse == []) {
+          //   alone++;
+          // }
+
+          if (it.qyestionType == "主观" && typeof it.isFalse != "number") {
+            alone++;
+          } else if (it.qyestionType == "单选" && it.isFalse == []) {
+            alone++;
+          } else if (it.qyestionType == "多选" && it.isFalse.length == 0) {
             alone++;
           }
         }
@@ -146,10 +158,13 @@ const setTheme = () => {
     console.log(res.data);
     console.log(scoring.value);
 
-    for (let item of s) {
-      for (let i = 0; i < item + 1; i++) {
-        console.log(i);
-        optionScore.value.push({ value: i, label: i });
+    for (let i = 0; i < s.length; i++) {
+      optionScore.value.push([]);
+    }
+
+    for (let i = 0; i < s.length; i++) {
+      for (let j = 0; j < s[i] + 1; j++) {
+        optionScore.value[i].push({ value: j, label: j });
       }
     }
     console.log(optionScore.value);
@@ -171,14 +186,23 @@ const isZero = ref(false);
 const isSure = () => {
   isShow.value = true;
   timer.value = 0;
+  // console.log(content.value);
   if (time.value < content.value.length) {
     for (let item of content.value) {
       item["noMake"] = 0;
-      if (item.isFalse == [] || item.isFalse == "") {
+      console.log(typeof item.isFalse == "number");
+      console.log(item.isFalse);
+      if (item.qyestionType == "主观" && typeof item.isFalse == "string") {
+        timer.value++;
+        item["noMake"] = 1;
+      }
+
+      if (item.isFalse == [] && item.qyestionType != "主观") {
         timer.value++;
         item["noMake"] = 1;
       }
     }
+    console.log(timer.value);
     console.log(content.value);
     if (timer.value > 0) {
       degree.value = "未完成";
@@ -228,6 +252,20 @@ const isSure = () => {
             }
           } else if (item.qyestionType == "主观") {
             score.value += item.isFalse;
+          } else if (item.qyestionType == "单选判断") {
+            for (let item of content.value) {
+              item.select = item.select.map((k, index) => {
+                return {
+                  i: index,
+                  name: k["name"],
+                };
+              });
+              for (let it of item.select) {
+                if (it.name == item.isFalse) {
+                  score.value += item.Single[it["i"]];
+                }
+              }
+            }
           }
         }
       }
@@ -251,9 +289,11 @@ const draft = () => {
   number.value = 0;
   console.log(content.value);
   for (let item of content.value) {
-    if (item.isFalse == []) {
+    if (item.qyestionType == "主观" && typeof item.isFalse != "number") {
       number.value++;
-    } else if (item.isFalse == 0) {
+    } else if (item.qyestionType == "单选" && item.isFalse == []) {
+      number.value++;
+    } else if (item.qyestionType == "多选" && item.isFalse.length == 0) {
       number.value++;
     }
   }
@@ -616,6 +656,32 @@ const open2 = () => {
                 </el-radio>
               </el-radio-group>
             </div>
+
+            <div v-if="item.qyestionType == '单选判断'">
+              <el-radio-group
+                v-model="item.isFalse"
+                style="
+                  position: relative;
+                  display: flex;
+                  flex-direction: column;
+                "
+              >
+                <el-radio
+                  :label="it.name"
+                  size="large"
+                  v-for="(it, ind) in item.select"
+                  :key="ind"
+                  :style="{
+                    marginLeft: ind == item.select.length - 1 ? '-30px' : '0px',
+                  }"
+                >
+                  <span style="font-size: 1vw">
+                    {{ it.name }}.{{ it.value }}
+                  </span>
+                </el-radio>
+              </el-radio-group>
+            </div>
+
             <div>
               <el-checkbox-group
                 v-model="item.isFalse"
@@ -655,13 +721,12 @@ const open2 = () => {
                 placeholder="请选择分数"
               >
                 <el-option
-                  v-for="item in optionScore"
+                  v-for="item in optionScore[index]"
                   :key="item.value"
                   :label="item.label"
                   :value="item.value"
                 />
               </el-select>
-              {{ item.isFalse }}
             </div>
           </div>
           <span style="color: #909090; font-size: 12px" v-if="item.remarks">

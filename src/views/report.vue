@@ -2,6 +2,9 @@
 import { House } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted, watch } from "vue";
 import Axios from "../request/index.ts";
+import { getCurrentInstance } from "vue";
+import { asBlob } from "html-docx-js-typescript";
+import { saveAs } from "file-saver";
 
 const student = reactive({});
 const studentB = reactive({});
@@ -118,23 +121,77 @@ const handleChange = (val) => {
 };
 
 const his = ref([]);
+const str = ref("");
 Axios.get(
   `/answer/getAll?studentId=${JSON.parse(localStorage.getItem("sq")).studentId}`
 ).then((res) => {
   console.log(res);
   console.log(JSON.parse(res.data[1].context)._value[0].qyestionContent);
   for (let item of res.data) {
+    item["passTime"] = 0;
     item["context"] = JSON.parse(item["context"])._value;
-    if (item.isFalse == item.isTrue) {
-      item["isPass"] = "是";
-    } else {
-      item["isPass"] = "否";
-    }
+    console.log(item);
+
     for (let it of item["context"]) {
       if (it["subjectivity"]) {
         it["subjectivity"] = it["subjectivity"]
           .split("\n")
           .filter((k) => k != "");
+      }
+
+      if (it.isFalse <= 2 && it.qyestionType == "主观") {
+        it["isPass"] = "否";
+      } else if (it.isFalse == it.isTrue && it.qyestionType != "主观") {
+        it["isPass"] = "是";
+        item["passTime"]++;
+        it["isNone"] = true;
+      } else if (it.isFalse > 2 && it.qyestionType == "主观") {
+        it["isPass"] = "是";
+        item["passTime"]++;
+        it["isNone"] = true;
+      } else {
+        it["isPass"] = "否";
+      }
+      console.log(it);
+    }
+
+    if (item["passTime"] == item["context"].length) {
+      item["pass"] = true;
+    } else {
+      item["pass"] = false;
+    }
+    console.log(item["context"]);
+    for (let i = 0; i < item["context"].length; ) {
+      if (item["context"][i]["isNone"]) {
+        console.log(item["context"][i]);
+        item["context"].splice(i, 1);
+      } else {
+        i++;
+      }
+    }
+
+    for (let ob of item["context"]) {
+      console.log(ob);
+      if (ob["subjectivity"]) {
+        for (let o of ob["subjectivity"]) {
+          str.value += `
+              <tr>
+                <td colspan="2">${ob["qyestionContent"]}</td>
+                <td colspan="3">${o}</td>
+                <td colspan="3" >${ob["isPass"]}</td>
+              </tr>
+          `;
+        }
+      } else {
+        for (let k of ob["select"]) {
+          str.value += `
+              <tr>
+                <td  colspan="2">${ob["qyestionContent"]}</td>
+                <td colspan="3">${k}</td>
+                <td colspan="2">${ob["isPass"]}</td>
+              </tr>
+          `;
+        }
       }
     }
   }
@@ -142,6 +199,231 @@ Axios.get(
   his.value = res.data;
   console.log(his.value);
 });
+
+const exportWordTpl = () => {
+  const htmlString = `<!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Document</title>
+                                <style>
+                                #export-content{
+                                    width: 100%;
+                                    height: 100%;
+                                    /* background-color: aqua; */
+                                }
+                                th, td {
+                                    border: 1px solid black; padding: 8px; text-align: center;
+                                }
+                                .bold-text {
+                                    font-weight: bold;
+                                }
+                                </style>
+                            </head>
+                            <body>
+                              <div id="export-content">
+    <h1 style="text-align: center; margin-top: 10px">个别化教育计划</h1>
+    <div style="display: flex; justify-content: center">
+      <span>（ 2023 年 02 月 —— 2023 年 09 月）</span>
+    </div>
+    <div style="display: flex; justify-content: center; margin-top: 20px">
+      <table style="border-collapse: collapse">
+        <tbody>
+          <tr>
+            <td class="bold-text">姓名</td>
+            <td>${student.studentName}</td>
+            <td class="bold-text">昵称</td>
+            <td>${studentB.nickname}</td>
+            <td style="padding: 0">
+              <table>
+                <tbody>
+                  <td
+                    class="bold-text"
+                    style="
+                      border-left: none;
+                      border-top: none;
+                      border-bottom: none;
+                    "
+                  >
+                    性别
+                  </td>
+                  <td
+                    style="
+                      border-left: none;
+                      border-top: none;
+                      border-bottom: none;
+                      border-right: none;
+                    "
+                  >
+                    ${student.studentGender}
+                  </td>
+                </tbody>
+              </table>
+            </td>
+            <td style="padding: 0">
+              <table style="width: 100%">
+                <tbody>
+                  <td
+                    class="bold-text"
+                    style="
+                      border-left: none;
+                      border-top: none;
+                      border-bottom: none;
+                    "
+                  >
+                    血型
+                  </td>
+                  <td
+                    style="
+                      border-left: none;
+                      border-top: none;
+                      border-bottom: none;
+                      border-right: none;
+                    "
+                  >
+                    ${studentB.bloodGroup}
+                  </td>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+          <tr>
+            <td class="bold-text">出生日期</td>
+            <td>${studentB.birthday}</td>
+            <td class="bold-text">年龄</td>
+            <td></td>
+            <td class="bold-text">班级</td>
+            <td>${student.clazzName}</td>
+          </tr>
+
+          <tr>
+            <td class="bold-text">民族</td>
+            <td>${studentB.nation}</td>
+            <td class="bold-text">户籍地</td>
+            <td>${p1.value}/${c1.value}/${r1.value}</td>
+            <td class="bold-text">成长地</td>
+            <td>${p2.value}/${c2.value}/${r2.value}</td>
+          </tr>
+
+          <tr>
+            <td class="bold-text">障碍类型</td>
+            <td>${student.obstacleName}</td>
+            <td class="bold-text">障碍程度</td>
+            <td>${studentB.obstacleDegree}</td>
+            <td class="bold-text">伴随障碍类型</td>
+            <td>${studentB.otherObstacleName}</td>
+          </tr>
+
+          <tr>
+            <td class="bold-text" rowspan="10">生长史</td>
+            <td rowspan="2">语言发展</td>
+            <td colspan="4">首个词汇出现时间：</td>
+          </tr>
+
+          <tr>
+            <td colspan="4">首个句子出现时间：${Growth.firstWordAppears}</td>
+          </tr>
+          <tr>
+            <td rowspan="4">动作发展</td>
+            <td colspan="4">抬头时间：${Growth.headUpTime}</td>
+          </tr>
+          <tr>
+            <td colspan="4">独立坐时间：${Growth.independentSittingTime}</td>
+          </tr>
+          <tr>
+            <td colspan="4">独立站时间：${Growth.independentStationTime}</td>
+          </tr>
+
+          <tr>
+            <td colspan="4">独立走时间：${Growth.independentTravelTime}</td>
+          </tr>
+          <tr>
+            <td rowspan="4">自理能力发展</td>
+            <td colspan="4">学会表达小便需求的时间：${Growth.headUpTime}</td>
+          </tr>
+          <tr>
+            <td colspan="4">独立小便时间：${Growth.urinationTime}</td>
+          </tr>
+          <tr>
+            <td colspan="4">会表达大便需求的时间：${Growth.headUpTime}</td>
+          </tr>
+          <tr>
+            <td colspan="4">独立大便时间：${Growth.stoolTime}</td>
+          </tr>
+          <tr>
+            <td class="bold-text" rowspan="2">医疗史</td>
+            <td colspan="5">遗传病史：${Growth.geneticHistory}</td>
+          </tr>
+          <tr>
+            <td colspan="5">重大疾病史：${Growth.majorDiseases}</td>
+          </tr>
+          <tr>
+            <td class="bold-text">教育史</td>
+            <td colspan="5"></td>
+          </tr>
+          <tr>
+            <td class="bold-text" rowspan="4">生理特殊情况</td>
+            <td colspan="5">过敏情况：${special.irritability}</td>
+          </tr>
+          <tr>
+            <td colspan="5">存在健康问题：${special.healthProblem}</td>
+          </tr>
+          <tr>
+            <td colspan="5">用药/矫正器具：${special.pharmacy}</td>
+          </tr>
+          <tr>
+            <td colspan="5">沟通辅具：${special.speakAssist}</td>
+          </tr>
+          <tr>
+            <td class="bold-text" rowspan="11">兴趣偏好</td>
+            <td colspan="5">喜欢的物品：${hobby.loveArticle}</td>
+          </tr>
+          <tr>
+            <td colspan="5">喜欢的活动：${hobby.loveActivity}</td>
+          </tr>
+          <tr>
+            <td colspan="5">喜欢的人物：${hobby.loveFigure}</td>
+          </tr>
+          <tr>
+            <td colspan="5">性格的优势：${hobby.characterAdvantage}</td>
+          </tr>
+          <tr>
+            <td colspan="5">能力和特长：${hobby.shtick}</td>
+          </tr>
+          <tr>
+            <td colspan="5">其他：${hobby.other}</td>
+          </tr>
+          <tr>
+            <td colspan="5">不喜欢的物品：${hobby.unLoveArticle}</td>
+          </tr>
+          <tr>
+            <td colspan="5">不喜欢的活动：${hobby.unLoveActivity}</td>
+          </tr>
+          <tr>
+            <td colspan="5">不喜欢的人物：${hobby.unLoveFigure}</td>
+          </tr>
+          <tr>
+            <td colspan="5">其他因素：${hobby.otherFactors}</td>
+          </tr>
+          <tr>
+            <td colspan="5">说明：${hobby.explain_}</td>
+          </tr>
+          <tr>
+            <th class="bold-text" colspan="2">长期目标</th>
+            <th class="bold-text" colspan="3">短期目标</th>
+            <th class="bold-text" colspan="2">是否通过</th>
+          </tr>
+          ${str.value}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>`;
+  const fileData = asBlob(htmlString).then((data) => {
+    saveAs(data, "file.docx");
+  });
+};
 </script>
 
 <template>
@@ -159,6 +441,12 @@ Axios.get(
   </p>
   <div style="width: 100%; display: flex; justify-content: center">
     <div style="width: 96%; background-color: #fff">
+      <el-button
+        type="primary"
+        style="margin-left: 20px; margin-bottom: 20px; margin-top: 10px"
+        @click="exportWordTpl()"
+        >导出word</el-button
+      >
       <h3 style="margin-left: 20px; margin-top: 10px">儿童基本信息</h3>
       <div
         style="
@@ -472,14 +760,17 @@ Axios.get(
           @change="handleChange"
           style="border: 1px solid #ccc; border-radius: 10px"
         >
-          <el-collapse-item
-            :title="item.title"
-            :name="index + 1"
-            style="padding-left: 20px; font-weight: bold"
-            v-for="(item, index) in his"
-            :key="index"
-          >
-            <div>
+          <div v-for="(item, index) in his" :key="index">
+            <el-collapse-item
+              :title="item.title"
+              :name="index + 1"
+              style="
+                padding-left: 20px;
+                font-weight: bold;
+                border-bottom: 1px solid #f8f8f8;
+              "
+              v-if="!item.pass"
+            >
               <el-table
                 :data="item.context"
                 style="width: 98%"
@@ -498,33 +789,41 @@ Axios.get(
                 }"
               >
                 <el-table-column label="长期目标" width="auto" min-width="15%">
-                  <template #default="scope">{{
-                    scope.row.qyestionContent
-                  }}</template>
-                </el-table-column>
-                <el-table-column label="短期目标" width="auto" min-width="70%">
                   <template #default="scope">
-                    <p
-                      v-for="(it, ind) in scope.row.select"
-                      v-if="!scope.row.subjectivity"
-                    >
-                      {{ it.value }}
-                    </p>
-                    <p
-                      v-if="scope.row.subjectivity"
-                      v-for="(ite, inde) in scope.row.subjectivity"
-                      :key="inde"
-                    >
-                      {{ ite }}
+                    <p v-if="scope.row.isPass == '否'">
+                      {{ scope.row.qyestionContent }}
                     </p>
                   </template>
                 </el-table-column>
+                <el-table-column label="短期目标" width="auto" min-width="70%">
+                  <template #default="scope">
+                    <div v-if="scope.row.isPass == '否'">
+                      <p
+                        v-for="(it, ind) in scope.row.select"
+                        v-if="!scope.row.subjectivity"
+                      >
+                        {{ it.value }}
+                      </p>
+                      <p
+                        v-if="scope.row.subjectivity"
+                        v-for="(ite, inde) in scope.row.subjectivity"
+                        :key="inde"
+                      >
+                        {{ ite }}
+                      </p>
+                    </div>
+                  </template>
+                </el-table-column>
                 <el-table-column label="是否通过" width="auto" min-width="15%">
-                  <template #default="scope">{{ item.isPass }}</template>
+                  <template #default="scope"
+                    ><p v-if="scope.row.isPass == '否'">
+                      {{ scope.row.isPass }}
+                    </p></template
+                  >
                 </el-table-column>
               </el-table>
-            </div>
-          </el-collapse-item>
+            </el-collapse-item>
+          </div>
         </el-collapse>
       </div>
       <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">

@@ -196,7 +196,6 @@
 <script setup>
 import { asBlob } from "html-docx-js-typescript";
 import { saveAs } from "file-saver";
-import { getCurrentInstance } from "vue";
 const cxt = getCurrentInstance(); //相当于Vue2中的this
 const bus = cxt.appContext.config.globalProperties.$bus;
 

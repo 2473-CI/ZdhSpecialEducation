@@ -163,9 +163,7 @@ const toPerview = (type, scope) => {
 <template>
   <pdfPreview v-if="showPdf" :path="filePath"> </pdfPreview>
   <docPreview v-if="showWord" :path="filePath"></docPreview>
-  <excelPreview v-if="showExcel" :path="filePath">
-    <!-- <el-button @click="showExcel = false">取消</el-button> -->
-  </excelPreview>
+  <excelPreview v-if="showExcel" :path="filePath"> </excelPreview>
   <el-tabs
     v-model="activeName"
     style="background-color: #fff"

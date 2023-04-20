@@ -31,7 +31,11 @@ const getAllHis = () => {
       // console.log(Array.isArray(per.value));
       if (Array.isArray(per.value)) {
         for (let it of per.value) {
-          if (it.isFalse == [] || it.isFalse == 0) {
+          if (it.qyestionType == "主观" && typeof it.isFalse != "number") {
+            alone++;
+          } else if (it.qyestionType == "单选" && it.isFalse == []) {
+            alone++;
+          } else if (it.qyestionType == "多选" && it.isFalse.length == 0) {
             alone++;
           }
         }
@@ -129,6 +133,7 @@ const findTitle = () => {
 const showNum = ref(false);
 const content = ref([]);
 const textTitle = ref("");
+const optionScore = ref([]);
 const setTheme = () => {
   showNum.value = true;
   Axios.get(`/scale/getById?scaleId=${form.title}`).then((res) => {
@@ -138,6 +143,12 @@ const setTheme = () => {
     for (let item of content.value) {
       item["isFalse"] = [];
       item["remarks"] = "";
+    }
+    for (let item of s) {
+      for (let i = 0; i < item + 1; i++) {
+        console.log(i);
+        optionScore.value.push({ value: i, label: i });
+      }
     }
   });
 };
@@ -230,9 +241,11 @@ const draft = () => {
   number.value = 0;
   console.log(content.value);
   for (let item of content.value) {
-    if (item.isFalse == []) {
+    if (item.qyestionType == "主观" && typeof item.isFalse != "number") {
       number.value++;
-    } else if (item.isFalse == 0) {
+    } else if (item.qyestionType == "单选" && item.isFalse == []) {
+      number.value++;
+    } else if (item.qyestionType == "多选" && item.isFalse.length == 0) {
       number.value++;
     }
   }
@@ -343,14 +356,14 @@ const toHistory = (answerId) => {
         <span
           style="
             display: inline-block;
-            width: 15%;
+            width: 10%;
             white-space: nowrap;
             text-align: center;
           "
           >评估领域：</span
         >
 
-        <el-select
+        <!-- <el-select
           v-model="form.classify2"
           class="m-2"
           placeholder=" "
@@ -364,7 +377,7 @@ const toHistory = (answerId) => {
             :label="item.classify2"
             :value="item.classify2"
           />
-        </el-select>
+        </el-select> -->
 
         <!-- 
         <el-select
@@ -545,12 +558,25 @@ const toHistory = (answerId) => {
             </div>
 
             <div v-if="item.qyestionType == '主观'">
-              <el-input-number
+              <!-- <el-input-number
                 v-model="item.isFalse"
                 :min="0"
                 :max="item.qyestionScore"
                 @change="handleChange"
-              />
+              /> -->
+              <p>{{ item.subjectivity }}</p>
+              <el-select
+                v-model="item.isFalse"
+                class="m-2"
+                placeholder="请选择分数"
+              >
+                <el-option
+                  v-for="item in optionScore"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
+              </el-select>
             </div>
           </div>
           <span style="color: #909090; font-size: 12px" v-if="item.remarks">
