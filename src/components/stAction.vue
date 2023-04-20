@@ -207,7 +207,7 @@ const submit = () => {
     Axios.post("/exercise/add", {
       studentId: JSON.parse(localStorage.getItem("sq")).studentId,
       title: formDetail.classify3,
-      subTitle: "",
+      subTitle: "已完成",
       context: context.value,
       annex: "",
       startTime: startTime.value,
@@ -217,14 +217,14 @@ const submit = () => {
       if (res.success == true) {
         ElMessage({
           showClose: true,
-          message: res.data,
+          message: "提交成功！",
           type: "success",
         });
         await getAllRecord();
       } else if (res.success == false) {
         ElMessage({
           showClose: true,
-          message: res.message,
+          message: "提交失败！",
           type: "error",
         });
       }
@@ -376,6 +376,17 @@ const submit = () => {
             <el-button
               v-if="item.subTitle == '已完成'"
               style="position: absolute; right: 10px; bottom: 40%"
+              @click="
+                showPage = !showPage;
+                giveContent(
+                  item.context,
+                  index,
+                  item.startTime,
+                  item.endTime,
+                  item.title,
+                  item.id
+                );
+              "
               >查看</el-button
             >
           </el-card>
