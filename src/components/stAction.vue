@@ -113,7 +113,7 @@ const addItem = () => {
             annex: "",
             startTime: startTime.value,
             endTime: endTime.value,
-            id: rid.value,
+            id: null,
           }).then(async (res) => {
             if (res.success == true) {
               ElMessage({
@@ -182,7 +182,8 @@ const giveContent = (context, index, startTime, endTime, title, id) => {
   console.log(optionScore.value);
 };
 
-const score = ref(0);
+// const score = ref(0);
+const time = ref(0);
 const submit = () => {
   console.log(getList.value);
   console.log(Index.value);
@@ -202,6 +203,13 @@ const submit = () => {
     }
   }
   console.log(alone);
+  if (time.value != 0) {
+    ElMessage({
+      showClose: true,
+      message: "已经提交过了!",
+      type: "error",
+    });
+  }
   if (alone != 0) {
     ElMessage({
       showClose: true,
@@ -225,6 +233,7 @@ const submit = () => {
           message: "提交成功！",
           type: "success",
         });
+        time.value++;
         await getAllRecord();
       } else if (res.success == false) {
         ElMessage({
