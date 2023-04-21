@@ -188,11 +188,16 @@ const submit = () => {
   console.log(Index.value);
   let alone = 0;
   for (let it of getList.value) {
+    it["noMake"] = 0;
+
     if (it.qyestionType == "主观" && typeof it.isFalse != "number") {
+      it["noMake"] = 1;
       alone++;
     } else if (it.qyestionType == "单选" && typeof it.isFalse != "string") {
+      it["noMake"] = 1;
       alone++;
     } else if (it.qyestionType == "多选" && it.isFalse.length == 0) {
+      it["noMake"] = 1;
       alone++;
     }
   }
@@ -258,6 +263,41 @@ const submit = () => {
       }
     }
   }
+};
+
+const d = (id) => {
+  Axios.delete(`/exercise/deleteById?id=${id}`).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: "删除成功！",
+        type: "success",
+      });
+      await getAllRecord();
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: "删除失败！",
+        type: "error",
+      });
+    }
+    console.log(res);
+  });
+};
+
+const del = (id) => {
+  ElMessageBox.confirm("确定要删除吗?")
+    .then(async (a) => {
+      if (a == "confirm") {
+        await d(id);
+        close();
+      } else {
+        close();
+      }
+    })
+    .catch(() => {
+      // catch error
+    });
 };
 </script>
 <template>
@@ -357,6 +397,14 @@ const submit = () => {
               :style="{ color: item.subTitle == '未完成' ? 'red' : 'green' }"
               >{{ item.subTitle }}</span
             >
+
+            <el-button
+              type="danger"
+              style="position: absolute; right: 150px; bottom: 40%"
+              @click="del(item.id)"
+              >删除</el-button
+            >
+
             <el-button
               v-if="item.subTitle == '未完成'"
               style="position: absolute; right: 10px; bottom: 40%"
