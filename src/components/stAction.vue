@@ -118,14 +118,14 @@ const addItem = () => {
             if (res.success == true) {
               ElMessage({
                 showClose: true,
-                message: res.data,
+                message: "新增成功！",
                 type: "success",
               });
               await getAllRecord();
             } else if (res.success == false) {
               ElMessage({
                 showClose: true,
-                message: res.message,
+                message: "新增失败！",
                 type: "error",
               });
             }
@@ -388,7 +388,6 @@ const del = (id) => {
           :color="item.subTitle == '未完成' ? 'red' : 'green'"
           :key="index"
         >
-          {{ item.subTitle }}
           <el-card style="position: relative">
             <h4>{{ item.title }}</h4>
             <p>结束时间{{ item.endTime }}</p>
