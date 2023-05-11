@@ -158,9 +158,18 @@ const toPerview = (type, scope) => {
     showWord.value = true;
   }
 };
+
+const ret = () => {
+  showExcel.value = false;
+  showWord.value = false;
+  showPdf.value = false;
+};
 </script>
 
 <template>
+  <el-button @click="ret()" v-if="showPdf || showWord || showExcel"
+    >返回</el-button
+  >
   <pdfPreview v-if="showPdf" :path="filePath"> </pdfPreview>
   <docPreview v-if="showWord" :path="filePath"></docPreview>
   <excelPreview v-if="showExcel" :path="filePath"> </excelPreview>

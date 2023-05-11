@@ -36,7 +36,7 @@ import PerResources from "../views/PerResources.vue";
 import sharedResources from "../views/sharedResources.vue";
 import report from "../views/report.vue";
 import exercise from "../views/exercise.vue";
-
+import resettle from "../views/resettle.vue";
 const routes = [
   {
     path: "/",
@@ -243,6 +243,11 @@ const routes = [
         path: "exercise",
         name: "exercise",
         component: exercise,
+      },
+      {
+        path: "resettle",
+        name: "resettle",
+        component: resettle,
       },
     ],
   },

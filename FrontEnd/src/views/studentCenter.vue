@@ -346,7 +346,10 @@ console.log(scLsit);
             </svg>
             <p style="margin-left: 10px">转衔记录</p>
           </div>
-          <div class="long_info shaDow icon">
+          <div
+            class="long_info shaDow icon"
+            @click="$router.push('/management/resettle')"
+          >
             <svg
               t="1679842122000"
               class="icon"

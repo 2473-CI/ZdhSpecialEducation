@@ -1208,7 +1208,7 @@ getAllFile();
 const testcomRef = ref();
 const getSonHander = () => {
   showEditor.value = false;
-  console.log("获取子组件中的性别", testcomRef.value.valueHtml);
+  // console.log("获取子组件中的性别", testcomRef.value.valueHtml);
   Axios.post("/studentDevelopment/add", {
     studentId: JSON.parse(localStorage.getItem("sq")).studentId,
     richText: testcomRef.value.valueHtml,

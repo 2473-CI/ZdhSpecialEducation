@@ -2,6 +2,29 @@
 import { ref, reactive, getCurrentInstance, toRefs, defineProps } from "vue";
 import Axios from "../request/index.ts";
 import { ElMessage, ElMessageBox } from "element-plus";
+import { Plus } from "@element-plus/icons-vue";
+import pdfPreview from "../components/file/pdfPreview.vue";
+import excelPreview from "../components/file/excelPreview.vue";
+import docPreview from "../components/file/docPreview.vue";
+
+const dialogFormVisible = ref(false);
+const fileType = ref("");
+const fileName = ref("");
+
+const optionsType = [
+  {
+    label: "Excel",
+    value: "Excel",
+  },
+  {
+    label: "word",
+    value: "word",
+  },
+  {
+    label: "pdf",
+    value: "pdf",
+  },
+];
 
 const scalarArrayEquals = (array1, array2) => {
   return (
@@ -37,6 +60,7 @@ const getAllScale = () => {
 };
 
 const AllList = ref([]);
+const content = ref([]);
 const getAllRecord = () => {
   Axios.get(
     `/exercise/getByStudentId?studentId=${
@@ -49,7 +73,18 @@ const getAllRecord = () => {
       item["endTime"] = new Date(item["endTime"]).toLocaleDateString();
     }
     AllList.value = res.data;
-    console.log(AllList.value);
+
+    for (let item of AllList.value) {
+      console.log(JSON.parse(item.context));
+      let tmp = JSON.parse(item["context"]);
+      for (let it of tmp) {
+        if (!it.hasOwnProperty("isFalse")) it["isFalse"] = [];
+        if (!it.hasOwnProperty("remarks")) it["remarks"] = "";
+        if (!it.hasOwnProperty("scoreSelf")) it["scoreSelf"] = 0;
+      }
+      item["context"] = JSON.stringify(tmp);
+    }
+    // console.log(AllList.value);
   });
 };
 getAllRecord();
@@ -99,45 +134,53 @@ const addItem = () => {
       title: formDetail.context,
     }).then((res) => {
       console.log(res);
-      context.value = res.data[0].context;
-    });
-
-    ElMessageBox.confirm("确认要增加该学习任务吗?")
-      .then(async (a) => {
-        if (a == "confirm") {
-          Axios.post("/exercise/add", {
-            studentId: JSON.parse(localStorage.getItem("sq")).studentId,
-            title: formDetail.classify3,
-            subTitle: "未完成",
-            context: context.value,
-            annex: "",
-            startTime: startTime.value,
-            endTime: endTime.value,
-            id: null,
-          }).then(async (res) => {
-            if (res.success == true) {
-              ElMessage({
-                showClose: true,
-                message: "新增成功！",
-                type: "success",
+      console.log(res.data);
+      if (res.data.length != 0) {
+        context.value = res.data[0].context;
+        ElMessageBox.confirm("确认要增加该学习任务吗?")
+          .then(async (a) => {
+            if (a == "confirm") {
+              Axios.post("/exercise/add", {
+                studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+                title: formDetail.classify3,
+                subTitle: "未完成",
+                context: context.value,
+                annex: "",
+                startTime: startTime.value,
+                endTime: endTime.value,
+                id: null,
+              }).then(async (res) => {
+                if (res.success == true) {
+                  ElMessage({
+                    showClose: true,
+                    message: "新增成功！",
+                    type: "success",
+                  });
+                  await getAllRecord();
+                } else if (res.success == false) {
+                  ElMessage({
+                    showClose: true,
+                    message: "新增失败！",
+                    type: "error",
+                  });
+                }
               });
-              await getAllRecord();
-            } else if (res.success == false) {
-              ElMessage({
-                showClose: true,
-                message: "新增失败！",
-                type: "error",
-              });
+              close();
+            } else {
+              close();
             }
+          })
+          .catch(() => {
+            // catch error
           });
-          close();
-        } else {
-          close();
-        }
-      })
-      .catch(() => {
-        // catch error
-      });
+      } else {
+        ElMessage({
+          showClose: true,
+          message: "该量表内容为空",
+          type: "error",
+        });
+      }
+    });
   }
 };
 
@@ -152,24 +195,64 @@ const reset = () => {
 
 const getList = ref([]);
 const optionScore = ref([]);
-// const content = ref([]);
+const score = ref(0);
+const subT = ref("");
 const Index = ref("");
-const giveContent = (context, index, startTime, endTime, title, id) => {
-  console.log(context, index, startTime, endTime, title, id);
+const giveContent = (
+  context,
+  index,
+  startTime,
+  endTime,
+  title,
+  id,
+  isFalse,
+  subTitle
+) => {
+  score.value = 0;
+  console.log(context, index, startTime, endTime, title, id, isFalse, subTitle);
   Index.value = index;
   rid.value = id;
   getList.value = JSON.parse(context);
-  // content.value = JSON.parse(context);
+  subT.value = subTitle;
+  console.log(content.value);
+  console.log(getList.value);
   let s = [];
 
-  for (let item of getList.value) {
-    item["isFalse"] = [];
-    item["remarks"] = "";
-  }
-  for (let item of JSON.parse(context)) {
-    s.push(item["qyestionScore"]);
+  for (let it of getList.value) {
+    if (it.qyestionType == "单选") {
+      if (it.isFalse == it.isTrue) {
+        it.scoreSelf += it.qyestionScore;
+      }
+    } else if (it.qyestionType == "多选") {
+      if (scalarArrayEquals(it.isFalse, it.isTrue)) {
+        it.scoreSelf += it.qyestionScore;
+      }
+    } else if (it.qyestionType == "主观") {
+      it.scoreSelf += it.isFalse;
+    } else if (it.qyestionType == "单选判断") {
+      for (let o of content.value) {
+        o.select = o.select.map((k, index) => {
+          return {
+            i: index,
+            name: k["name"],
+          };
+        });
+        for (let k of item.select) {
+          if (k.name == it.isFalse) {
+            it.scoreSelf += it.Single[it["i"]];
+          }
+        }
+      }
+    }
   }
 
+  for (let item of getList.value) {
+    score.value += item.scoreSelf;
+  }
+
+  for (let item of getList.value) {
+    s.push(item["qyestionScore"]);
+  }
   for (let i = 0; i < s.length; i++) {
     optionScore.value.push([]);
   }
@@ -182,7 +265,6 @@ const giveContent = (context, index, startTime, endTime, title, id) => {
   console.log(optionScore.value);
 };
 
-// const score = ref(0);
 const time = ref(0);
 const submit = () => {
   console.log(getList.value);
@@ -203,14 +285,13 @@ const submit = () => {
     }
   }
   console.log(alone);
-  if (time.value != 0) {
+  if (time.value != 0 || subT.value == "已完成") {
     ElMessage({
       showClose: true,
       message: "已经提交过了!",
       type: "error",
     });
-  }
-  if (alone != 0) {
+  } else if (alone != 0) {
     ElMessage({
       showClose: true,
       message: "题目未完成！",
@@ -221,7 +302,7 @@ const submit = () => {
       studentId: JSON.parse(localStorage.getItem("sq")).studentId,
       title: formDetail.classify3,
       subTitle: "已完成",
-      context: context.value,
+      context: JSON.stringify(getList.value),
       annex: "",
       startTime: startTime.value,
       endTime: endTime.value,
@@ -233,6 +314,35 @@ const submit = () => {
           message: "提交成功！",
           type: "success",
         });
+
+        for (let it of JSON.parse(res.data.context)) {
+          if (it.qyestionType == "单选") {
+            if (it.isFalse == it.isTrue) {
+              score.value += it.qyestionScore;
+            }
+          } else if (it.qyestionType == "多选") {
+            if (scalarArrayEquals(it.isFalse, it.isTrue)) {
+              score.value += it.qyestionScore;
+            }
+          } else if (it.qyestionType == "主观") {
+            score.value += it.isFalse;
+          } else if (it.qyestionType == "单选判断") {
+            for (let o of content.value) {
+              o.select = o.select.map((k, index) => {
+                return {
+                  i: index,
+                  name: k["name"],
+                };
+              });
+              for (let k of item.select) {
+                if (k.name == it.isFalse) {
+                  score.value += it.Single[it["i"]];
+                }
+              }
+            }
+          }
+        }
+
         time.value++;
         await getAllRecord();
       } else if (res.success == false) {
@@ -243,34 +353,6 @@ const submit = () => {
         });
       }
     });
-
-    for (let it of getList.value) {
-      if (it.qyestionType == "单选") {
-        if (it.isFalse == it.isTrue) {
-          score.value += it.qyestionScore;
-        }
-      } else if (it.qyestionType == "多选") {
-        if (scalarArrayEquals(it.isFalse, it.isTrue)) {
-          score.value += it.qyestionScore;
-        }
-      } else if (it.qyestionType == "主观") {
-        score.value += it.isFalse;
-      } else if (it.qyestionType == "单选判断") {
-        for (let o of content.value) {
-          o.select = o.select.map((k, index) => {
-            return {
-              i: index,
-              name: k["name"],
-            };
-          });
-          for (let k of item.select) {
-            if (k.name == it.isFalse) {
-              score.value += it.Single[it["i"]];
-            }
-          }
-        }
-      }
-    }
   }
 };
 
@@ -308,9 +390,88 @@ const del = (id) => {
       // catch error
     });
 };
+
+const goHome = () => {
+  showPage.value = !showPage.value;
+};
+
+const file = ref("");
+const handleChange = (uploadFile, uploadFiles) => {
+  if (uploadFile.response) {
+    console.log(uploadFile.response.data.url, uploadFiles);
+    file.value = uploadFile.response.data.url;
+  }
+  // fileList.value = uploadFiles;
+  // let tmp = uploadFile["response"];
+  // if (uploadFile["response"] != undefined) {
+  //   console.log(uploadFile["response"]["data"]["url"]);
+  //   addForm.file = uploadFile["response"]["data"]["url"];
+  // }
+};
+const fileTime = ref("");
+const isAdd = () => {
+  Axios.post("/exercise/add", {
+    studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+    title: fileName.value,
+    subTitle: fileType.value,
+    context: "",
+    annex: file.value,
+    startTime: fileTime.value,
+    endTime: "",
+    id: null,
+  }).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: "新增成功！",
+        type: "success",
+      });
+      await getAllRecord();
+      fileName.value = "";
+      fileType.value = "";
+      file.value = "";
+      fileTime.value = "";
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: "新增失败！",
+        type: "error",
+      });
+    }
+  });
+};
+
+const filePath = ref("");
+const showExcel = ref(false);
+const showWord = ref(false);
+const showPdf = ref(false);
+const toPerview = (type, fileP) => {
+  console.log(type);
+  console.log(fileP);
+  filePath.value = fileP;
+  if (type == "Excel") {
+    showExcel.value = true;
+  } else if ((type = "word")) {
+    showWord.value = true;
+  }
+};
+
+const ret = () => {
+  showExcel.value = false;
+  showWord.value = false;
+  showPdf.value = false;
+};
 </script>
 <template>
-  <div style="width: 100%">
+  <el-button @click="ret()" v-if="showPdf || showWord || showExcel"
+    >返回</el-button
+  >
+  <pdfPreview v-if="showPdf" :path="filePath"> </pdfPreview>
+  <docPreview v-if="showWord" :path="filePath"></docPreview>
+  <div style="height: 600px; width: 100%" v-if="showExcel">
+    <excelPreview :path="filePath"> </excelPreview>
+  </div>
+  <div style="width: 100%" v-if="!showPdf && !showWord && !showExcel">
     <el-card
       class="box-card"
       style="margin-left: 1%; margin-right: 1%"
@@ -356,10 +517,10 @@ const del = (id) => {
           </el-select>
         </el-form-item>
         <br />
-        <el-form-item label="量表标题">
+        <el-form-item label="学习作业标题">
           <el-input
             v-model="formDetail.context"
-            placeholder="请填写量表标题"
+            placeholder="请填写学习作业标题"
             style="width: 220px"
           >
           </el-input>
@@ -385,7 +546,81 @@ const del = (id) => {
           <el-button @click="reset()">重置</el-button>
           <el-button type="primary" @click="addItem">添加任务</el-button>
         </el-form-item>
+
+        <el-form-item>
+          <el-button @click="dialogFormVisible = true">添加附件</el-button>
+        </el-form-item>
       </el-form>
+
+      <el-dialog v-model="dialogFormVisible" title="添加附件">
+        <div style="margin-bottom: 40px">
+          <span style="margin-left: 28px">文件类型：</span>
+          <el-select
+            placeholder="请选择文件类型"
+            style="width: 300px"
+            v-model="fileType"
+          >
+            <el-option
+              :label="item.label"
+              :value="item.value"
+              :key="item.value"
+              v-for="item in optionsType"
+            />
+          </el-select>
+        </div>
+        <div style="margin-bottom: 40px">
+          <span style="margin-left: 28px">文件名称：</span>
+          <el-input
+            style="width: 300px"
+            v-model="fileName"
+            placeholder="请填写文件名称"
+          ></el-input>
+        </div>
+        <div style="margin-bottom: 40px">
+          <span style="margin-left: 28px">创建时间：</span>
+          <el-date-picker
+            v-model="fileTime"
+            type="datetime"
+            style="width: 300px"
+            placeholder="请选择时间"
+          />
+        </div>
+        <el-form-item>
+          <el-upload
+            v-model:file-list="fileList"
+            class="upload-demo"
+            action="/file/upload"
+            :on-change="handleChange"
+          >
+            <!-- <el-button type="primary">点击上传文件</el-button> -->
+
+            <div
+              style="
+                height: 100px;
+                width: 100px;
+                border-radius: 15px;
+                border: 4px dashed #f8f8f8;
+                padding: 30px;
+                margin-left: 28px;
+              "
+            >
+              <Plus />
+            </div>
+          </el-upload>
+        </el-form-item>
+
+        <template #footer>
+          <span class="dialog-footer">
+            <el-button @click="dialogFormVisible = false">取消</el-button>
+            <el-button
+              type="primary"
+              @click="(dialogFormVisible = false), isAdd()"
+            >
+              确定
+            </el-button>
+          </span>
+        </template>
+      </el-dialog>
     </el-card>
 
     <el-card style="margin: 1%">
@@ -399,7 +634,15 @@ const del = (id) => {
         >
           <el-card style="position: relative">
             <h4>{{ item.title }}</h4>
-            <p>结束时间{{ item.endTime }}</p>
+            <p
+              v-if="
+                item.subTitle != 'Excel' &&
+                item.subTitle != 'pdf' &&
+                item.subTitle != 'word'
+              "
+            >
+              结束时间{{ item.endTime }}
+            </p>
             <span
               style="position: absolute; left: 50%; top: 20px"
               :style="{ color: item.subTitle == '未完成' ? 'red' : 'green' }"
@@ -424,11 +667,14 @@ const del = (id) => {
                   item.startTime,
                   item.endTime,
                   item.title,
-                  item.id
+                  item.id,
+                  item.isFalse,
+                  item.subTitle
                 );
               "
               >去完成></el-button
             >
+            <!-- {{ item.context }} -->
             <el-button
               v-if="item.subTitle == '已完成'"
               style="position: absolute; right: 10px; bottom: 40%"
@@ -440,19 +686,30 @@ const del = (id) => {
                   item.startTime,
                   item.endTime,
                   item.title,
-                  item.id
+                  item.id,
+                  item.isFalse,
+                  item.subTitle
                 );
               "
               >查看</el-button
             >
+            <el-button
+              style="position: absolute; right: 10px; bottom: 40%"
+              v-if="
+                item.subTitle == 'Excel' ||
+                item.subTitle == 'pdf' ||
+                item.subTitle == 'word'
+              "
+              @click="toPerview(item.subTitle, item.annex)"
+            >
+              预览
+            </el-button>
           </el-card>
         </el-timeline-item>
       </el-timeline>
 
-      <el-button v-show="showPage" @click="showPage = !showPage"
-        >返回</el-button
-      >
-      <div v-show="showPage">
+      <el-button v-show="showPage" @click="goHome()">返回</el-button>
+      <div v-if="showPage">
         <div
           v-for="(item, index) in getList"
           :key="index"
@@ -559,6 +816,7 @@ const del = (id) => {
         </div>
         <div style="display: flex; justify-content: space-between">
           <span>得分：{{ score }}</span>
+
           <el-button @click="submit()">提交</el-button>
         </div>
       </div>
