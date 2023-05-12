@@ -3,10 +3,12 @@ package szitu.springboot.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import szitu.springboot.model.Result;
+import szitu.springboot.model.Role;
 import szitu.springboot.model.Transfer;
 import szitu.springboot.model.User;
 import szitu.springboot.service.imp.TransferServiceImpl;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -19,7 +21,10 @@ public class TransferController {
     @PostMapping("/selectAllStartSchool")
     public Result<List<Transfer>> selectAllStartSchool(@RequestBody Transfer transfer,
                                                        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-                                                       @RequestParam(name = "size", required = false, defaultValue = "20") Integer size) throws Exception {
+                                                       @RequestParam(name = "size", required = false, defaultValue = "20") Integer size
+                                                        , HttpServletRequest request) throws Exception {
+        Role role = (Role)request.getAttribute("role");
+        transfer.setToSchoolId(role.getSchoolId());
         if(transfer.getFromSchoolId() == null){
             return Result.fail("缺少关键信息");
         }
@@ -38,7 +43,10 @@ public class TransferController {
     @PostMapping("/selectCenterPadding")
     public Result<List<Transfer>> selectCenterPadding(@RequestBody Transfer transfer,
                                                        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-                                                       @RequestParam(name = "size", required = false, defaultValue = "20") Integer size) throws Exception {
+                                                       @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                                                      HttpServletRequest request) throws Exception {
+        Role role = (Role)request.getAttribute("role");
+        transfer.setFromRegionCode(role.getRegionCode().toString());
         if(transfer.getFromRegionCode() == null){
             return Result.fail("缺少关键信息");
         }
@@ -56,7 +64,10 @@ public class TransferController {
     @PostMapping("/selectBoardPadding")
     public Result<List<Transfer>> selectBoardPadding(@RequestBody Transfer transfer,
                                                       @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-                                                      @RequestParam(name = "size", required = false, defaultValue = "20") Integer size) throws Exception {
+                                                      @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                                                     HttpServletRequest request) throws Exception {
+        Role role = (Role)request.getAttribute("role");
+        transfer.setFromRegionCode(role.getRegionCode().toString());
         if(transfer.getFromRegionCode() == null){
             return Result.fail("缺少关键信息");
         }
