@@ -67,4 +67,14 @@ public class TransferServiceImpl implements TransferService {
     public void end(Transfer transfer) {
         transferMapper.end(transfer);
     }
+
+    @Override
+    public List<Transfer> selectEndPadding(Integer toSchoolId, Integer offset, Integer size) {
+        return transferMapper.selectEndPadding(toSchoolId, offset, size);
+    }
+
+    @Override
+    public Long selectEndPaddingLength(Integer toSchoolId) {
+        return transferMapper.selectEndPaddingLength(toSchoolId);
+    }
 }

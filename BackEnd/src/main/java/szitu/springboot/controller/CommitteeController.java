@@ -65,6 +65,22 @@ public class CommitteeController {
         return Result.fail("你没有相关权限！");
     }
 
+    @PostMapping("/isCommittee")
+    public Result<Boolean> isCommittee(HttpServletRequest request){
+        List<Committee> all = committeeService.getAll();
+        Role role = (Role)request.getAttribute("role");
+//        role.getRole() != ""
+        if (role.getSchoolId() == null){
+            return Result.success(false);
+        }
+        for(Committee committee : all){
+            if (committee.getSubordinateCenter().equals(role.getSchoolId().longValue())){
+                return Result.success(true);
+            }
+        }
+        return Result.success(false);
+    }
+
 
     /**
      * 获取所有委员会列表

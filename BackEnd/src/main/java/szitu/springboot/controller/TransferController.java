@@ -2,10 +2,8 @@ package szitu.springboot.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import szitu.springboot.model.Result;
-import szitu.springboot.model.Role;
-import szitu.springboot.model.Transfer;
-import szitu.springboot.model.User;
+import szitu.springboot.model.*;
+import szitu.springboot.service.imp.StudentServiceImp;
 import szitu.springboot.service.imp.TransferServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +16,15 @@ public class TransferController {
     @Autowired
     private TransferServiceImpl transferService;
 
+    @Autowired
+    private StudentServiceImp studentServiceImp;
     @PostMapping("/selectAllStartSchool")
     public Result<List<Transfer>> selectAllStartSchool(@RequestBody Transfer transfer,
                                                        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
                                                        @RequestParam(name = "size", required = false, defaultValue = "20") Integer size
                                                         , HttpServletRequest request) throws Exception {
         Role role = (Role)request.getAttribute("role");
-        transfer.setToSchoolId(role.getSchoolId());
+        transfer.setFromSchoolId(role.getSchoolId());
         if(transfer.getFromSchoolId() == null){
             return Result.fail("缺少关键信息");
         }
@@ -82,6 +82,27 @@ public class TransferController {
         }
     }
 
+    @PostMapping("/selectEndPadding")
+    public Result<List<Transfer>> selectEndPadding(@RequestBody Transfer transfer,
+                                                     @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+                                                     @RequestParam(name = "size", required = false, defaultValue = "20") Integer size,
+                                                     HttpServletRequest request) throws Exception {
+        Role role = (Role)request.getAttribute("role");
+        transfer.setToSchoolId(role.getSchoolId());
+        if(transfer.getToSchoolId() == null){
+            return Result.fail("缺少关键信息");
+        }
+        try{
+            List<Transfer> ts = transferService.selectEndPadding(transfer.getToSchoolId(), (page - 1) * size, size);
+            Long length = transferService.selectEndPaddingLength(transfer.getToSchoolId());
+            Result<List<Transfer>> result = Result.success(ts);
+            result.setLength(length);
+            return result;
+        }catch (Exception err){
+            return Result.fail("查询失败");
+        }
+    }
+
     @PostMapping("/successCenter")
     public Result<String> successCenter(@RequestBody Transfer transfer){
         if(transfer.getId() == null){
@@ -123,7 +144,10 @@ public class TransferController {
 
 
     @PostMapping("/start")
-    public Result<String> start(@RequestBody Transfer transfer){
+    public Result<String> start(@RequestBody Transfer transfer,HttpServletRequest request){
+        Role role = (Role)request.getAttribute("role");
+        transfer.setFromSchoolId(role.getSchoolId());
+        System.out.println(transfer);
         if(transfer.getStudentId() == null || transfer.getFromSchoolId() == null || transfer.getToSchoolId() == null){
             return Result.fail("缺少关键信息");
         }
@@ -132,6 +156,22 @@ public class TransferController {
             return Result.success("创建成功！");
         }catch (Exception err){
             return Result.fail("创建失败");
+        }
+    }
+
+    @PostMapping("/end")
+    public Result<String> end(@RequestBody Transfer transfer,HttpServletRequest request){
+        Role role = (Role)request.getAttribute("role");
+        transfer.setToSchoolId(role.getStudentId());
+        if(transfer.getId()==null||transfer.getStudentId()==null||transfer.getToSchoolId()==null){
+            return Result.fail("缺少关键信息");
+        }
+        try{
+            transferService.end(transfer);
+            studentServiceImp.updateToSchool(transfer.getToSchoolId().longValue(), transfer.getStudentId().longValue());
+            return Result.success("接受成功！");
+        }catch (Exception err){
+            return Result.fail("接受失败！");
         }
     }
 }

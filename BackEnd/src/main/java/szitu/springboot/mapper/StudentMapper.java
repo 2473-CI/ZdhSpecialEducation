@@ -138,6 +138,9 @@ public interface StudentMapper {
             """)
     public void auth(Long studentId, String authorization);
 
+    @Update("UPDATE student SET schoolId=#{schoolId} where studentId=#{studentId}")
+    public void updateToSchool(Long schoolId, Long studentId);
+
     @Select("""
            <script>
            SELECT s.*, sch.schoolName

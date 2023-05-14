@@ -16,4 +16,6 @@ public interface TransferService {
     public void successCenter(Transfer transfer);
     public void successBoard(Transfer transfer);
     public void end(Transfer transfer);
+    public List<Transfer> selectEndPadding(Integer toSchoolId, Integer offset, Integer size);
+    public Long selectEndPaddingLength(Integer toSchoolId);
 }

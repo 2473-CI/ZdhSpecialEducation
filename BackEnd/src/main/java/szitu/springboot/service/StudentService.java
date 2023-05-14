@@ -5,6 +5,8 @@ import szitu.springboot.model.Student;
 import java.util.List;
 
 public interface StudentService {
+
+    public void updateToSchool(Long schoolId, Long studentId);
     public List<Student> getAll();
 
     public List<Student> search(Long schoolId, Long clazzId, String studentName,

@@ -18,6 +18,7 @@ public class Role {
     private Integer studentId;
     private Date date;
     private String authorization;
+//    private boolean is;
     public Role() {
 
     }

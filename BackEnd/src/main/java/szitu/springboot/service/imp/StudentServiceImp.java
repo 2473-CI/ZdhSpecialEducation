@@ -14,6 +14,11 @@ public class StudentServiceImp implements StudentService {
     private StudentMapper studentMapper;
 
     @Override
+    public void updateToSchool(Long schoolId, Long studentId) {
+        studentMapper.updateToSchool(schoolId, studentId);
+    }
+
+    @Override
     public List<Student> getAll() {
         return studentMapper.selectAll();
     }
