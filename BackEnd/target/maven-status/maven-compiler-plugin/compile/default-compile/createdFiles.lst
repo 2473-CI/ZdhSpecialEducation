@@ -129,5 +129,4 @@ szitu\springboot\service\ScaleService.class
 szitu\springboot\model\Clazz.class
 szitu\springboot\controller\StudentController.class
 szitu\springboot\service\imp\FamilyBasicServiceImp.class
-szitu\springboot\controller\AnswerServiceController.class
 szitu\springboot\mapper\PhysiologyMapper.class
