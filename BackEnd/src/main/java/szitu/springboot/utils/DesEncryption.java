@@ -38,4 +38,10 @@ public class DesEncryption {
         byte[] decrypted = cipher.doFinal(decoded);
         return new String(decrypted);
     }
+
+    public static void main(String[] args) throws Exception {
+        String str = "OAB5w5D0vACTEApZoLpJNmiUicNr5XlE/TmbjD4kaleyfNe4aD1mGggNYyWKEnSxZbUlBjeYPFv0cj1YRtOQDFn0iE8NFQunrd31gaoKVsiCGPHKYKr0f0oHEMnoGitn9cJRksyJ3OYbeR9rWJscw+Qq24Yg84PH+QHGNvUrgM6xES/soLX9zg==";
+        String decode = DesEncryption.decode(str);
+        System.out.println(decode);
+    }
 }

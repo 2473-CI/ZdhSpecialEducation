@@ -71,6 +71,7 @@ public class TransferController {
         if(transfer.getFromRegionCode() == null){
             return Result.fail("缺少关键信息");
         }
+        System.out.println("t>"+transfer);
         try{
             List<Transfer> ts = transferService.selectBoardPadding(transfer, (page - 1) * size, size);
             Long length = transferService.selectBoardPaddingLength(transfer);
@@ -172,6 +173,20 @@ public class TransferController {
             return Result.success("接受成功！");
         }catch (Exception err){
             return Result.fail("接受失败！");
+        }
+    }
+
+    @PostMapping("/selectByStudentId")
+    public Result<List<Transfer>> selectByStudentId(@RequestBody Transfer transfer) {
+        Integer studentId = transfer.getStudentId();
+        if(studentId == null){
+            return Result.fail("缺少关键信息");
+        }
+        try {
+            List<Transfer> transfers = transferService.selectByStudentId(studentId.longValue());
+            return Result.success(transfers);
+        }catch (Exception err){
+            return Result.fail("查询失败！");
         }
     }
 }

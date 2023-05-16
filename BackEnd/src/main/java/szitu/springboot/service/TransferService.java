@@ -18,4 +18,6 @@ public interface TransferService {
     public void end(Transfer transfer);
     public List<Transfer> selectEndPadding(Integer toSchoolId, Integer offset, Integer size);
     public Long selectEndPaddingLength(Integer toSchoolId);
+
+    public List<Transfer> selectByStudentId(Long studentId);
 }

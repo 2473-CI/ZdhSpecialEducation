@@ -54,4 +54,7 @@ public interface TransferMapper {
 
     @Update("UPDATE transfer SET endTime=NOW() AND status='接受完成'  WHERE id = #{id}")
     public void end(Transfer transfer);
+
+    @Select("SELECT * FROM transfer WHERE studentId=#{studentId}")
+    public List<Transfer> selectByStudentId(Long studentId);
 }
