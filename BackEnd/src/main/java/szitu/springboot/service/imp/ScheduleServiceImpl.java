@@ -13,8 +13,8 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     private ScheduleMapper scheduleMapper;
     @Override
-    public List<Schedule> selectByStudentId(Integer studentId) {
-        return scheduleMapper.selectByStudentId(studentId);
+    public List<Schedule> selectByStudentId(Schedule schedule) {
+        return scheduleMapper.selectByStudentId(schedule);
     }
 
     @Override

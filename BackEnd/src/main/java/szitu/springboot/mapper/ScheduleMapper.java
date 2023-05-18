@@ -7,10 +7,44 @@ import java.util.List;
 
 @Mapper
 public interface ScheduleMapper {
-    @Select("SELECT * FROM schedule WHERE studentId=#{studentId}")
-    public List<Schedule> selectByStudentId(Integer studentId);
+    @Select("""
+        <script> 
+        SELECT * FROM schedule WHERE 
+            <if test="studentId != null">
+                studentId=#{studentId}
+            </if>
+            <if test="classId != null">
+                classId=#{classId}
+            </if>
+        </script>
+        """)
+    public List<Schedule> selectByStudentId(Schedule schedule);
 
-    @Insert("INSERT INTO schedule(studentId, schedule) values(#{studentId}, #{schedule})")
+    @Insert("""
+        <script>    
+            INSERT INTO schedule(
+                    <if test="studentId != null">
+                        studentId, 
+                    </if>
+                    <if test="classId != null">
+                        classId, 
+                    </if>
+                    schedule, 
+                    `time`, 
+                    title) 
+                values(
+                     <if test="studentId != null">
+                        #{studentId}, 
+                    </if>
+                    <if test="classId != null">
+                        #{classId}, 
+                    </if>
+                    #{schedule}, 
+                    #{time}, 
+                    #{title}
+                )
+        </script>
+        """)
     public void insert(Schedule schedule);
 
     @Delete("DELETE FROM schedule WHERE id = #{id}")

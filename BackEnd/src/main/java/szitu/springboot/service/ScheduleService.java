@@ -5,7 +5,7 @@ import szitu.springboot.model.Schedule;
 import java.util.List;
 
 public interface ScheduleService {
-    public List<Schedule> selectByStudentId(Integer studentId);
+    public List<Schedule> selectByStudentId(Schedule schedule);
 
     public void insert(Schedule schedule);
 

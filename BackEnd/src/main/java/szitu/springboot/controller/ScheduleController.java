@@ -17,7 +17,10 @@ public class ScheduleController {
 
     @PostMapping("/add")
     public Result<String> add(@RequestBody Schedule schedule){
-        if(schedule.getStudentId() == null || schedule.getSchedule() == null){
+        if(schedule.getSchedule() == null){
+            return Result.fail("缺少关键信息");
+        }
+        if(schedule.getStudentId() == null && schedule.getClassId() == null){
             return Result.fail("缺少关键信息");
         }
         try {
@@ -43,14 +46,14 @@ public class ScheduleController {
 
     @PostMapping("/selectById")
     public Result<List<Schedule>> selectById(@RequestBody Schedule schedule){
-        if(schedule.getStudentId() == null){
+        if(schedule.getStudentId() == null && schedule.getClassId() == null){
             return Result.fail("缺少关键信息！");
         }
         try {
-            List<Schedule> schedules = scheduleService.selectByStudentId(schedule.getStudentId());
+            List<Schedule> schedules = scheduleService.selectByStudentId(schedule);
             return Result.success(schedules);
         }catch (Exception err){
-            return Result.fail("删除失败！");
+            return Result.fail("查询失败！" + err);
         }
     }
 }
