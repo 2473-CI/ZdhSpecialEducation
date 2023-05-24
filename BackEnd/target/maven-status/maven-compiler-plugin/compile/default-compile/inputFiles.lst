@@ -1,8 +1,11 @@
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\ServeMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\SchoolHomeServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\SchoolHomeMapper.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ServeServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\FamilyBasicController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\TransferServiceImpl.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\GrowUpController.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ServeService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\PlanService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\ObstacleController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\SchoolHomeController.java
@@ -12,6 +15,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\servic
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\AnswerMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\GradeController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\AnswerController.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\PlacementController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Clazz.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\User.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ClazzServiceImp.java
@@ -25,7 +29,9 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\ScaleClassifyMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\FileServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\SchoolService.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\PlacementMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\TeacherServiceImp.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\ServeController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\TransferController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ScaleServiceImpl.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ReflectService.java
@@ -83,6 +89,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\servic
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\StudentMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\StudentService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\StudentServiceImp.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Placement.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ScheduleService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\ScheduleController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Student.java
@@ -125,10 +132,12 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\servic
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\GradeServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\School.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ClazzService.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\PlacementService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Role.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Board.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\SchoolHome.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\FileController.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\PlacementServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\SchoolHomeService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\StudentBasicMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\ScaleClassify.java
@@ -138,6 +147,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\servic
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ObstacleServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Committee.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\GrowUpMapper.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Serve.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\LoveServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ScaleClassifyService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\ReflectController.java
