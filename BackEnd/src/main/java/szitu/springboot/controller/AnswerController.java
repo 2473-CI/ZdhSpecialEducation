@@ -6,12 +6,15 @@ import szitu.springboot.model.Answer;
 import szitu.springboot.model.Result;
 import szitu.springboot.service.imp.AnswerServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RequestMapping("/answer")
 @RestController
 public class AnswerController {
+
+
 
     @Autowired
     public AnswerServiceImpl answerService;
@@ -60,8 +63,10 @@ public class AnswerController {
         if(studentId == -1){
             return Result.success(answerService.getAll());
         }else {
+            System.out.println(answerService.getListByStudentId(studentId));
             return Result.success(answerService.getListByStudentId(studentId));
         }
+
     }
 
 

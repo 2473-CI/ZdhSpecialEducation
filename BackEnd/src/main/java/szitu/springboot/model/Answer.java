@@ -15,4 +15,5 @@ public class Answer {
     private String degree; // 完成度
     private String evaluation1; // 评价1
     private String evaluation2; // 评价2
+    private Date createTime;
 }

@@ -38,6 +38,9 @@ public class UserController {
 
     @Autowired
     private CommitteeServiceImpl committeeService;
+//
+//    @PostMapping("/decode")
+//    public Result<Role>
 
     /**
      * 登录
@@ -169,7 +172,11 @@ public class UserController {
         Role role = (Role)request.getAttribute("role");
         return Result.success(role.getRole()) ;
     }
-
+    @PostMapping("/getRole")
+    public Result<Role> getRole1(HttpServletRequest request){
+        Role role = (Role)request.getAttribute("role");
+        return Result.success(role) ;
+    }
     /**
      * 获取所有用户
      * @param request
