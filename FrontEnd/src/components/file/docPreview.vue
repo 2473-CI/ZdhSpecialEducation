@@ -15,6 +15,7 @@ const docxFile = reactive(null);
 //使用父组件传递过来的值
 const { path } = toRefs(props);
 path.value = path.value.replace("/file", "/file/word");
+// path.value = "http://47.98.50.217:82" + path.value
 console.log(props);
 // path.value = "http://192.168.10.142:82/file/attachment/download?filename=app.doc";
 // axios

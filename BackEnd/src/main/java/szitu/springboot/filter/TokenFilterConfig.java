@@ -11,7 +11,7 @@ public class TokenFilterConfig {
         FilterRegistrationBean<TokenFilter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new TokenFilter());
         registration.addUrlPatterns("/*"); // 设置过滤器的URL模式
-        registration.addInitParameter("exclusions", "/file/sheet/download,/file/attachment/download,/file/download,/file/upload,/examine/auth,/region/getOneMess,/user/login,/user/register,/school/getAll,/committee/,/region/getAll,/region/select,/obstacle/getAll,/grade/getAll"); // 排除/login URL
+        registration.addInitParameter("exclusions", "/file/word/download,/file/sheet/download,/file/attachment/download,/file/download,/file/upload,/examine/auth,/region/getOneMess,/user/login,/user/register,/school/getAll,/committee/,/region/getAll,/region/select,/obstacle/getAll,/grade/getAll"); // 排除/login URL
         registration.setName("TokenFilter");
         registration.setOrder(1); // 设置过滤器的优先级
         return registration;

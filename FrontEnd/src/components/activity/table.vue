@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { useSchoolStore } from "../../store/school";
 import { useActiveStore } from "../../store/activity";
 const ActiveStore = useActiveStore();

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useStudentStore } from "../store/student";
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 
 const StudentStore = useStudentStore();
 const ob = JSON.parse(localStorage.getItem("sq"));

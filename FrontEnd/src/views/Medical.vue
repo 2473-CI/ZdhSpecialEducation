@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { House } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted } from "vue";
 const list = ref([

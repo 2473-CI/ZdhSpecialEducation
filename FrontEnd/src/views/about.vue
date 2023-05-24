@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import { useAboutStore } from '../store/about'
 
 const aboutStore = useAboutStore()

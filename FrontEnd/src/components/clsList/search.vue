@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { ref, reactive } from "vue";
 import { useClassStore } from "../../store/cls";
 import Axios from "../../request/index";

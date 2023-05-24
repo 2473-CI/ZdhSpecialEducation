@@ -88,12 +88,12 @@ const form = reactive({
 
 // const basicId = ref("");
 
-const form1 = reactive({
-  cardId: "",
-  studentStatus: "",
-  studentId: JSON.parse(localStorage.getItem("sq")).studentId,
-  basicId: "",
-});
+// const form1 = reactive({
+//   cardId: "",
+//   studentStatus: "",
+//   studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+//   basicId: "",
+// });
 
 search();
 

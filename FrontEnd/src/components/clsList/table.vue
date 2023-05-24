@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useSchoolStore } from "../../store/school";
@@ -44,13 +44,13 @@ Axios.get("/grade/getAll").then((res) => {
   console.log(ob);
 });
 
-const handleSizeChange = (size: number) => {
+const handleSizeChange = (size) => {
   classStore.size = size;
   console.log("切换每页数量：", classStore.size);
   classStore.search();
 };
 
-const handleCurrentChange = (page: number) => {
+const handleCurrentChange = (page) => {
   classStore.page = page;
   console.log("切换页码：", classStore.page);
   classStore.search();
@@ -84,7 +84,7 @@ const upgrade = (classId, gradeName, className, description) => {
   });
 };
 
-const del = (clazzId: string) => {
+const del = (clazzId) => {
   ElMessageBox.confirm("确定要删除嘛？", "警告", {
     confirmButtonText: "确认",
     cancelButtonText: "取消",

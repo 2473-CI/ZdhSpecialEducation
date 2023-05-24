@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { useVideoStore } from '../store/videos'
 
 /**

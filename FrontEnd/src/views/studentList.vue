@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import Search from '../components/studentList/search.vue'
 import Table from '../components/studentList/table.vue'
 </script>

@@ -75,7 +75,7 @@ import {
 import * as docx from "docx-preview";
 import * as XLSX from "xlsx";
 import axios from "axios";
-import Axios from "../../request/index.ts";
+import Axios from "../../request/index.js";
 const { proxy } = getCurrentInstance();
 const typeName = ref(props.type);
 const imgUrl = ref("");

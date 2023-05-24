@@ -301,7 +301,7 @@ const ret = () => {
               <el-upload
                 v-model:file-list="fileList"
                 class="upload-demo"
-                action="/file/upload"
+                action="http://47.98.50.217:82/file/upload"
                 :on-change="handleChange"
               >
                 <el-button type="primary">点击上传文件</el-button>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive, getCurrentInstance, toRefs, defineProps } from "vue";
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Plus } from "@element-plus/icons-vue";
 import pdfPreview from "../components/file/pdfPreview.vue";
@@ -460,7 +460,7 @@ const showPdf = ref(false);
 const toPerview = (type, fileP) => {
   console.log(type);
   console.log(fileP);
-  filePath.value = fileP;
+  filePath.value = "http://47.98.50.217:82" + fileP;
   if (type == "Excel") {
     showExcel.value = true;
   } else if ((type = "word")) {
@@ -560,11 +560,11 @@ const ret = () => {
           <el-button type="primary" @click="addItem">添加任务</el-button>
         </el-form-item>
 
-        <el-form-item>
+        
+      </el-form>
+      <el-form-item >
           <el-button @click="dialogFormVisible = true">添加附件</el-button>
         </el-form-item>
-      </el-form>
-
       <el-dialog v-model="dialogFormVisible" title="添加附件">
         <div style="margin-bottom: 40px">
           <span style="margin-left: 28px">文件类型：</span>
@@ -602,7 +602,7 @@ const ret = () => {
           <el-upload
             v-model:file-list="fileList"
             class="upload-demo"
-            action="/file/upload"
+            action="http://47.98.50.217:82/file/upload"
             :on-change="handleChange"
           >
             <!-- <el-button type="primary">点击上传文件</el-button> -->

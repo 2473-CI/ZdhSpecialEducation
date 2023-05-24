@@ -2,7 +2,7 @@
 import { ref, reactive, getCurrentInstance, toRefs, defineProps } from "vue";
 import { House } from "@element-plus/icons-vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 
 const allList = ref([]);
 const dialogFormVisible = ref(false);

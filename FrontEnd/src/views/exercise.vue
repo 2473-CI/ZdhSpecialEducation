@@ -2,7 +2,7 @@
 import { ref, reactive, getCurrentInstance, toRefs, defineProps } from "vue";
 import { House } from "@element-plus/icons-vue";
 
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 import { asBlob } from "html-docx-js-typescript";
 import { saveAs } from "file-saver";
 import allWord from "../components/exer/allWord.vue";

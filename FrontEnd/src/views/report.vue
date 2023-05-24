@@ -1,7 +1,7 @@
 <script setup>
 import { House } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted, watch } from "vue";
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 import { getCurrentInstance } from "vue";
 import { asBlob } from "html-docx-js-typescript";
 import { saveAs } from "file-saver";

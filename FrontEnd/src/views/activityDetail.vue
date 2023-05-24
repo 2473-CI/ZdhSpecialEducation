@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { useRouter } from 'vue-router'
 import { useActiveStore } from '../store/activity'
 const router = useRouter()

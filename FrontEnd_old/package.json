@@ -1,0 +1,33 @@
+{
+  "name": "zdhspecialeducation",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@vue-office/docx": "^0.2.4",
+    "@vue-office/excel": "^0.2.10",
+    "@vue-office/pdf": "^0.2.5",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^5.1.12",
+    "axios": "^1.3.4",
+    "docx-preview": "^0.1.15",
+    "element-plus": "^2.2.33",
+    "mitt": "^3.0.0",
+    "pinia": "^2.0.32",
+    "vue": "^3.2.45",
+    "vue-router": "^4.1.6",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "file-saver": "^2.0.5",
+    "html-docx-js-typescript": "^0.1.5",
+    "typescript": "^4.9.3",
+    "vite": "^4.2.1"
+  }
+}

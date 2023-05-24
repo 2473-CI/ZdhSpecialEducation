@@ -1,7 +1,7 @@
 <script setup>
 import { House } from "@element-plus/icons-vue";
 import { ref, reactive, onMounted, watch } from "vue";
-import Axios from "../request/index.ts";
+import Axios from "../request/index.js";
 import { useRouter } from "vue-router";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { h } from "vue";

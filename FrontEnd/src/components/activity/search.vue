@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { ref } from "vue";
 import { useSchoolStore } from "../../store/school";
 const SchoolStore = useSchoolStore();

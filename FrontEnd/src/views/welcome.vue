@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup >
 import { useUserStore } from "../store/user";
 import { useProductStore } from "../store/product";
 
