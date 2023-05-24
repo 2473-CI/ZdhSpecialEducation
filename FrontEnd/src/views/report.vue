@@ -16,6 +16,20 @@ const r1 = ref("");
 const p2 = ref("");
 const c2 = ref("");
 const r2 = ref("");
+
+function steTime(time, style) {
+  var N = time.getFullYear(); //年
+  var Y =
+    time.getMonth() + 1 < 10
+      ? "0" + (time.getMonth() + 1)
+      : time.getMonth() + 1; //月
+  var R = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(); //日
+  var H = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(); //时
+  var F = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes(); //分
+  var M = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds(); //秒
+  return N + style + Y + style + R + " " + H + ":" + F + ":" + M;
+}
+
 Axios.get(
   `/studentBasic/get?studentId=${
     JSON.parse(localStorage.getItem("sq")).studentId
@@ -187,7 +201,7 @@ Axios.get(
           str.value += `
               <tr>
                 <td  colspan="2">${ob["qyestionContent"]}</td>
-                <td colspan="3">${k}</td>
+                <td colspan="3">${k["value"]}</td>
                 <td colspan="2">${ob["isPass"]}</td>
               </tr>
           `;
@@ -289,11 +303,18 @@ const exportWordTpl = () => {
           </tr>
           <tr>
             <td class="bold-text">出生日期</td>
-            <td>${studentB.birthday}</td>
+            <td>${steTime(new Date(studentB.birthday), "-")}</td>
             <td class="bold-text">年龄</td>
             <td></td>
             <td class="bold-text">班级</td>
             <td>${student.clazzName}</td>
+          </tr>
+
+          <tr>
+            <td class="bold-text">身份证</td>
+            <td>${studentB.cardId}</td>
+            <td class="bold-text">学籍号</td>
+            <td>${studentB.studentStatus}</td>
           </tr>
 
           <tr>
@@ -366,13 +387,19 @@ const exportWordTpl = () => {
             <td colspan="5">过敏情况：${special.irritability}</td>
           </tr>
           <tr>
-            <td colspan="5">存在健康问题：${special.healthProblem}</td>
+            <td colspan="5">存在健康问题：${special.healthProblem
+              .split(".")[0]
+              .replace("[", "")
+              .replace("]", "")}</td>
           </tr>
           <tr>
             <td colspan="5">用药/矫正器具：${special.pharmacy}</td>
           </tr>
           <tr>
-            <td colspan="5">沟通辅具：${special.speakAssist}</td>
+            <td colspan="5">沟通辅具：${special.speakAssist
+              .split(".")[0]
+              .replace("[", "")
+              .replace("]", "")}</td>
           </tr>
           <tr>
             <td class="bold-text" rowspan="11">兴趣偏好</td>
@@ -403,7 +430,10 @@ const exportWordTpl = () => {
             <td colspan="5">不喜欢的人物：${hobby.unLoveFigure}</td>
           </tr>
           <tr>
-            <td colspan="5">其他因素：${hobby.otherFactors}</td>
+            <td colspan="5">其他因素：${hobby.otherFactors
+              .split(".")[0]
+              .replace("[", "")
+              .replace("]", "")}</td>
           </tr>
           <tr>
             <td colspan="5">说明：${hobby.explain_}</td>
@@ -414,6 +444,29 @@ const exportWordTpl = () => {
             <th class="bold-text" colspan="2">是否通过</th>
           </tr>
           ${str.value}
+
+          <tr>
+            <th class="bold-text" colspan="7">同意签名盖章</th>
+          </tr>
+          <tr>
+            <th class="bold-text" colspan="7">我已经详阅以上所列之教育计划，并且同意此修改后个别教育计划之执行。（请在下列方格中签名）</th>
+          </tr>
+          <tr>
+            <td class="bold-text">行政人员</td>
+            <td></td>
+            <td class="bold-text">班主任</td>
+            <td></td>
+            <td class="bold-text">家长/监护人</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td class="bold-text">巡回指导教师</td>
+            <td></td>
+            <td class="bold-text">资源教师</td>
+            <td></td>
+            <td class="bold-text">康复师</td>
+            <td></td>
+          </tr>
         </tbody>
       </table>
     </div>
@@ -484,7 +537,8 @@ const exportWordTpl = () => {
             overflow: hidden;
           "
         >
-          <span style="color: #8c8c8c">出生日期：</span>{{ studentB.birthday }}
+          <span style="color: #8c8c8c">出生日期：</span
+          >{{ steTime(new Date(studentB.birthday), "-") }}
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">年龄：</span>
@@ -500,6 +554,13 @@ const exportWordTpl = () => {
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">生长地：</span>{{ p2 }}/{{ c2 }}/{{ r2 }}
+        </p>
+        <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
+          <span style="color: #8c8c8c">身份证号：</span>{{ studentB.cardId }}
+        </p>
+        <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
+          <span style="color: #8c8c8c">学籍号：</span
+          >{{ studentB.studentStatus }}
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">障碍类型：</span
@@ -608,7 +669,12 @@ const exportWordTpl = () => {
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">存在健康问题：</span
-          >{{ special.healthProblem }}
+          >{{
+            special.healthProblem
+              .split(".")[0]
+              .replace("[", "")
+              .replace("]", "")
+          }}
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">其他健康问题：</span
@@ -620,7 +686,9 @@ const exportWordTpl = () => {
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">无语言需要沟通辅具：</span
-          >{{ special.speakAssist }}
+          >{{
+            special.speakAssist.split(".")[0].replace("[", "").replace("]", "")
+          }}
         </p>
         <p style="width: 24%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c"> 其他沟通辅具：</span
@@ -674,7 +742,10 @@ const exportWordTpl = () => {
           >{{ hobby.unLoveFigure }}
         </p>
         <p style="width: 30%; height: 20px; color: #000; font-size: 14px">
-          <span style="color: #8c8c8c">其他因素：</span>{{ hobby.otherFactors }}
+          <span style="color: #8c8c8c">其他因素：</span
+          >{{
+            hobby.otherFactors.split(".")[0].replace("[", "").replace("]", "")
+          }}
         </p>
         <p style="width: 30%; height: 20px; color: #000; font-size: 14px">
           <span style="color: #8c8c8c">说明：</span>{{ hobby.explain_ }}
@@ -705,7 +776,7 @@ const exportWordTpl = () => {
           >{{ family.languageEnvironment }}
         </p>
       </div>
-      <el-table
+      <!-- <el-table
         :data="tableData"
         :cell-style="{
           textAlign: 'left',
@@ -745,12 +816,12 @@ const exportWordTpl = () => {
           width="auto"
           min-width="20%"
         />
-      </el-table>
+      </el-table> -->
 
-      <h3 style="margin-left: 20px; margin-top: 30px">特殊儿童评估干预</h3>
+      <!-- <h3 style="margin-left: 20px; margin-top: 30px">特殊儿童评估干预</h3>
       <div style="margin-top: 10px; color: #8c8c8c; margin-bottom: 20px">
         <p style="margin-left: 20px">无</p>
-      </div>
+      </div> -->
       <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
         志培学校国家课程标准评估
       </h3>
@@ -826,7 +897,7 @@ const exportWordTpl = () => {
           </div>
         </el-collapse>
       </div>
-      <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
+      <!-- <h3 style="margin-left: 20px; margin-top: 30px; margin-bottom: 20px">
         随班就读儿童评估干预
       </h3>
       <div style="margin-top: 10px; color: #8c8c8c; margin-bottom: 20px">
@@ -837,7 +908,7 @@ const exportWordTpl = () => {
       </h3>
       <div style="margin-top: 10px; color: #8c8c8c; margin-bottom: 20px">
         <p style="margin-left: 20px">无</p>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

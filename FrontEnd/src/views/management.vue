@@ -148,11 +148,11 @@ Axios.get("/user/getRole").then(async (res) => {
             v-if="isShowG || isShowJ"
             >个人资源</el-menu-item
           >
-          <el-menu-item
+          <!-- <el-menu-item
             index="/management/sharedResources"
             v-if="isShowG || isShowW || isShowX || isShowJ"
             >共享资源</el-menu-item
-          >
+          > -->
         </el-sub-menu>
 
         <el-sub-menu index="4" v-if="isShowG || isShowW || isShowX || isShowJ">
@@ -165,10 +165,11 @@ Axios.get("/user/getRole").then(async (res) => {
             v-if="isShowG || isShowW || isShowX || isShowJ"
             >转衔审批</el-menu-item
           >
-          <el-menu-item
-            index="/management/enroll"
-            v-if="isShowG || isShowW || isShowX"
-            >注册审批</el-menu-item
+          <el-menu-item index="/management/enroll" v-if="isShowG || isShowX"
+            >接收转衔审批</el-menu-item
+          >
+          <el-menu-item index="/management/placement" v-if="isShowX"
+            >安置审批</el-menu-item
           >
         </el-sub-menu>
       </el-menu>

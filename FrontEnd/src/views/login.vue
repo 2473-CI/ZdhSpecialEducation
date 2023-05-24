@@ -60,7 +60,7 @@ const password = ref("");
           <el-radio label="系统管理员" size="small" border>系统管理员</el-radio>
           <el-radio label="委员会" size="small" border>委员会</el-radio>
           <el-radio label="学生" size="small" border>学生</el-radio>
-          <el-radio label="学校管理" size="small" border>学校管理员</el-radio>
+          <el-radio label="学校管理员" size="small" border>学校管理员</el-radio>
           <el-radio label="教师" size="small" border>教师</el-radio>
         </el-radio-group>
 

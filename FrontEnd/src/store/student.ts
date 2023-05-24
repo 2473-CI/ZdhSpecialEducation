@@ -24,6 +24,7 @@ export const useStudentStore = defineStore("student", {
         sex: "",
         obstacle: "",
         studentId: "",
+        arrangeName: "",
       },
     };
   },

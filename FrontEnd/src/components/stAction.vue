@@ -11,6 +11,14 @@ const dialogFormVisible = ref(false);
 const fileType = ref("");
 const fileName = ref("");
 
+const showBtn = ref(true);
+Axios.get("/user/getRole").then((res) => {
+  console.log(res);
+  if (res.data == "学生") {
+    showBtn.value = false;
+  }
+});
+
 const optionsType = [
   {
     label: "Excel",
@@ -75,14 +83,16 @@ const getAllRecord = () => {
     AllList.value = res.data;
 
     for (let item of AllList.value) {
-      console.log(JSON.parse(item.context));
-      let tmp = JSON.parse(item["context"]);
-      for (let it of tmp) {
-        if (!it.hasOwnProperty("isFalse")) it["isFalse"] = [];
-        if (!it.hasOwnProperty("remarks")) it["remarks"] = "";
-        if (!it.hasOwnProperty("scoreSelf")) it["scoreSelf"] = 0;
+      console.log(item);
+      if (item["context"] != "") {
+        let tmp = JSON.parse(item["context"]);
+        for (let it of tmp) {
+          if (!it.hasOwnProperty("isFalse")) it["isFalse"] = [];
+          if (!it.hasOwnProperty("remarks")) it["remarks"] = "";
+          if (!it.hasOwnProperty("scoreSelf")) it["scoreSelf"] = 0;
+        }
+        item["context"] = JSON.stringify(tmp);
       }
-      item["context"] = JSON.stringify(tmp);
     }
     // console.log(AllList.value);
   });
@@ -228,7 +238,8 @@ const giveContent = (
         it.scoreSelf += it.qyestionScore;
       }
     } else if (it.qyestionType == "主观") {
-      it.scoreSelf += it.isFalse;
+      it.scoreSelf += it.isFalse - 0;
+      console.log(typeof it.scoreSelf);
     } else if (it.qyestionType == "单选判断") {
       for (let o of content.value) {
         o.select = o.select.map((k, index) => {
@@ -298,6 +309,7 @@ const submit = () => {
       type: "error",
     });
   } else {
+    console.log(formDetail.classify3);
     Axios.post("/exercise/add", {
       studentId: JSON.parse(localStorage.getItem("sq")).studentId,
       title: formDetail.classify3,
@@ -475,6 +487,7 @@ const ret = () => {
     <el-card
       class="box-card"
       style="margin-left: 1%; margin-right: 1%"
+      v-if="showBtn"
       v-show="!showPage"
     >
       <el-form :inline="true" class="all-form">
@@ -818,6 +831,12 @@ const ret = () => {
           <span>得分：{{ score }}</span>
 
           <el-button @click="submit()">提交</el-button>
+          <el-button
+            v-show="showPage"
+            @click="goHome()"
+            style="position: absolute; right: 100px"
+            >返回</el-button
+          >
         </div>
       </div>
     </el-card>

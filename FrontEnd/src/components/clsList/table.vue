@@ -56,6 +56,34 @@ const handleCurrentChange = (page: number) => {
   classStore.search();
 };
 
+const upgrade = (classId, gradeName, className, description) => {
+  let obj = {};
+  console.log(classId, gradeName);
+  obj = options3.value.filter((k) => k.gradeName == gradeName)[0];
+  obj.gradeId++;
+  Axios.put("/clazz/update", {
+    clazzId: classId,
+    gradeId: obj.gradeId,
+    clazzName: className,
+    description: description,
+  }).then(async (res) => {
+    if (res.success == true) {
+      ElMessage({
+        showClose: true,
+        message: res.data,
+        type: "success",
+      });
+      await classStore.search();
+    } else if (res.success == false) {
+      ElMessage({
+        showClose: true,
+        message: res.message,
+        type: "error",
+      });
+    }
+  });
+};
+
 const del = (clazzId: string) => {
   ElMessageBox.confirm("确定要删除嘛？", "警告", {
     confirmButtonText: "确认",
@@ -332,6 +360,18 @@ const revise = () => {
         <template #default="scope">
           <div style="display: flex; flex-wrap: nowrap">
             <el-button
+              text
+              @click="
+                upgrade(
+                  scope.row.clazzId,
+                  scope.row.gradeName,
+                  scope.row.clazzName,
+                  scope.row.description
+                )
+              "
+              >升级</el-button
+            >
+            <el-button
               type="primary"
               text
               style="margin-left: -15px"
@@ -346,7 +386,6 @@ const revise = () => {
               "
               >修改</el-button
             >
-
             <el-button type="danger" text @click="del(scope.row.clazzId)"
               >删除</el-button
             >
@@ -370,7 +409,7 @@ const revise = () => {
 
     <el-dialog
       v-model="dialogVisible"
-      title="新建班级"
+      title="修改"
       style="text-align: center; width: 500px; height: 600px"
     >
       <el-form :model="form2">

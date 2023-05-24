@@ -62,6 +62,19 @@ const scalarArrayEquals = (array1, array2) => {
   );
 };
 
+function steTime(time, style) {
+  var N = time.getFullYear(); //年
+  var Y =
+    time.getMonth() + 1 < 10
+      ? "0" + (time.getMonth() + 1)
+      : time.getMonth() + 1; //月
+  var R = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(); //日
+  var H = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(); //时
+  var F = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes(); //分
+  var M = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds(); //秒
+  return N + style + Y + style + R + " " + H + ":" + F + ":" + M;
+}
+
 const num = ref(0);
 const handleChange = (value) => {
   console.log(value);
@@ -351,15 +364,68 @@ const open = (index) => {
     });
 };
 
-const toHistory = (answerId) => {
+const toHistory = (answerId, degree) => {
   showNum.value = true;
+
+  if (degree != "未完成") {
+    isShow.value = true;
+  }
+  score.value = 0;
   Axios.get(`/answer/get?answerId=${answerId}`).then((res) => {
+    let s = [];
+    console.log(res);
     console.log(JSON.parse(res.data.context)["_value"]);
+
     content.value = JSON.parse(res.data.context)["_value"];
     textTitle.value = res.data.title;
     textarea1.value = res.data.evaluation1;
     textarea2.value = res.data.evaluation2;
     ansId.value = answerId;
+
+    for (let item of JSON.parse(res.data.context)["_value"]) {
+      s.push(item["qyestionScore"]);
+    }
+    console.log(s);
+    console.log(res.data);
+    console.log(scoring.value);
+
+    for (let i = 0; i < s.length; i++) {
+      optionScore.value.push([]);
+    }
+
+    for (let i = 0; i < s.length; i++) {
+      for (let j = 0; j < s[i] + 1; j++) {
+        optionScore.value[i].push({ value: j, label: j });
+      }
+    }
+
+    for (let item of JSON.parse(res.data.context)["_value"]) {
+      if (item.qyestionType == "单选") {
+        if (item.isFalse == item.isTrue) {
+          score.value += item.qyestionScore - 0;
+        }
+      } else if (item.qyestionType == "多选") {
+        if (scalarArrayEquals(item.isFalse, item.isTrue)) {
+          score.value += item.qyestionScore - 0;
+        }
+      } else if (item.qyestionType == "主观") {
+        score.value += item.isFalse - 0;
+      } else if (item.qyestionType == "单选判断") {
+        for (let item of content.value) {
+          item.select = item.select.map((k, index) => {
+            return {
+              i: index,
+              name: k["name"],
+            };
+          });
+          for (let it of item.select) {
+            if (it.name == item.isFalse) {
+              score.value += item.Single[it["i"]] - 0;
+            }
+          }
+        }
+      }
+    }
   });
 };
 const open2 = () => {
@@ -527,7 +593,7 @@ const open2 = () => {
         </div> -->
 
         <el-card
-          @click="toHistory(item.answerId)"
+          @click="toHistory(item.answerId, item.degree)"
           class="box-card"
           style="background-color: #e6fffb"
           v-for="(item, index) in hisList"
@@ -553,6 +619,9 @@ const open2 = () => {
               width="100"
             />
           </div>
+          <p style="text-align: center; font-size: 12px; margin-top: 8px">
+            {{ steTime(new Date(item.createTime), "-") }}
+          </p>
         </el-card>
       </div>
 
@@ -695,7 +764,9 @@ const open2 = () => {
                   :key="i"
                   style="margin-top: 10px"
                 >
-                  <span> {{ sel.name }}.{{ sel.value }}</span>
+                  <span>
+                    {{ sel.name }}.<span>{{ sel.value }}</span></span
+                  >
                 </el-checkbox>
               </el-checkbox-group>
             </div>
@@ -742,12 +813,10 @@ const open2 = () => {
           <span style="margin-left: 20px">
             得分：<span v-if="isShow">{{ score }}</span>
           </span>
-          <el-button
-            type="primary"
-            style="width: 10%; font-size: 1vw"
-            @click="isSure()"
-            >提交</el-button
-          >
+          <div>
+            <el-button type="primary" @click="isSure()">提交</el-button>
+            <el-button @click="showNum = false">返回</el-button>
+          </div>
         </div>
 
         <div

@@ -16,6 +16,19 @@ const hisList = ref([]);
 const per = ref([]);
 const ansId = ref("");
 
+function steTime(time, style) {
+  var N = time.getFullYear(); //年
+  var Y =
+    time.getMonth() + 1 < 10
+      ? "0" + (time.getMonth() + 1)
+      : time.getMonth() + 1; //月
+  var R = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(); //日
+  var H = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(); //时
+  var F = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes(); //分
+  var M = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds(); //秒
+  return N + style + Y + style + R + " " + H + ":" + F + ":" + M;
+}
+
 const getAllHis = () => {
   Axios.get(
     `/answer/getAll?studentId=${
@@ -302,13 +315,60 @@ const open = (index) => {
 
 const toHistory = (answerId) => {
   showNum.value = true;
+  if (degree != "未完成") {
+    isShow.value = true;
+  }
+  score.value = 0;
   Axios.get(`/answer/get?answerId=${answerId}`).then((res) => {
+    let s = [];
     console.log(JSON.parse(res.data.context)["_value"]);
     content.value = JSON.parse(res.data.context)["_value"];
     textTitle.value = res.data.title;
     textarea1.value = res.data.evaluation1;
     textarea2.value = res.data.evaluation2;
     ansId.value = answerId;
+
+    for (let item of JSON.parse(res.data.context)["_value"]) {
+      s.push(item["qyestionScore"]);
+    }
+
+    for (let i = 0; i < s.length; i++) {
+      optionScore.value.push([]);
+    }
+
+    for (let i = 0; i < s.length; i++) {
+      for (let j = 0; j < s[i] + 1; j++) {
+        optionScore.value[i].push({ value: j, label: j });
+      }
+    }
+
+    for (let item of JSON.parse(res.data.context)["_value"]) {
+      if (item.qyestionType == "单选") {
+        if (item.isFalse == item.isTrue) {
+          score.value += item.qyestionScore - 0;
+        }
+      } else if (item.qyestionType == "多选") {
+        if (scalarArrayEquals(item.isFalse, item.isTrue)) {
+          score.value += item.qyestionScore - 0;
+        }
+      } else if (item.qyestionType == "主观") {
+        score.value += item.isFalse - 0;
+      } else if (item.qyestionType == "单选判断") {
+        for (let item of content.value) {
+          item.select = item.select.map((k, index) => {
+            return {
+              i: index,
+              name: k["name"],
+            };
+          });
+          for (let it of item.select) {
+            if (it.name == item.isFalse) {
+              score.value += item.Single[it["i"]] - 0;
+            }
+          }
+        }
+      }
+    }
   });
 };
 </script>
@@ -411,20 +471,20 @@ const toHistory = (answerId) => {
           />
         </el-select> -->
 
-        <el-button
+        <!-- <el-button
           style="width: 10%; font-size: 1vw; margin-left: 1vw"
           type="primary"
           >查看IEP报告</el-button
-        >
+        > -->
         <el-button
           type="primary"
           style="width: 10%; font-size: 1vw"
           @click="$router.push('/management/report')"
           >查看报告</el-button
         >
-        <el-button type="primary" style="width: 13%; font-size: 1vw"
+        <!-- <el-button type="primary" style="width: 13%; font-size: 1vw"
           >查看其他学年IEP</el-button
-        >
+        > -->
       </div>
 
       <div v-if="!showNum" style="width: 80%; display: flex; flex-wrap: wrap">
@@ -483,6 +543,9 @@ const toHistory = (answerId) => {
               width="150"
             />
           </div>
+          <p style="text-align: center; font-size: 12px; margin-top: 8px">
+            {{ steTime(new Date(item.createTime), "-") }}
+          </p>
         </el-card>
       </div>
 
@@ -592,12 +655,10 @@ const toHistory = (answerId) => {
           <span style="margin-left: 20px">
             得分：<span v-if="isShow">{{ score }}</span>
           </span>
-          <el-button
-            type="primary"
-            style="width: 10%; font-size: 1vw"
-            @click="isSure()"
-            >提交</el-button
-          >
+          <div>
+            <el-button type="primary" @click="isSure()">提交</el-button>
+            <el-button @click="showNum = false">返回</el-button>
+          </div>
         </div>
         <div
           style="display: flex; justify-content: space-around; margin-top: 20px"

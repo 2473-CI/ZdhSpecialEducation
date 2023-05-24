@@ -2,7 +2,7 @@ import axios from "axios";
 import { router } from "../router";
 
 const Axios = axios.create({
-  // baseURL: "http://192.168.10.142:82",
+  // baseURL: "http://192.168.10.105:82",
   baseURL: "http://47.98.50.217:82",
   timeout: 5000,
 });

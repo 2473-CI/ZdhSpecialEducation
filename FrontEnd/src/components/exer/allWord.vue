@@ -202,6 +202,26 @@
       </div>
     </div>
     <button @click="lastExportWordTpl()">导出 Word 文档</button>
+
+    <div id="export-content5">
+      <h1 style="text-align: center; margin-top: 10px">支持服务</h1>
+      <div style="display: flex; justify-content: center; margin-top: 20px">
+        <table style="border-collapse: collapse; width: 100%">
+          <tbody id="sup"></tbody>
+        </table>
+      </div>
+    </div>
+    <button @click="supexportWordTpl2()">导出 Word 文档</button>
+
+    <div id="export-content6">
+      <h1 style="text-align: center; margin-top: 10px">课程计划</h1>
+      <div style="display: flex; justify-content: center; margin-top: 20px">
+        <table style="border-collapse: collapse; width: 100%">
+          <tbody id="les"></tbody>
+        </table>
+      </div>
+    </div>
+    <button @click="lessionexportWordTpl2()">导出 Word 文档</button>
   </div>
 </template>
 
@@ -276,12 +296,280 @@ onMounted(() => {
       lastExportWordTpl();
     });
   });
+
+  const wordList = ref([]);
+  bus.on("supMessage", (list) => {
+    wordList.value = list["_rawValue"];
+    console.log(wordList.value);
+    let str = `
+            <tr>
+              <th class="bold-text" colspan="3">服务内容</th>
+              <th class="bold-text" colspan="3">服务内容描述</th>
+              <th class="bold-text" colspan="3">负责单位（人）</th>
+            </tr>`;
+    for (let item of wordList.value) {
+      str += `<tr>
+              <td colspan="3">${item.content}</td>
+              <td colspan="3">${item.describe}</td>
+              <td colspan="3">${item.unit}</td>
+            </tr>`;
+    }
+
+    document.getElementById("sup").innerHTML = str;
+    nextTick(() => {
+      supexportWordTpl2();
+    });
+  });
+
+  const lessionList = reactive({
+    schedule: "",
+    time: "",
+    title: "",
+  });
+  bus.on("lessionMessage", (list) => {
+    lessionList.schedule = list[0].schedule;
+    lessionList.time = list[0].time;
+    lessionList.title = list[0].title;
+    console.log(lessionList);
+
+    let str = ` <tr>
+              <th class="bold-text" colspan="7">${lessionList.title}</th>
+            </tr>
+            <tr>
+              <td>时段</td>
+              <td>节次</td>
+              <td>星期一</td>
+              <td>星期二</td>
+              <td>星期三</td>
+              <td>星期四</td>
+              <td>星期五</td>
+            </tr>
+            <tr>
+              <td>
+                上午
+                <p>
+                   ${JSON.parse(lessionList.time)[0].startTime}~${
+      JSON.parse(lessionList.time)[0].endTime
+    }
+                </p>
+              </td>
+              <td>1</td>
+              <td>
+                <p>${JSON.parse(lessionList.schedule)[0].oneLessionName}</p>
+                <p>${JSON.parse(lessionList.schedule)[0].oneTeacherName}</p>
+                </td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].oneLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].oneTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].oneLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].oneTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].oneLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].oneTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].oneLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].oneTeacherName
+                }</p></td>
+            </tr>
+            <tr>
+              <td>上午
+                <p>
+                   ${JSON.parse(lessionList.time)[1].startTime}~${
+      JSON.parse(lessionList.time)[1].endTime
+    }
+                </p>
+                </td>
+              <td>2</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].twoLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].twoTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].twoLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].twoTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].twoLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].twoTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].twoLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].twoTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].twoLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].twoTeacherName
+                }</p></td>
+            </tr>
+            <tr>
+              <td>上午<p>
+                   ${JSON.parse(lessionList.time)[2].startTime}~${
+      JSON.parse(lessionList.time)[2].endTime
+    }
+                </p></td>
+              <td>3</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].threeLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].threeTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].threeLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].threeTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].threeLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].threeTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].threeLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].threeTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].threeLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].threeTeacherName
+                }</p></td>
+            </tr>
+            <tr>
+              <td>上午
+                <p>
+                   ${JSON.parse(lessionList.time)[3].startTime}~${
+      JSON.parse(lessionList.time)[3].endTime
+    }
+                </p>
+                </td>
+              <td>4</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].fourLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].fourTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].fourLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].fourTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].fourLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].fourTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].fourLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].fourTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].fourLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].fourTeacherName
+                }</p></td>
+            </tr>
+            <tr>
+              <td></td>
+            </tr>
+            <tr>
+              <td>下午
+                <p>
+                   ${JSON.parse(lessionList.time)[4].startTime}~${
+      JSON.parse(lessionList.time)[4].endTime
+    }
+                </p>
+                </td>
+              <td>5</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].fiveLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].fiveTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].fiveLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].fiveTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].fiveLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].fiveTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].fiveLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].fiveTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].fiveLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].fiveTeacherName
+                }</p></td>
+            </tr>
+
+            <tr>
+              <td>下午
+                <p>
+                   ${JSON.parse(lessionList.time)[5].startTime}~${
+      JSON.parse(lessionList.time)[5].endTime
+    }
+                </p>
+                </td>
+              <td>6</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].sixLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].sixTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].sixLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].sixTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].sixLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].sixTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].sixLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].sixTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].sixLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].sixTeacherName
+                }</p></td>
+            </tr>
+            <tr>
+              <td>下午
+                <p>
+                   ${JSON.parse(lessionList.time)[6].startTime}~${
+      JSON.parse(lessionList.time)[6].endTime
+    }
+                </p>
+                </td>
+              <td>7</td>
+              <td><p>${JSON.parse(lessionList.schedule)[0].sevenLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[0].sevenTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[1].sevenLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[1].sevenTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[2].sevenLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[2].sevenTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[3].sevenLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[3].sevenTeacherName
+                }</p></td>
+              <td><p>${JSON.parse(lessionList.schedule)[4].sevenLessionName}</p>
+                <p>${
+                  JSON.parse(lessionList.schedule)[4].sevenTeacherName
+                }</p></td>
+            </tr>`;
+    document.getElementById("les").innerHTML = str;
+    nextTick(() => {
+      lessionexportWordTpl2();
+    });
+  });
 });
 onBeforeUnmount(() => {
   bus.off("printMessage");
   bus.off("firstMessage");
   bus.off("homeMessage");
   bus.off("reflectMessage");
+  bus.off("supMessage");
+  bus.off("lessionManage");
 });
 
 const planExportWordTpl = () => {
@@ -403,6 +691,70 @@ const lastExportWordTpl = () => {
                             <body>
                             ${
                               document.getElementById("export-content4")
+                                .innerHTML
+                            }
+                            </body>
+                        </html>`;
+  const fileData = asBlob(htmlString).then((data) => {
+    saveAs(data, "file.docx");
+  });
+};
+
+const supexportWordTpl2 = () => {
+  const htmlString = `<!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Document</title>
+                                <style>
+                                #export-content{
+                                    width: 100%;
+                                    height: 100%;
+                                    /* background-color: aqua; */
+                                }
+                                th, td {
+                                    border: 1px solid black; padding: 8px; text-align: center;
+                                }
+                                .bold-text {
+                                    font-weight: bold;
+                                }
+                                </style>
+                            </head>
+                            <body>
+                            ${
+                              document.getElementById("export-content5")
+                                .innerHTML
+                            }
+                            </body>
+                        </html>`;
+  const fileData = asBlob(htmlString).then((data) => {
+    saveAs(data, "file.docx");
+  });
+};
+
+const lessionexportWordTpl2 = () => {
+  const htmlString = `<!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <title>Document</title>
+                                <style>
+                                #export-content{
+                                    width: 100%;
+                                    height: 100%;
+                                    /* background-color: aqua; */
+                                }
+                                th, td {
+                                    border: 1px solid black; padding: 8px; text-align: center;
+                                }
+                                .bold-text {
+                                    font-weight: bold;
+                                }
+                                </style>
+                            </head>
+                            <body>
+                            ${
+                              document.getElementById("export-content6")
                                 .innerHTML
                             }
                             </body>

@@ -326,7 +326,10 @@ console.log(scLsit);
         <div
           style="height: 130px; display: flex; justify-content: space-between"
         >
-          <div class="home_info shaDow icon">
+          <div
+            class="home_info shaDow icon"
+            @click="$router.push('/management/record')"
+          >
             <svg
               t="1679842077237"
               class="icon"

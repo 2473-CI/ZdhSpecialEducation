@@ -10,18 +10,18 @@ import java.util.List;
 public interface ServeMapper {
 
     @Insert("""
-        INSERT INTO 'serve'(studentId, studentName, content, description, head)
+        INSERT INTO `serve`(studentId, studentName, content, description, head)
          values(#{studentId}, #{studentName}, #{content}, #{description}, #{head})
     """)
     public void insert(Serve serve);
 
     @Delete("""
-        DELETE FROM 'serve' WHERE id=#{id}
+        DELETE FROM `serve` WHERE id=#{id}
         """)
     public void delete(Serve serve);
 
     @Select("""
-        SELECT * FROM 'serve' WHERE studentId=#{studentId}
+        SELECT * FROM `serve` WHERE studentId=#{studentId}
     """)
     public List<Serve> selectByStudentId(Serve serve);
 }

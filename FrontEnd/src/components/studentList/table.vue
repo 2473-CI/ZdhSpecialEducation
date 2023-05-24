@@ -24,6 +24,23 @@ const handleCurrentChange = (page) => {
   search();
 };
 
+const allIdList = ref([]);
+const cardList = ref([]);
+Axios.post(`/student/search?page=1&size=1000`, {}).then((res) => {
+  console.log(res);
+  for (let item of res.data) {
+    allIdList.value.push(item.studentId);
+  }
+  console.log(allIdList.value);
+
+  for (let item of allIdList.value) {
+    Axios.get(`/studentBasic/get?studentId=${item}`).then((res) => {
+      cardList.value.push(res.data.studentBasic);
+    });
+  }
+  cardList.value = cardList.value.sort((a, b) => b.studentId - a.studentId);
+});
+
 const addX = (
   name,
   studentHead,
@@ -31,7 +48,10 @@ const addX = (
   clazzName,
   studentGender,
   obstacleName,
-  studentId
+  studentId,
+  arrangeName,
+  arrangeId,
+  schoolId
 ) => {
   StudentStore.studentQuery.name = name;
   StudentStore.studentQuery.headUrl = studentHead;
@@ -40,6 +60,9 @@ const addX = (
   StudentStore.studentQuery.sex = studentGender;
   StudentStore.studentQuery.obstacle = obstacleName;
   StudentStore.studentQuery.studentId = studentId;
+  StudentStore.studentQuery.arrangeName = arrangeName;
+  StudentStore.studentQuery.arrangeId = arrangeId;
+
   console.log(StudentStore.studentQuery);
   StudentStore.getStorage();
 };
@@ -61,6 +84,15 @@ const form = reactive({
   sex: "",
   pro: "",
   avge: "",
+});
+
+// const basicId = ref("");
+
+const form1 = reactive({
+  cardId: "",
+  studentStatus: "",
+  studentId: JSON.parse(localStorage.getItem("sq")).studentId,
+  basicId: "",
 });
 
 search();
@@ -272,6 +304,7 @@ const change2 = () => {
 
 function exportExcel() {
   let arrAll = [];
+  console.log(document.querySelectorAll(".el-table__header th .cell"));
   let header = [...document.querySelectorAll(".el-table__header th .cell")].map(
     (th) => th.textContent
   );
@@ -491,7 +524,7 @@ const showMe = () => {
           </el-form-item>
 
           <el-form-item>
-            <span style="margin-left: 15px">放置方式：</span>
+            <span style="margin-left: 15px">安置方式：</span>
             <el-select
               v-model="form.avge"
               placeholder="请选择放置方式"
@@ -557,6 +590,7 @@ const showMe = () => {
       }"
     >
       <!-- <el-table-column fixed prop="schoolId" label="学校" width="150" /> -->
+
       <el-table-column
         label="学校"
         width="auto"
@@ -564,6 +598,21 @@ const showMe = () => {
         prop="schoolName"
       >
       </el-table-column>
+
+      <el-table-column label="身份证" width="auto" min-width="20%">
+        <template #default="scope">
+          <p v-for="(item,index) in cardList" :key="index" >
+
+            <p  v-if="scope.row.studentId == item.studentId">
+              <p v-if="cardList[index].cardId">
+                {{ cardList[index].cardId }}
+              </p>
+              
+            </p>
+          </p>
+        </template>
+      </el-table-column>
+
       <el-table-column
         prop="clazzName"
         label="班级"
@@ -576,6 +625,17 @@ const showMe = () => {
         width="auto"
         min-width=" 10%"
       />
+      <el-table-column label="学籍号" width="auto" min-width="20%">
+        <template #default="scope">
+          <p v-for="(item,index) in cardList" :key="index" >
+          <p  v-if="scope.row.studentId == item.studentId">
+            <p v-if="cardList[index].studentNo">
+              {{ cardList[index].studentNo }}
+            </p>
+          </p>
+        </p>
+        </template>
+      </el-table-column>
       <el-table-column label="头像" width="auto" min-width="10%">
         <template #default="scope">
           <!-- <div style="display: flex; align-items: center"> -->
@@ -606,6 +666,7 @@ const showMe = () => {
         width="auto"
         min-width="15%"
       />
+
       <el-table-column
         label="操作"
         width="auto"
@@ -627,7 +688,9 @@ const showMe = () => {
                     scope.row.clazzName,
                     scope.row.studentGender,
                     scope.row.obstacleName,
-                    scope.row.studentId
+                    scope.row.studentId,
+                    scope.row.arrangeName,
+                    scope.row.schoolId
                   )
               "
               >进入主页</el-button
@@ -748,6 +811,7 @@ const showMe = () => {
           v-model="reviseForm.arrangeId"
           placeholder="请选择放置方式"
           style="width: 300px"
+          disabled
         >
           <el-option
             v-for="item in options4"

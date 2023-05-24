@@ -37,6 +37,19 @@ const form2 = reactive({
   subordinateCenter: "",
 });
 
+function steTime(time, style) {
+  var N = time.getFullYear(); //年
+  var Y =
+    time.getMonth() + 1 < 10
+      ? "0" + (time.getMonth() + 1)
+      : time.getMonth() + 1; //月
+  var R = time.getDate() < 10 ? "0" + time.getDate() : time.getDate(); //日
+  var H = time.getHours() < 10 ? "0" + time.getHours() : time.getHours(); //时
+  var F = time.getMinutes() < 10 ? "0" + time.getMinutes() : time.getMinutes(); //分
+  var M = time.getSeconds() < 10 ? "0" + time.getSeconds() : time.getSeconds(); //秒
+  return N + style + Y + style + R + " " + H + ":" + F + ":" + M;
+}
+
 Axios.get("/region/select?").then((res) => {
   console.log(res);
   provinceList.value = JSON.parse(JSON.stringify(res.data));
@@ -493,7 +506,7 @@ const revItem = () => {
                 text-overflow: ellipsis;
               "
             >
-              {{ scope.row.committeeCreateTime }}
+              {{ steTime(new Date(scope.row.committeeCreateTime), "-") }}
             </p>
           </template>
         </el-table-column>
