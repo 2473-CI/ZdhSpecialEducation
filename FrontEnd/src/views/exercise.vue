@@ -864,6 +864,7 @@ Axios.get("/clazz/getAll").then(async (res) => {
 const saveClass = () => {
   clId.value = "";
   Axios.get("/clazz/getAll").then(async (res) => {
+    console.log(res)
     for (let item of res.data) {
       if (
         item.clazzName == JSON.parse(localStorage.getItem("sq")).className &&

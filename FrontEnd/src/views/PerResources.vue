@@ -69,6 +69,10 @@ const optionsOne = [
     label: "pdf",
     value: "pdf",
   },
+  {
+    label: "mp4",
+    value: "mp4",
+  },
 ];
 
 const isAdd = () => {
@@ -103,7 +107,7 @@ const isAdd = () => {
       addForm.contextType = "";
       addForm.fileTitle = "";
       addForm.fileSubtitle = "";
-      addForm.publiced = "";
+      addForm.publiced = "否";
       addForm.file = "";
       await Axios.post("/file/search", {}).then((res) => {
         console.log(res);
@@ -147,6 +151,7 @@ const reset = () => {
 const showExcel = ref(false);
 const showWord = ref(false);
 const showPdf = ref(false);
+const showMp4 = ref(false);
 const filePath = ref("");
 const toPerview = (type, scope) => {
   console.log(type);
@@ -154,8 +159,11 @@ const toPerview = (type, scope) => {
   filePath.value = scope.row.filePath;
   if (type == "Excel") {
     showExcel.value = true;
-  } else if ((type = "word")) {
+  } else if (type == "word") {
     showWord.value = true;
+  } else if (type == "mp4") {
+    console.log(123123);
+    showMp4.value = true;
   }
 };
 
@@ -163,21 +171,38 @@ const ret = () => {
   showExcel.value = false;
   showWord.value = false;
   showPdf.value = false;
+  showMp4.value = false;
 };
 </script>
 
 <template>
-  <el-button @click="ret()" v-if="showPdf || showWord || showExcel"
+  <el-button @click="ret()" v-if="showPdf || showWord || showExcel || showMp4"
     >返回</el-button
   >
   <pdfPreview v-if="showPdf" :path="filePath"> </pdfPreview>
   <docPreview v-if="showWord" :path="filePath"></docPreview>
   <excelPreview v-if="showExcel" :path="filePath"> </excelPreview>
+  <video
+    width="600"
+    height="450"
+    controls
+    v-if="showMp4"
+    style="
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -175px;
+      margin-left: -250px;
+    "
+  >
+    <source :src="`http://47.98.50.217:82` + filePath" type="video/mp4" />
+  </video>
+
   <el-tabs
     v-model="activeName"
     style="background-color: #fff"
     tab-position="center"
-    v-if="!showPdf && !showWord && !showExcel"
+    v-if="!showPdf && !showWord && !showExcel && !showMp4"
   >
     <div style="padding: 1%">
       <el-card class="box-card">
@@ -325,13 +350,13 @@ const ret = () => {
               />
             </el-form-item>
 
-            <el-form-item>
+            <!-- <el-form-item>
               <span style="margin-left: 30px">是否公开：</span>
               <el-radio-group v-model="addForm.publiced">
                 <el-radio label="privated" size="large">否</el-radio>
                 <el-radio label="publiced" size="large">是</el-radio>
               </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
           </el-form>
           <template #footer>
             <span class="dialog-footer">
@@ -367,9 +392,9 @@ const ret = () => {
           <el-table-column label="文件副标题" width="auto" min-width="10%">
             <template #default="scope">{{ scope.row.fileSubtitle }} </template>
           </el-table-column>
-          <el-table-column label="是否公开" width="auto" min-width="10%">
+          <!-- <el-table-column label="是否公开" width="auto" min-width="10%">
             <template #default="scope">{{ ob[scope.row.publiced] }} </template>
-          </el-table-column>
+          </el-table-column> -->
 
           <el-table-column label="操作" width="auto" min-width="10%">
             <template #default="scope">

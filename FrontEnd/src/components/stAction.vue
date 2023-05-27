@@ -32,6 +32,10 @@ const optionsType = [
     label: "pdf",
     value: "pdf",
   },
+  {
+    label: "MP4",
+    value: "MP4",
+  },
 ];
 
 const scalarArrayEquals = (array1, array2) => {
@@ -457,14 +461,17 @@ const filePath = ref("");
 const showExcel = ref(false);
 const showWord = ref(false);
 const showPdf = ref(false);
+const showMP4 = ref(false);
 const toPerview = (type, fileP) => {
   console.log(type);
   console.log(fileP);
-  filePath.value = "http://47.98.50.217:82" + fileP;
+  filePath.value = fileP;
   if (type == "Excel") {
     showExcel.value = true;
-  } else if ((type = "word")) {
+  } else if (type == "word") {
     showWord.value = true;
+  } else if (type == "MP4") {
+    showMP4.value = true;
   }
 };
 
@@ -472,10 +479,11 @@ const ret = () => {
   showExcel.value = false;
   showWord.value = false;
   showPdf.value = false;
+  showMP4.value = false;
 };
 </script>
 <template>
-  <el-button @click="ret()" v-if="showPdf || showWord || showExcel"
+  <el-button @click="ret()" v-if="showPdf || showWord || showExcel || showMP4"
     >返回</el-button
   >
   <pdfPreview v-if="showPdf" :path="filePath"> </pdfPreview>
@@ -483,7 +491,21 @@ const ret = () => {
   <div style="height: 600px; width: 100%" v-if="showExcel">
     <excelPreview :path="filePath"> </excelPreview>
   </div>
-  <div style="width: 100%" v-if="!showPdf && !showWord && !showExcel">
+
+  <video
+    width="600"
+    height="450"
+    controls
+    v-if="showMP4"
+    style="display: block; margin: 30px auto"
+  >
+    <source :src="`http://47.98.50.217:82` + filePath" type="video/mp4" />
+  </video>
+
+  <div
+    style="width: 100%"
+    v-if="!showPdf && !showWord && !showExcel && !showMP4"
+  >
     <el-card
       class="box-card"
       style="margin-left: 1%; margin-right: 1%"
@@ -559,12 +581,10 @@ const ret = () => {
           <el-button @click="reset()">重置</el-button>
           <el-button type="primary" @click="addItem">添加任务</el-button>
         </el-form-item>
-
-        
       </el-form>
-      <el-form-item >
-          <el-button @click="dialogFormVisible = true">添加附件</el-button>
-        </el-form-item>
+      <el-form-item>
+        <el-button @click="dialogFormVisible = true">添加附件</el-button>
+      </el-form-item>
       <el-dialog v-model="dialogFormVisible" title="添加附件">
         <div style="margin-bottom: 40px">
           <span style="margin-left: 28px">文件类型：</span>
@@ -711,7 +731,8 @@ const ret = () => {
               v-if="
                 item.subTitle == 'Excel' ||
                 item.subTitle == 'pdf' ||
-                item.subTitle == 'word'
+                item.subTitle == 'word' ||
+                item.subTitle == 'MP4'
               "
               @click="toPerview(item.subTitle, item.annex)"
             >

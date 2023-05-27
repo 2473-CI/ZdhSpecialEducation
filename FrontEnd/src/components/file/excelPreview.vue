@@ -1,5 +1,8 @@
 <template>
-  <vue-office-excel :src="path" @rendered="rendered" />
+  <vue-office-excel
+    :src="`http://47.98.50.217:82` + path"
+    @rendered="rendered"
+  />
 </template>
 
 <script setup>

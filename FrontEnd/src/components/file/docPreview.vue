@@ -1,5 +1,8 @@
 <template>
-  <vue-office-docx :src="path" @rendered="rendered" />
+  <vue-office-docx
+    :src="`http://47.98.50.217:82` + path"
+    @rendered="rendered"
+  />
 </template>
 
 <script setup>
