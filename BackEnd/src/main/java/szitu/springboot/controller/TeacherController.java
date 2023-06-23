@@ -65,13 +65,17 @@ public class TeacherController {
         return Result.fail("你不具有相关权限！");
     }
 
-    @GetMapping("/")
-    public Result<List<Teacher>> get(HttpServletRequest request){
-        Role role = (Role)request.getAttribute("role");
-        if(role.getRole().equals("系统管理员")){
-            return Result.success(teacherServiceImp.select());
+    @PostMapping("/search")
+    public Result<List<Teacher>> get(@RequestParam(value = "page", required = false, defaultValue = "1") Integer page,
+                                     @RequestParam(value = "size", required = false, defaultValue = "20") Integer size,
+                                     @RequestBody Teacher teacher){
+        // Integer schoolId, String userName, String userPhone, String userMail, Integer page, Integer size
+        Integer sid = null;
+        if(teacher.getSchoolId() != null){
+            sid = Math.toIntExact(teacher.getSchoolId());
         }
-        return Result.fail("接口未完成！");
+        List<Teacher> search = teacherServiceImp.search(sid, teacher.getUserName(), teacher.getUserPhone(), teacher.getUserMail(), page, size);
+        return Result.success(search);
     }
 
 }

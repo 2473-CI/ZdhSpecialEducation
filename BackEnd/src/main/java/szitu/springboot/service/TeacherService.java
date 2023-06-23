@@ -14,4 +14,6 @@ public interface TeacherService {
     public void delete(Long teacherId);
 
     public List<Teacher> select();
+
+    public List<Teacher> search(Integer schoolId, String userName, String userPhone, String userMail, Integer page, Integer size);
 }

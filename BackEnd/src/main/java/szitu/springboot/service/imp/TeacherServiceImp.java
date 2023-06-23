@@ -37,4 +37,9 @@ public class TeacherServiceImp implements TeacherService {
     public List<Teacher> select(){
         return teacherMapper.select();
     }
+
+    @Override
+    public List<Teacher> search(Integer schoolId, String userName, String userPhone, String userMail, Integer page, Integer size) {
+        return teacherMapper.search(schoolId, userName, userPhone, userMail, (page-1)*size, size);
+    }
 }
