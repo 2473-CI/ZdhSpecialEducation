@@ -60,6 +60,28 @@ public interface TeacherMapper {
 
     @Select("SELECT * FROM `teacher` WHERE deleteTime is NULL;")
     public List<Teacher> select();
+
+
+    @Select("""
+        <script>
+            SELECT * FROM `teacher` WHERE deleteTime is NULL 
+            <if test='schoolId != null'>
+                AND schoolId = #{schoolId}
+            </if>
+            <if test='userName != null'>
+                AND userName LIKE CONCAT('%',#{userName},'%')
+            </if>
+            <if test='userPhone != null'>
+                AND userPhone LIKE CONCAT('%',#{userPhone},'%')
+            </if>
+            <if test='userMail != null'>
+                AND userMail LIKE CONCAT('%',#{userMail},'%')
+            </if>
+            LIMIT #{offset}, #{size} 
+            ;
+        </script>
+    """)
+    public List<Teacher> search(Integer schoolId, String userName, String userPhone, String userMail, Integer offset, Integer size);
 //
 //    @Select("SELECT * FROM `teacher` WHERE deleteTime is NULL;")
 //    public List<Teacher> select();

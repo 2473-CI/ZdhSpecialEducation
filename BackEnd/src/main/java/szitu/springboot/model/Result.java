@@ -2,6 +2,9 @@ package szitu.springboot.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class Result<T> {
     private boolean success;
@@ -34,4 +37,6 @@ public class Result<T> {
     public static <T> Result<T> searchRes(T data, Long length) {
         return new Result<>(true, null, data, length);
     }
+
+
 }

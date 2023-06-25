@@ -1,4 +1,5 @@
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\ServeMapper.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\EchartsMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\SchoolHomeServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\SchoolHomeMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ServeServiceImp.java
@@ -59,6 +60,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\servic
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\AnswerService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\FamilyBasic.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Admin.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\EchartsService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\GradeMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\SpringbootApplication.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Physiology.java
@@ -107,6 +109,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\ReflectServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\SpecialMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Transfer.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\EchartsController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\FileMapper.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\ExerciseController.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\mapper\AdminMapper.java
@@ -134,6 +137,7 @@ D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\ClazzService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\PlacementService.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Role.java
+D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\service\imp\EchartsServiceImp.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\Board.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\model\SchoolHome.java
 D:\Programming\ZdhSpecialEducation\BackEnd\src\main\java\szitu\springboot\controller\FileController.java
