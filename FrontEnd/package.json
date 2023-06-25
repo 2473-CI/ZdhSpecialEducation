@@ -16,6 +16,7 @@
     "@wangeditor/editor-for-vue": "^5.1.12",
     "axios": "^1.4.0",
     "docx-preview": "^0.1.15",
+    "echarts": "^5.4.2",
     "element-plus": "^2.3.5",
     "file-saver": "^2.0.5",
     "html-docx-js-typescript": "^0.1.5",

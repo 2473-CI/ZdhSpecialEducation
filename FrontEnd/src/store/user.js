@@ -8,9 +8,9 @@ export const useUserStore = defineStore("user", {
       userList: [],
       teacherList: [],
       total: 0,
+      page: 1,
+      size: 10,
       searchUser: {
-        // page: 1,
-        // size: 10,
         schoolId: "",
         userName: "",
         userPhone: "",
@@ -23,12 +23,11 @@ export const useUserStore = defineStore("user", {
   actions: {
     async search() {
       console.log("搜索");
-      console.log(this.searchUser.page);
       const data = await Axios.post(
-        `/user/search?page=${this.searchUser.page}&size=${this.searchUser.size}`,
+        `/teacher/search?page=${this.page}&size=${this.size}`,
         this.searchUser
       );
-      this.total = data.length;
+      this.total = data.data.length;
       this.userList = data.data;
       console.log(data);
     },
@@ -36,10 +35,17 @@ export const useUserStore = defineStore("user", {
     // async newSearch(){
     //   const data = await Axios.post(`/teacher/`)
     // }
-
-    async getAll() {
-      const data = await Axios.get("/teacher/");
-      this.teacherList = data.data;
+    async selfSearch(id) {
+      console.log("搜索");
+      const data = await Axios.post(`/teacher/search?page=1&size=99`, {
+        schoolId: id,
+        userName: this.searchUser.userName,
+        userPhone: this.searchUser.userPhone,
+        userMail: this.searchUser.userPhone,
+      });
+      this.total = data.data.length;
+      this.userList = data.data;
+      console.log(data);
     },
   },
 });

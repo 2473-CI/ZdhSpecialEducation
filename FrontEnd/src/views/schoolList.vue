@@ -324,7 +324,7 @@ const revItem = () => {
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="省份" width="auto" min-width="20%">
+        <el-table-column label="省份" width="auto" min-width="15%">
           <template #default="scope">
             <p
               style="
@@ -339,7 +339,7 @@ const revItem = () => {
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="市" width="auto" min-width="20%">
+        <el-table-column label="市" width="auto" min-width="15%">
           <template #default="scope">
             <p
               style="
@@ -354,7 +354,7 @@ const revItem = () => {
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="区" width="auto" min-width="20%">
+        <el-table-column label="区" width="auto" min-width="15%">
           <template #default="scope">
             <p
               style="
@@ -369,12 +369,25 @@ const revItem = () => {
             </p>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="auto" min-width="10%">
+        <el-table-column label="操作" width="auto" min-width="25%">
           <template #default="scope">
+            <el-botton
+              type="danger"
+              text
+              @click="
+                $router.push({
+                  path: '/management/echarts',
+                  query: {
+                    schoolId: scope.row.schoolId,
+                  },
+                })
+              "
+            >
+              查看
+            </el-botton>
             <el-button
               type="danger"
               text
-              style="margin-left: -15px"
               @click="
                 dialogrevFormVisible = true;
                 revise(
@@ -391,7 +404,6 @@ const revItem = () => {
             <el-button
               type="danger"
               text
-              style="margin-left: -15px"
               @click="handleClose(scope.row.schoolId)"
               >删除</el-button
             >

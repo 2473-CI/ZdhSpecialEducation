@@ -43,5 +43,18 @@ export const useStudentStore = defineStore("student", {
     getStorage() {
       localStorage.setItem("sq", JSON.stringify(this.studentQuery));
     },
+    async selfSearch(id) {
+      const data = await Axios.post(`/student/search?page=1&size=99`, {
+        schoolId: id,
+        studentName: this.searchStudent.studentName,
+        clazzId: this.searchStudent.clazzId,
+        studentGender: this.searchStudent.studentGender,
+        obstacleId: this.searchStudent.obstacleId,
+        arrangeId: this.searchStudent.arrangeId,
+      });
+      this.total = data.length;
+      this.studentList = data.data;
+      console.log(this.studentList);
+    },
   },
 });

@@ -864,7 +864,7 @@ Axios.get("/clazz/getAll").then(async (res) => {
 const saveClass = () => {
   clId.value = "";
   Axios.get("/clazz/getAll").then(async (res) => {
-    console.log(res)
+    console.log(res);
     for (let item of res.data) {
       if (
         item.clazzName == JSON.parse(localStorage.getItem("sq")).className &&
@@ -1741,7 +1741,10 @@ const lessionExportWordTpl = () => {
           >返回</el-button
         >
         <el-button v-show="planShow" @click="planShow = false">返回</el-button>
-        <div v-show="showPlanHis" style="display: flex; width: 85%">
+        <div
+          v-show="showPlanHis"
+          style="display: flex; flex-wrap: wrap; width: 85%"
+        >
           <el-card
             shadow="hover"
             style="
@@ -2295,7 +2298,7 @@ const lessionExportWordTpl = () => {
         <el-button @click="showItemSupport = false" v-show="showItemSupport"
           >返回</el-button
         >
-        <div style="display: flex; width: 85%">
+        <div style="display: flex; width: 85%; flex-wrap: wrap">
           <el-card
             shadow="hover"
             style="

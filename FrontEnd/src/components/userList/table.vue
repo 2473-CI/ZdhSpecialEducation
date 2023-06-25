@@ -46,7 +46,6 @@ const del = async (Id) => {
         message: res.data,
         type: "success",
       });
-      await useUserStore().getAll();
     } else if (res.success == false) {
       ElMessage({
         showClose: true,
@@ -72,7 +71,16 @@ const change = () => {
 };
 
 Axios.get("/school/getAll").then((res) => {
-  options.value = res.data;
+  let arr = [];
+  Axios.post("/user/getRole").then((res2) => {
+    if (res2.data.role == "学校管理员") {
+      console.log(res);
+      arr = res.data.filter((k) => k.schoolId == res2.data.schoolId);
+      options.value = arr;
+    } else {
+      options.value = res.data;
+    }
+  });
   for (let item of res.data) {
     ob[item["schoolId"].toString()] = item["schoolName"];
   }
@@ -122,7 +130,6 @@ const revItem = () => {
         message: res.data,
         type: "success",
       });
-      await useUserStore().getAll();
     } else if (res.success == false) {
       ElMessage({
         showClose: true,
@@ -162,7 +169,7 @@ const newItem = () => {
         message: "新增成功",
         type: "success",
       });
-      await useUserStore().getAll();
+
       form.account = "";
       form.address = "";
       form.password = "";
@@ -184,7 +191,6 @@ const newItem = () => {
 
 const UserStore = useUserStore();
 UserStore.search();
-UserStore.getAll();
 const handleSizeChange = (size) => {
   console.log("切换每页数量：", size);
   UserStore.searchUser.size = size;
@@ -366,7 +372,7 @@ const handleClose = (teacherId) => {
       </div>
     </template>
     <el-table
-      :data="UserStore.teacherList"
+      :data="UserStore.userList"
       :cell-style="{
         textAlign: 'left',
         marginLeft: '0px',
@@ -676,7 +682,7 @@ const handleClose = (teacherId) => {
       </template>
     </el-dialog>
 
-    <!-- <div class="page-split">
+    <div class="page-split">
       <el-pagination
         :current-page="UserStore.searchUser.page"
         :page-size="UserStore.searchUser.size"
@@ -687,7 +693,7 @@ const handleClose = (teacherId) => {
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
       />
-    </div> -->
+    </div>
   </el-card>
 </template>
 

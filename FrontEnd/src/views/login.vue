@@ -12,7 +12,7 @@ const login = () => {
     account: account.value,
     passWord: password.value,
     role: role.value,
-  }).then((res) => {
+  }).then(async (res) => {
     if (res.success == true) {
       ElMessage({
         showClose: true,
@@ -28,7 +28,16 @@ const login = () => {
         //   })
         // )
       );
-      router.push("/management/studentList");
+
+      await Axios.post("/user/getRole").then((res) => {
+        if (res.data.role == "学校管理员") {
+          router.push(`/management/echartsSelf?schoolId=${res.data.schoolId}`);
+        } else if (res.data.role == "教师" || res.data.role == "学生") {
+          router.push(`/management/studentList`);
+        } else if (res.data.role == "委员会" || res.data.role == "系统管理员") {
+          router.push(`/management/schoolList`);
+        }
+      });
     } else {
       ElMessage({
         showClose: true,

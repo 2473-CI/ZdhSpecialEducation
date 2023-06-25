@@ -13,6 +13,7 @@ StudentStore.search();
 const options = ref("");
 Axios.get("/school/getAll").then((res) => {
   options.value = res.data;
+  console.log(options.value);
 });
 
 const options3 = ref("");
@@ -23,6 +24,13 @@ Axios.get("/obstacle/getAll").then((res) => {
 const options2 = ref("");
 Axios.get("/clazz/getAll").then((res) => {
   options2.value = res.data;
+  console.log(res);
+  console.log(options2.value);
+});
+
+const options4 = ref([]);
+Axios.get("/arrange/getAll").then((res) => {
+  options4.value = res.data;
 });
 
 const reSeach = reactive({
@@ -37,6 +45,40 @@ const reSeach = reactive({
 const clear = () => {
   StudentStore.searchStudent = reSeach;
 };
+
+const showMySelf = ref(true);
+Axios.post("/user/getRole").then(async (res) => {
+  let arr = [];
+
+  console.log(options.value);
+  if (res.data.role == "教师" || res.data.role == "学校管理员") {
+    showMySelf.value = false;
+    await StudentStore.selfSearch(res.data.schoolId);
+    let sName = options.value.filter(
+      (item) => item.schoolId == res.data.schoolId
+    )[0].schoolName;
+
+    await Axios.get("/clazz/getAll").then((it) => {
+      it.data.forEach((item, index) => {
+        if (item.schoolName == sName) {
+          arr.push(item);
+        }
+      });
+      options2.value = arr;
+    });
+  }
+  console.log(arr);
+});
+
+const chaxun = () => {
+  Axios.post("/user/getRole").then(async (res) => {
+    if (res.data.role == "教师" || res.data.role == "学校管理员") {
+      await StudentStore.selfSearch(res.data.schoolId);
+    } else {
+      await StudentStore.search();
+    }
+  });
+};
 </script>
 
 <template>
@@ -46,7 +88,7 @@ const clear = () => {
       :model="StudentStore.searchStudent"
       class="all-form"
     >
-      <el-form-item label="学校" class="top-item">
+      <el-form-item label="学校" class="top-item" v-show="showMySelf">
         <el-select
           v-model="StudentStore.searchStudent.schoolId"
           placeholder="请选择"
@@ -105,14 +147,17 @@ const clear = () => {
           v-model="StudentStore.searchStudent.arrangeId"
           placeholder="请选择"
         >
-          <el-option label="特殊学校" value="特殊学校" />
+          <el-option
+            v-for="item in options4"
+            :key="item.arrangeId"
+            :label="item.arrangeName"
+            :value="item.arrangeId"
+          />
         </el-select>
       </el-form-item>
       <el-form-item class="right-bottom">
         <el-button @click="clear()">重置</el-button>
-        <el-button type="primary" @click="StudentStore.search()"
-          >查询</el-button
-        >
+        <el-button type="primary" @click="chaxun()">查询</el-button>
         <el-button @click="isExpansion = !isExpansion">
           <span v-show="isExpansion">收起</span>
           <span v-show="!isExpansion">展开</span>

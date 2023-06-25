@@ -26,5 +26,16 @@ export const useClassStore = defineStore("class", {
       this.total = data.length;
       this.classList = data.data;
     },
+
+    async selfSearch(id) {
+      const data = await Axios.post(`/clazz/search?page=1&size=99`, {
+        schoolId: id,
+        gradeId: this.searchClass.gradeId,
+        clazzName: this.searchClass.clazzName,
+      });
+      this.total = data.length;
+      this.classList = data.data;
+      console.log(data);
+    },
   },
 });

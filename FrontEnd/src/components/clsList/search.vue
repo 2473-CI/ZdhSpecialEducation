@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import { ref, reactive } from "vue";
 import { useClassStore } from "../../store/cls";
 import Axios from "../../request/index";
@@ -7,8 +7,15 @@ const classStore = useClassStore();
 const isExpansion = ref(false);
 
 const options = ref("");
-Axios.get("/school/getAll").then((res) => {
+const showSchoolSearch = ref(true);
+Axios.get("/school/getAll").then(async (res) => {
   options.value = res.data;
+  await Axios.post("/user/getRole").then(async (res2) => {
+    if (res2.data.role == "学校管理员") {
+      showSchoolSearch.value = false;
+      await classStore.selfSearch(res2.data.schoolId);
+    }
+  });
 });
 
 const options2 = ref("");
@@ -30,12 +37,22 @@ const reseach = reactive({
 const clear = () => {
   classStore.searchClass = reseach;
 };
+const clsSearch = () => {
+  Axios.post("/user/getRole").then(async (res2) => {
+    if (res2.data.role == "学校管理员") {
+      showSchoolSearch.value = false;
+      await classStore.selfSearch(res2.data.schoolId);
+    } else {
+      classStore.search();
+    }
+  });
+};
 </script>
 
 <template>
   <el-card class="box-card">
     <el-form :inline="true" :model="classStore.searchClass" class="all-form">
-      <el-form-item label="学校" style="width: 40%">
+      <el-form-item label="学校" style="width: 40%" v-show="showSchoolSearch">
         <el-select
           v-model="classStore.searchClass.schoolId"
           placeholder="请选择"
@@ -48,7 +65,7 @@ const clear = () => {
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="年级" style="width: 40%; margin-left: -20px">
+      <el-form-item label="年级" style="width: 40%">
         <el-select
           v-model="classStore.searchClass.gradeId"
           placeholder="请选择"
@@ -61,7 +78,7 @@ const clear = () => {
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="班级名" v-show="isExpansion" style="width: 280px">
+      <el-form-item label="班级名" style="width: 280px" v-show="isExpansion">
         <el-input
           v-model="classStore.searchClass.clazzName"
           placeholder="请输入"
@@ -70,7 +87,7 @@ const clear = () => {
 
       <el-form-item class="right-bottom" style="width: 25%">
         <el-button @click="clear()">重置</el-button>
-        <el-button type="primary" @click="classStore.search()">查询</el-button>
+        <el-button type="primary" @click="clsSearch()">查询</el-button>
         <el-button @click="isExpansion = !isExpansion">
           <span v-show="isExpansion">收起</span>
           <span v-show="!isExpansion">展开</span>

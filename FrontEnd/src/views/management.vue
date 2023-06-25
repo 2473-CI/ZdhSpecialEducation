@@ -56,6 +56,14 @@ Axios.get("/user/getRole").then(async (res) => {
     router.replace("StudentCenter");
   }
 });
+
+const schId = ref("");
+Axios.post("/user/getRole").then((res) => {
+  console.log(res);
+  if (res.data.role == "学校管理员") {
+    schId.value = res.data.schoolId;
+  }
+});
 </script>
 
 <template>
@@ -117,6 +125,20 @@ Axios.get("/user/getRole").then(async (res) => {
             <el-icon><location /></el-icon>
             <span>学校</span>
           </template>
+          <el-menu-item
+            index=""
+            v-if="isShowX"
+            @click="
+              $router.push({
+                path: '/management/echartsSelf',
+                query: {
+                  schoolId: schId,
+                },
+              })
+            "
+          >
+            查看本校
+          </el-menu-item>
           <el-menu-item index="/management/schoolList" v-if="isShowG"
             >学校管理</el-menu-item
           >

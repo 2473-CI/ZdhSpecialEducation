@@ -11,17 +11,30 @@ import { FileSaver } from "file-saver";
 const { studentList } = storeToRefs(useStudentStore());
 const StudentStore = useStudentStore();
 const { search } = useStudentStore();
+const {selfSearch} = useStudentStore();
 const lastShow = ref(false);
 const handleSizeChange = (size) => {
   StudentStore.size = size;
   console.log("切换每页数量：", StudentStore.size);
-  search();
+  Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  })
 };
 
 const handleCurrentChange = (page) => {
   StudentStore.page = page;
   console.log("切换页码：", StudentStore.page);
-  search();
+  Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  })
 };
 
 const allIdList = ref([]);
@@ -95,7 +108,14 @@ const form = reactive({
 //   basicId: "",
 // });
 
-search();
+// search();
+Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  })
 
 console.log(studentList);
 // getAllList();
@@ -117,7 +137,13 @@ const del = (stuId) => {
             message: res.data,
             type: "success",
           });
-          await search();
+          await  Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  })
         } else if (res.success == false) {
           ElMessage({
             showClose: true,
@@ -144,13 +170,41 @@ const change = () => {
 };
 
 const options = ref([]);
-Axios.get("/school/getAll").then((res) => {
-  options.value = res.data;
+Axios.get("/school/getAll").then(async(res) => {
+  let arr = []
+  await Axios.post("/user/getRole").then((res2) => {
+    if(res2.data.role == "学校管理员"){
+       arr =  res.data.filter(k => k.schoolId == res2.data.schoolId)
+       options.value = arr
+    }else{
+      options.value = res.data;
+    }
+  })
+  
 });
 
 const options2 = ref([]);
-Axios.get("/clazz/getAll").then((res) => {
-  options2.value = res.data;
+Axios.get("/clazz/getAll").then(async(res) => {
+  let arr = []
+  
+  console.log(options2.value)
+  await Axios.post("/user/getRole").then((res2) => {
+      if(res2.data.role == "教师" || res2.data.role == "学校管理员"){
+       let Sname = options.value.filter(k => k.schoolId == res2.data.schoolId)[0].schoolName
+       console.log(Sname)
+       res.data.forEach((item,index) => {
+          if(item.schoolName == Sname){
+            arr.push(item)
+            console.log(item)
+          }
+       })
+       options2.value = arr
+      }else{
+        options2.value = res.data;
+      }
+  })
+  
+  console.log(options2.value)
 });
 
 const options3 = ref([]);
@@ -180,7 +234,13 @@ const newItem = () => {
         message: res.data,
         type: "success",
       });
-      await search();
+      await  Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  })
       form.school = "";
       form.class = "";
       form.name = "";
@@ -240,6 +300,7 @@ const revItem = () => {
   reviseForm.studentId = stuId.value;
   console.log(options3.value);
   console.log(reviseForm.arrangeId);
+  
 
   let res = options2.value.filter((o) => o.clazzName == reviseForm.clazzId);
   if (res.length > 0) {
@@ -260,14 +321,27 @@ const revItem = () => {
     reviseForm.obstacleId = res2[0].obstacleId;
   }
 
-  Axios.put("/student/update", reviseForm).then(async (res) => {
+  if(reviseForm.studentName.trim()==""){
+       ElMessage({
+        showClose: true,
+        message: "姓名不能为空",
+        type: "error",
+      });
+  }else{
+    Axios.put("/student/update", reviseForm).then(async (res) => {
     if (res.success == true) {
       ElMessage({
         showClose: true,
         message: res.data,
         type: "success",
       });
-      await search();
+      await  Axios.post("/user/getRole").then(async(res) => {
+      if(res.data.role == "教师" || res.data.role == "学校管理员"){
+        await selfSearch(res.data.schoolId);
+      }else{
+        await search();
+      }
+  });
       reviseForm.schoolName = "";
       reviseForm.clazzId = "";
       reviseForm.studentName = "";
@@ -290,6 +364,8 @@ const revItem = () => {
       reviseForm.arrangeName = "";
     }
   });
+  }
+
 };
 
 const change2 = () => {
@@ -408,7 +484,13 @@ const showMe = () => {
                 type: "success",
               });
             }
-            await search();
+            await Axios.post("/user/getRole").then(async(res) => {
+              if(res.data.role == "教师" || res.data.role == "学校管理员"){
+                await selfSearch(res.data.schoolId);
+              }else{
+                await search();
+              }
+  });
             lastShow.value = false;
           } else if (res.success == false) {
             num2.value++;

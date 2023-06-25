@@ -39,6 +39,8 @@ import exercise from "../views/exercise.vue";
 import resettle from "../views/resettle.vue";
 import record from "../views/record.vue";
 import placement from "../views/placement.vue";
+import echarts from "../views/echarts.vue";
+import echartsSelf from "../views/echartsSelf.vue";
 const routes = [
   {
     path: "/",
@@ -138,6 +140,16 @@ const routes = [
         path: "schoolList",
         name: "schoolList",
         component: schoolList,
+      },
+      {
+        path: "echarts",
+        name: "echarts",
+        component: echarts,
+      },
+      {
+        path: "echartsSelf",
+        name: "echartsSelf",
+        component: echartsSelf,
       },
       //量表管理
       {

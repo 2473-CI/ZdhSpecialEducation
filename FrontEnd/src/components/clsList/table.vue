@@ -1,4 +1,4 @@
-<script setup >
+<script setup>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { useSchoolStore } from "../../store/school";
@@ -17,8 +17,16 @@ const form = reactive({
 });
 
 const options = ref("");
-Axios.get("/school/getAll").then((res) => {
-  options.value = res.data;
+Axios.get("/school/getAll").then(async (res) => {
+  let arr = [];
+  await Axios.post("/user/getRole").then((res2) => {
+    if (res2.data.role == "学校管理员") {
+      arr = res.data.filter((k) => k.schoolId == res2.data.schoolId);
+      options.value = arr;
+    } else {
+      options.value = res.data;
+    }
+  });
 });
 
 const options2 = ref("");
@@ -73,7 +81,13 @@ const upgrade = (classId, gradeName, className, description) => {
         message: res.data,
         type: "success",
       });
-      await classStore.search();
+      await Axios.post("/user/getRole").then(async (res) => {
+        if (res.data.role == "学校管理员") {
+          await classStore.selfSearch(res.data.schoolId);
+        } else {
+          await classStore.search();
+        }
+      });
     } else if (res.success == false) {
       ElMessage({
         showClose: true,
@@ -98,7 +112,14 @@ const del = (clazzId) => {
             message: res.data,
             type: "success",
           });
-          await classStore.search();
+
+          await Axios.post("/user/getRole").then(async (res) => {
+            if (res.data.role == "学校管理员") {
+              await classStore.selfSearch(res.data.schoolId);
+            } else {
+              await classStore.search();
+            }
+          });
         } else if (res.success == false) {
           ElMessage({
             showClose: true,
@@ -130,7 +151,13 @@ const newItem = () => {
         message: res.data,
         type: "success",
       });
-      await classStore.search();
+      await Axios.post("/user/getRole").then(async (res) => {
+        if (res.data.role == "学校管理员") {
+          await classStore.selfSearch(res.data.schoolId);
+        } else {
+          await classStore.search();
+        }
+      });
       form.school = "";
       form.grade = "";
       form.class = "";
@@ -171,7 +198,13 @@ const revise = () => {
         message: res.data,
         type: "success",
       });
-      await classStore.search();
+      await Axios.post("/user/getRole").then(async (res) => {
+        if (res.data.role == "学校管理员") {
+          await classStore.selfSearch(res.data.schoolId);
+        } else {
+          await classStore.search();
+        }
+      });
       form2.className = "";
       form2.des = "";
       form2.gradeId = "";

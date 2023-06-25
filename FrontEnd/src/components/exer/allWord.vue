@@ -2,7 +2,7 @@
   <div v-show="false">
     <div id="export-content1">
       <h1 style="text-align: center; margin-top: 10px">
-        {{ wordForm.startYear }}—{{ wordForm.lastYear }}学年度第{{
+        （四）、 {{ wordForm.startYear }}—{{ wordForm.lastYear }}学年度第{{
           wordForm.semester
         }}学期特殊课程期末综合评估
       </h1>
@@ -86,7 +86,7 @@
 
     <div id="export-content2">
       <h1 style="text-align: center; margin-top: 10px">
-        {{ w2.startYear }}—{{ w2.lastYear }}学年度第{{
+        （三）、 {{ w2.startYear }}—{{ w2.lastYear }}学年度第{{
           w2.semester
         }}学期特殊课程期末综合评估
       </h1>
@@ -135,7 +135,7 @@
 
     <div id="export-content3">
       <h1 style="text-align: center; margin-top: 10px">
-        {{ w3.startYear }}—{{ w3.lastYear }}学年度第{{
+        （五）、 {{ w3.startYear }}—{{ w3.lastYear }}学年度第{{
           w3.semester
         }}学期家校联系卡
       </h1>
@@ -155,7 +155,6 @@
             </tr>
 
             <tr>
-              <!-- <td style="width: 30%;height: 200px;">存在的问题 与 困惑</td> -->
               <td style="width: 70%; height: 200px">
                 需要协助的事项：{{ w3.assist }}
               </td>
@@ -172,7 +171,7 @@
 
     <div id="export-content4">
       <h1 style="text-align: center; margin-top: 10px">
-        {{ w4.startYear }}—{{ w4.lastYear }}学年度第{{
+        （六）、 {{ w4.startYear }}—{{ w4.lastYear }}学年度第{{
           w4.semester
         }}学期教育教学的反思
       </h1>
@@ -204,7 +203,7 @@
     <button @click="lastExportWordTpl()">导出 Word 文档</button>
 
     <div id="export-content5">
-      <h1 style="text-align: center; margin-top: 10px">支持服务</h1>
+      <h1 style="text-align: center; margin-top: 10px">（七）、支持服务</h1>
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <table style="border-collapse: collapse; width: 100%">
           <tbody id="sup"></tbody>
@@ -214,7 +213,7 @@
     <button @click="supexportWordTpl2()">导出 Word 文档</button>
 
     <div id="export-content6">
-      <h1 style="text-align: center; margin-top: 10px">课程计划</h1>
+      <h1 style="text-align: center; margin-top: 10px">（二）、课程计划</h1>
       <div style="display: flex; justify-content: center; margin-top: 20px">
         <table style="border-collapse: collapse; width: 100%">
           <tbody id="les"></tbody>
