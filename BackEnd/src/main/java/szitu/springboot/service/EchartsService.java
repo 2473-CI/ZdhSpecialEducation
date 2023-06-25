@@ -16,5 +16,17 @@ public interface EchartsService {
     public Integer countFileBySchoolId(Integer schoolId);
 
     public Integer countNewStudentBySchoolId(Integer schoolId);
+    public Integer countExerciseBySchoolId(Integer schoolId);
 
+    public Integer countAnswerBySchoolIdEnd(Integer schoolId);
+
+    public Integer countAnswerBySchoolIdPadding(Integer schoolId);
+
+    public Integer countAnswerBySchoolId(Integer schoolId);
+
+    public Integer countClassBySchoolId(Integer schoolId);
+
+    public Integer countIepEnd(Integer studentId);
+
+    public Integer countIep(Integer studentId);
 }

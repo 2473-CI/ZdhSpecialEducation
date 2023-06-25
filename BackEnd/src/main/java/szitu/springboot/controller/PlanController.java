@@ -49,7 +49,7 @@ public class PlanController {
             planServiceImp.insert(plan);
             return Result.success("新增成功！");
         }catch (Exception err){
-            return Result.fail("新增失败！");
+            return Result.fail("新增失败！"+err);
         }
     }
 }

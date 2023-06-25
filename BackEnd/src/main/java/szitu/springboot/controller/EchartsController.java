@@ -74,5 +74,36 @@ public class EchartsController {
     public Result<Integer> countNewStudentBySchoolId(@RequestParam(name="schoolId") Integer schoolId){
         return Result.success(echartsService.countNewStudentBySchoolId(schoolId));
     }
+
+    @GetMapping("/countExerciseBySchoolId")
+    public Result<Integer> countExerciseBySchoolId(@RequestParam(name="schoolId") Integer schoolId){
+        return Result.success(echartsService.countExerciseBySchoolId(schoolId));
+    }
+
+    @GetMapping("/countAnswerBySchoolId")
+    public Result<HashMap> countAnswerBySchoolId(@RequestParam(name="schoolId") Integer schoolId){
+        HashMap<String, Integer> map = new HashMap<>();
+        map.put("all", echartsService.countAnswerBySchoolId(schoolId));
+        map.put("end", echartsService.countAnswerBySchoolIdEnd(schoolId));
+        map.put("padding", echartsService.countAnswerBySchoolIdPadding(schoolId));
+        return Result.success(map);
+    }
+
+    @GetMapping("/countClassBySchoolId")
+    public Result<Integer> countClassBySchoolId(@RequestParam(name="schoolId") Integer schoolId){
+        return Result.success(echartsService.countClassBySchoolId(schoolId));
+    }
+
+    @GetMapping("/countIepEnd")
+    public Result<Integer> countIepEnd(@RequestParam(name="schoolId") Integer schoolId){
+        return Result.success(echartsService.countIepEnd(schoolId));
+    }
+
+
+
+    @GetMapping("/countIep")
+    public Result<Integer> countIep(@RequestParam(name="schoolId") Integer schoolId){
+        return Result.success(echartsService.countIep(schoolId));
+    }
 }
 
