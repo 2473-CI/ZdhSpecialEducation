@@ -27,3 +27,7 @@ https://github.com/RuStealsMelons/ZdhSpecialEducationSpringBoot.git
 后端
 
 > springboot3 + mybatis
+
+PC端
+
+> electron 对 前端build结果套壳，没有做定制开发

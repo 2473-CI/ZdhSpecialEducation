@@ -11,7 +11,7 @@
  Target Server Version : 80030
  File Encoding         : 65001
 
- Date: 24/05/2023 17:28:06
+ Date: 26/06/2023 08:40:25
 */
 
 SET NAMES utf8mb4;
@@ -143,7 +143,7 @@ CREATE TABLE `clazz`  (
   `updateTime` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleteTime` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`clazzId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '班级表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 25 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '班级表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of clazz
@@ -169,7 +169,9 @@ INSERT INTO `clazz` VALUES (18, 7, 2, NULL, NULL, '2023-03-31 08:17:39', '2023-0
 INSERT INTO `clazz` VALUES (19, 8, 6, NULL, NULL, '2023-04-01 02:32:27', '2023-05-23 14:57:05', NULL);
 INSERT INTO `clazz` VALUES (20, 10, 14, '蒲公英班', '可爱的小伞兵，各个朝气蓬勃', '2023-04-12 07:37:01', NULL, NULL);
 INSERT INTO `clazz` VALUES (21, 11, 14, '聚义班', '男生多的班级', '2023-04-16 11:51:13', NULL, NULL);
-INSERT INTO `clazz` VALUES (22, 12, 13, '1班', '主要是和自闭儿童有段的班级', '2023-04-21 14:22:32', '2023-05-23 18:37:06', NULL);
+INSERT INTO `clazz` VALUES (22, 12, 13, '1班', '', '2023-04-21 14:22:32', '2023-06-24 09:15:59', NULL);
+INSERT INTO `clazz` VALUES (23, 7, 3, '元和1班', '', '2023-06-22 09:24:52', '2023-06-23 14:23:49', NULL);
+INSERT INTO `clazz` VALUES (24, 12, 5, '测试1班', '', '2023-06-24 09:16:28', '2023-06-24 09:16:35', NULL);
 
 -- ----------------------------
 -- Table structure for committee
@@ -224,7 +226,7 @@ CREATE TABLE `exercise`  (
   `updateTime` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleteTime` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 94 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '训练活动' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 97 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '训练活动' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of exercise
@@ -238,6 +240,8 @@ INSERT INTO `exercise` VALUES (91, 52, '', '已完成', '[{\"qyestionType\":\"�
 INSERT INTO `exercise` VALUES (92, 52, '西方失语症评估量表（WAB）', '已完成', '[{\"qyestionType\":\"单选\",\"qyestionScore\":3,\"qyestionContent\":\"1+1\",\"select\":[{\"value\":\"1\",\"name\":\"A\"},{\"value\":\"2\",\"name\":\"B\"},{\"value\":\"3\",\"name\":\"C\"},{\"value\":\"4\",\"name\":\"D\"}],\"isTrue\":\"B\",\"subjectivity\":\"\",\"Single\":[0,0,0,0],\"isFalse\":\"B\",\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0},{\"qyestionType\":\"单选\",\"qyestionScore\":3,\"qyestionContent\":\"2+2\",\"select\":[{\"value\":\"2\",\"name\":\"A\"},{\"value\":\"3\",\"name\":\"B\"},{\"value\":\"4\",\"name\":\"C\"},{\"value\":\"5\",\"name\":\"D\"}],\"isTrue\":\"C\",\"subjectivity\":\"\",\"Single\":[0,0,0,0],\"isFalse\":\"A\",\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0}]', '', NULL, NULL, NULL, '2023-05-18 11:11:00', '2023-05-18 11:11:00');
 INSERT INTO `exercise` VALUES (93, 52, '小学二年级下数学随班就读学业评估量表', '已完成', '[{\"qyestionType\":\"主观\",\"qyestionScore\":4,\"qyestionContent\":\"一、数与代数\\n1.有余数的除法(除数和商都是-位数) \\n2.认识除法竖式\\n3.认识万以内的数(计数单位“千”“万”，数的组成、读写和大小比较)数\\n4. 用算盘表示万以内的数\\n5.“  ”和简单的近似数\\n6.口算两位数加、减两位数(和在100以内)\\n7.笔算两、三位数的加、减，加、减法的验算\\n8.时、分、秒的认识\\n9.用有余数除法解决的简单实际问题\\n10.两步计算的加减法实际问题\",\"select\":[],\"isTrue\":[],\"isFalse\":4,\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0},{\"qyestionType\":\"主观\",\"qyestionScore\":4,\"qyestionContent\":\"二、图形与几何\\n1.认识东、南、西、北和东北、西北、东南、西南等方向，会用这些词语描绘物体所在的方向\\n2.认识分米和毫米，能够进行简单的长度单位的换算和长度测量\\n3.初步认识直角、锐角与钝角\",\"select\":[],\"isTrue\":[],\"isFalse\":2,\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0},{\"qyestionType\":\"主观\",\"qyestionScore\":4,\"qyestionContent\":\"三、统计与概率\\n1.简单数据的分类整理\\n2.用画“正”字的方法收集、整理数据\\n3.根据统计数据回答并提出问题，对数据进行简单的分析和解释\",\"select\":[],\"isTrue\":[],\"isFalse\":2,\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0},{\"qyestionType\":\"主观\",\"qyestionScore\":4,\"qyestionContent\":\"四、综合与实践\\n1．通过实践活动，感受数学在日常生活中的作用，体验运用所学的知识和方法解决简单问题的过程，获得初步的数学活动经验。\\n2.在实践活动中，了解要解决的问题和解决问题的办法。\\n3.经历实践操作的过程，进一步理解所学的内容。\",\"select\":[],\"isTrue\":[],\"isFalse\":4,\"remarks\":\"\",\"scoreSelf\":0,\"noMake\":0}]', '', NULL, NULL, NULL, '2023-05-18 12:40:27', NULL);
 INSERT INTO `exercise` VALUES (94, 52, '', 'word', '', '', '2023-05-24 00:00:00', NULL, NULL, '2023-05-24 16:25:37', '2023-05-24 16:25:37');
+INSERT INTO `exercise` VALUES (95, 52, 'MP4测试', 'MP4', '', '/file/download?filename=video-mp4-1685005597344movie.mp4', '2023-05-25 00:00:00', NULL, NULL, NULL, NULL);
+INSERT INTO `exercise` VALUES (96, 52, '认知训练的内容', 'word', '', '/file/download?filename=application-vnd.openxmlformats-officedocument.wordprocessingml.document-1687655958672滕王阁序.docx', '2023-06-25 00:00:00', NULL, NULL, NULL, NULL);
 
 -- ----------------------------
 -- Table structure for familybasic
@@ -260,7 +264,7 @@ CREATE TABLE `familybasic`  (
   `employmentResources` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '就业资源',
   `otherEmploymentResources` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '其他就业资源',
   PRIMARY KEY (`familyId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '家庭基本信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 64 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '家庭基本信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of familybasic
@@ -320,6 +324,7 @@ INSERT INTO `familybasic` VALUES (59, 97, 0, '', '', '', '', '', '', '', '', '',
 INSERT INTO `familybasic` VALUES (60, 98, 0, '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `familybasic` VALUES (61, 99, 0, '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `familybasic` VALUES (62, 100, 0, '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `familybasic` VALUES (63, 101, 0, '', '', '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for familymember
@@ -365,7 +370,7 @@ CREATE TABLE `file`  (
   `updateTime` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `deleteTime` datetime NULL DEFAULT NULL COMMENT '删除时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '文件' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '文件' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of file
@@ -378,6 +383,11 @@ INSERT INTO `file` VALUES (24, 'word', '789', 'aaa', 'vbvv', 'wk', '系统管理
 INSERT INTO `file` VALUES (25, 'word', '789', '23', 'xdf', 'wk', '系统管理员', 'privated', '/file/download?filename=application-vnd.openxmlformats-officedocument.wordprocessingml.document-16816453077560416.docx', '2023-04-16 19:42:07', '2023-04-16 19:42:37', NULL);
 INSERT INTO `file` VALUES (26, 'Excel', '123', '456', 'fdgsdg', 'wk', '系统管理员', 'privated', '/file/download?filename=application-vnd.openxmlformats-officedocument.spreadsheetml.sheet-1681648461236新建 XLSX 工作表.xlsx', '2023-04-16 20:34:32', '2023-04-16 20:34:48', NULL);
 INSERT INTO `file` VALUES (27, 'word', '1123', '666', '666', 'wk', '系统管理员', 'publiced', '/file/download?filename=application-vnd.openxmlformats-officedocument.wordprocessingml.document-1681993237550设计文档.docx', '2023-04-20 20:20:45', NULL, NULL);
+INSERT INTO `file` VALUES (28, 'mp4', '测试', '测试', '', 'wk', '系统管理员', 'privated', '', '2023-05-25 14:07:58', NULL, NULL);
+INSERT INTO `file` VALUES (29, '', '', '', '', 'wk', '系统管理员', '', '/file/download?filename=video-mp4-1684997542356movie.mp4', '2023-05-25 14:52:23', NULL, NULL);
+INSERT INTO `file` VALUES (30, 'mp4', '', '', '', 'wk', '系统管理员', '', '/file/download?filename=video-mp4-1684998543381movie.mp4', '2023-05-25 15:09:04', NULL, NULL);
+INSERT INTO `file` VALUES (31, 'word', '', '', '', 'wk', '系统管理员', '', '/file/download?filename=application-vnd.openxmlformats-officedocument.wordprocessingml.document-1685004178525file.docx', '2023-05-25 16:42:59', NULL, NULL);
+INSERT INTO `file` VALUES (32, 'word', '测试文件', 'file', '测试文件', 'zgl', '教师', '', '/file/download?filename=application-vnd.openxmlformats-officedocument.wordprocessingml.document-1687262068377file.docx', '2023-06-20 19:54:44', NULL, NULL);
 
 -- ----------------------------
 -- Table structure for grade
@@ -450,7 +460,7 @@ CREATE TABLE `growup`  (
   `geneticHistory` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '遗传病史',
   `majorDiseases` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '' COMMENT '重大疾病史',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 57 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '成长信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 58 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '成长信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of growup
@@ -510,6 +520,7 @@ INSERT INTO `growup` VALUES (53, 97, 0, '', '', '', '', '', '', '', '', '', '', 
 INSERT INTO `growup` VALUES (54, 98, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `growup` VALUES (55, 99, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `growup` VALUES (56, 100, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `growup` VALUES (57, 101, 0, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for love
@@ -530,7 +541,7 @@ CREATE TABLE `love`  (
   `otherFactors` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '其他因素',
   `explain_` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '说明',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 69 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '兴趣爱好' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 70 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '兴趣爱好' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of love
@@ -590,6 +601,7 @@ INSERT INTO `love` VALUES (65, 97, '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `love` VALUES (66, 98, '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `love` VALUES (67, 99, '', '', '', '', '', '', '', '', '', '', '');
 INSERT INTO `love` VALUES (68, 100, '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `love` VALUES (69, 101, '', '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for obstacle
@@ -633,7 +645,7 @@ CREATE TABLE `physiology`  (
   `speakAssist` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '语言沟通辅助',
   `otherAssist` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '其他辅助',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '生理信息表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 66 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '生理信息表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of physiology
@@ -693,6 +705,7 @@ INSERT INTO `physiology` VALUES (61, 97, '', '', '', '', '', '');
 INSERT INTO `physiology` VALUES (62, 98, '', '', '', '', '', '');
 INSERT INTO `physiology` VALUES (63, 99, '', '', '', '', '', '');
 INSERT INTO `physiology` VALUES (64, 100, '', '', '', '', '', '');
+INSERT INTO `physiology` VALUES (65, 101, '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for placement
@@ -728,8 +741,8 @@ CREATE TABLE `plan`  (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `studentId` int NOT NULL,
   `studentName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
-  `height` double NULL DEFAULT NULL,
-  `weight` double NULL DEFAULT NULL,
+  `height` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
+  `weight` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `leftEyes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `rightEyes` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `radio` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
@@ -746,12 +759,16 @@ CREATE TABLE `plan`  (
   `lastYear` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `semester` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of plan
 -- ----------------------------
-INSERT INTO `plan` VALUES (4, 52, NULL, 111, 111, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `plan` VALUES (4, 52, NULL, '111', '111', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `plan` VALUES (5, 52, NULL, '123', '123', '123', '123', '优', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `plan` VALUES (6, 52, NULL, '1', NULL, '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `plan` VALUES (7, 52, NULL, '1cm', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `plan` VALUES (8, 52, NULL, '1.6cm', '200kg', 'dsdakjb', '213', '不及格', '213', 'jhhkbkj', 'bkbhkjb', 'vjhvjhg', 'hjghj', 'hjgjhv', 'bkjbkj', 'gdwuiaeyfjacyea', 'wzrextcyvubinompxedtrcyvubijok', '2021', '2022', '2');
 
 -- ----------------------------
 -- Table structure for reflect
@@ -769,12 +786,13 @@ CREATE TABLE `reflect`  (
   `problem` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `improve` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of reflect
 -- ----------------------------
 INSERT INTO `reflect` VALUES (1, 52, '茶杯', '', '', '', '123', '', '', '');
+INSERT INTO `reflect` VALUES (2, 52, '茶杯', '2022', '2023', '2', '张老师', '体育锻炼的进步', '认知功能的衰退', '加强认知的家庭和学校的训练');
 
 -- ----------------------------
 -- Table structure for region
@@ -3923,12 +3941,14 @@ CREATE TABLE `schedule`  (
   `time` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '上课时间',
   `title` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '标题',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 28 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 33 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of schedule
 -- ----------------------------
-INSERT INTO `schedule` VALUES (26, 52, NULL, '[{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"}]', '[{\"startTime\":\"6：00\",\"endTime\":\"7：00\"},{\"startTime\":\"7：01\",\"endTime\":\"8：01\"},{\"startTime\":\"8：02\",\"endTime\":\"9：02\"},{\"startTime\":\"10：30\",\"endTime\":\"12：00\"},{\"startTime\":\"13：00\",\"endTime\":\"14：00\"},{\"startTime\":\"15:00\",\"endTime\":\"16:00\"},{\"startTime\":\"17:00\",\"endTime\":\"00:00\"}]', '二年级上册');
+INSERT INTO `schedule` VALUES (30, 52, NULL, '[{\"oneLessionName\":\"123\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"\",\"oneTeacherName\":\"\",\"twoLessionName\":\"\",\"twoTeacherName\":\"\",\"threeLessionName\":\"\",\"threeTeacherName\":\"\",\"fourLessionName\":\"\",\"fourTeacherName\":\"\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"}]', '[{\"startTime\":\"123\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"}]', '');
+INSERT INTO `schedule` VALUES (31, 52, NULL, '[{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"}]', '[{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"}]', '特教IEP的课表1');
+INSERT INTO `schedule` VALUES (32, NULL, 23, '[{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"},{\"oneLessionName\":\"数学\",\"oneTeacherName\":\"汪老师\",\"twoLessionName\":\"语文\",\"twoTeacherName\":\"李老师\",\"threeLessionName\":\"英语\",\"threeTeacherName\":\"张老师\",\"fourLessionName\":\"体育\",\"fourTeacherName\":\"孙老师\",\"fiveLessionName\":\"\",\"fiveTeacherName\":\"\",\"sixLessionName\":\"\",\"sixTeacherName\":\"\",\"sevenLessionName\":\"\",\"sevenTeacherName\":\"\"}]', '[{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"},{\"startTime\":\"\",\"endTime\":\"\"}]', '特教IEP的课表1');
 
 -- ----------------------------
 -- Table structure for school
@@ -3978,13 +3998,14 @@ CREATE TABLE `schoolhome`  (
   `assist` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `feedback` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of schoolhome
 -- ----------------------------
 INSERT INTO `schoolhome` VALUES (2, 52, '茶杯', '', '', '', '123', '', '', '');
 INSERT INTO `schoolhome` VALUES (3, 52, '茶杯', '', '', '', 'awa', '', '', '');
+INSERT INTO `schoolhome` VALUES (4, 52, '茶杯', '2022', '2023', '2', '张老师', '认知功能的衰退', '在家继续训练', '同意');
 
 -- ----------------------------
 -- Table structure for serve
@@ -3994,17 +4015,22 @@ CREATE TABLE `serve`  (
   `id` int UNSIGNED NOT NULL AUTO_INCREMENT,
   `studentId` int NULL DEFAULT NULL COMMENT '学生Id',
   `studentName` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '学生姓名',
-  `content` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '内容',
+  `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '内容',
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '描述',
   `head` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '负责人',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 10 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of serve
 -- ----------------------------
 INSERT INTO `serve` VALUES (2, 52, NULL, '[{\"content\":\"1\",\"describe\":\"2\",\"unit\":\"3\"},{\"content\":\"11\",\"describe\":\"22\",\"unit\":\"33\"},{\"content\":\"111\",\"describe\":\"222\",\"unit\":\"333\"}]', '', '');
 INSERT INTO `serve` VALUES (4, 52, NULL, '[{\"content\":\"1\",\"describe\":\"2\",\"unit\":\"3\"}]', '', '');
+INSERT INTO `serve` VALUES (5, 52, NULL, '[{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"}]', '', '');
+INSERT INTO `serve` VALUES (6, 52, NULL, '[{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"},{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"}]', '', '');
+INSERT INTO `serve` VALUES (7, 52, NULL, '[{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"},{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"},{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"},{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"},{\"content\":\"2\",\"describe\":\"2\",\"unit\":\"2\"}]', '', '');
+INSERT INTO `serve` VALUES (8, 52, NULL, '[{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"11\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"1\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"111\",\"describe\":\"\",\"unit\":\"\"},{\"content\":\"11\",\"describe\":\"\",\"unit\":\"\"}]', '', '');
+INSERT INTO `serve` VALUES (9, 52, NULL, '[{\"content\":\"加强康复训练\",\"describe\":\"在校内的康复中心，做康复训练\",\"unit\":\"张老师\"}]', '', '');
 
 -- ----------------------------
 -- Table structure for special
@@ -4025,13 +4051,15 @@ CREATE TABLE `special`  (
   `advantageArea` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   `defectArea` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of special
 -- ----------------------------
 INSERT INTO `special` VALUES (3, 52, '茶杯', '', '', '', '', 'hhh', '', '', '', '', '');
 INSERT INTO `special` VALUES (6, 52, '茶杯', '', '', '', '', '12341652', '', '', '', '', '');
+INSERT INTO `special` VALUES (7, 52, '茶杯', '2022', '2023', '2', '张老师', '认知问题加重', '更多的进行认知锻炼', '达标。 跑步和运动都可以；', '共同发展课程', '运动特长', '认知康复训练');
+INSERT INTO `special` VALUES (8, 52, '茶杯', '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for student
@@ -4053,60 +4081,26 @@ CREATE TABLE `student`  (
   `updateTime` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
   `deleteTime` datetime NULL DEFAULT NULL,
   PRIMARY KEY (`studentId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 101 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 102 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of student
 -- ----------------------------
-INSERT INTO `student` VALUES (52, 7, 18, 'cb', '123456', '茶杯', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 4, 1, '审批完成', '2023-03-31 08:18:56', '2023-04-05 19:04:39', NULL);
+INSERT INTO `student` VALUES (52, 7, 23, 'cb', '123456', '茶杯', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 4, 1, '审批完成', '2023-03-31 08:18:56', '2023-06-22 15:04:21', NULL);
 INSERT INTO `student` VALUES (53, 9, 10, 'wy', '123456', '吴用', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 2, 1, '需委员会审批', '2023-04-01 05:12:34', '2023-04-05 19:36:20', NULL);
 INSERT INTO `student` VALUES (54, 9, 13, 'lt', '123456', '刘唐', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 1, '需学校审批', '2023-04-02 07:06:31', '2023-05-23 08:48:56', NULL);
 INSERT INTO `student` VALUES (55, 9, 18, NULL, NULL, '鲁智深', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 7, 6, NULL, '2023-04-08 07:40:21', '2023-04-10 02:30:31', NULL);
-INSERT INTO `student` VALUES (56, 9, 18, NULL, NULL, '松江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 1, 6, NULL, '2023-04-08 07:48:35', '2023-04-08 07:49:58', '2023-04-08 07:49:58');
-INSERT INTO `student` VALUES (57, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:34:26', '2023-04-08 08:39:29', '2023-04-08 08:39:29');
-INSERT INTO `student` VALUES (58, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 08:43:07', '2023-04-08 08:43:17', '2023-04-08 08:43:17');
-INSERT INTO `student` VALUES (59, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:43:07', '2023-04-08 08:43:20', '2023-04-08 08:43:20');
-INSERT INTO `student` VALUES (60, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:43:39', '2023-04-08 08:51:50', '2023-04-08 08:51:50');
-INSERT INTO `student` VALUES (61, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 08:43:39', '2023-04-08 08:51:54', '2023-04-08 08:51:54');
-INSERT INTO `student` VALUES (62, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:52:09', '2023-04-08 08:52:19', '2023-04-08 08:52:19');
-INSERT INTO `student` VALUES (63, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 08:52:09', '2023-04-08 08:52:21', '2023-04-08 08:52:21');
-INSERT INTO `student` VALUES (64, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:58:55', '2023-04-08 08:59:41', '2023-04-08 08:59:41');
-INSERT INTO `student` VALUES (65, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 08:58:55', '2023-04-08 08:59:48', '2023-04-08 08:59:48');
-INSERT INTO `student` VALUES (66, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 08:59:31', '2023-04-08 08:59:50', '2023-04-08 08:59:50');
-INSERT INTO `student` VALUES (67, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 08:59:31', '2023-04-08 08:59:52', '2023-04-08 08:59:52');
-INSERT INTO `student` VALUES (68, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 09:01:18', '2023-04-08 09:04:05', '2023-04-08 09:04:05');
-INSERT INTO `student` VALUES (69, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 09:01:18', '2023-04-08 09:04:02', '2023-04-08 09:04:02');
-INSERT INTO `student` VALUES (70, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 09:03:11', '2023-04-08 09:03:59', '2023-04-08 09:03:59');
-INSERT INTO `student` VALUES (71, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 09:03:11', '2023-04-08 09:03:57', '2023-04-08 09:03:57');
-INSERT INTO `student` VALUES (72, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 09:09:13', '2023-04-08 10:13:14', '2023-04-08 10:13:14');
-INSERT INTO `student` VALUES (73, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 09:09:13', '2023-04-08 10:13:17', '2023-04-08 10:13:17');
-INSERT INTO `student` VALUES (74, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 10:13:59', '2023-04-08 11:02:04', '2023-04-08 11:02:04');
-INSERT INTO `student` VALUES (75, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 10:13:59', '2023-04-08 11:02:06', '2023-04-08 11:02:06');
-INSERT INTO `student` VALUES (76, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:37:51', '2023-04-08 11:38:10', '2023-04-08 11:38:10');
-INSERT INTO `student` VALUES (77, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 11:37:51', '2023-04-08 11:38:12', '2023-04-08 11:38:12');
-INSERT INTO `student` VALUES (78, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:47:17', '2023-04-08 11:47:58', '2023-04-08 11:47:58');
-INSERT INTO `student` VALUES (79, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 11:47:17', '2023-04-08 11:47:53', '2023-04-08 11:47:53');
-INSERT INTO `student` VALUES (80, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:47:34', '2023-04-08 11:47:50', '2023-04-08 11:47:50');
-INSERT INTO `student` VALUES (81, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 11:47:34', '2023-04-08 11:48:02', '2023-04-08 11:48:02');
-INSERT INTO `student` VALUES (82, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:49:15', '2023-04-08 11:49:24', '2023-04-08 11:49:24');
-INSERT INTO `student` VALUES (83, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 6, NULL, '2023-04-08 11:49:15', '2023-04-08 11:49:26', '2023-04-08 11:49:26');
-INSERT INTO `student` VALUES (84, 7, 19, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:50:01', NULL, NULL);
+INSERT INTO `student` VALUES (84, 7, 23, NULL, NULL, '时迁', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 11:50:01', '2023-06-22 09:36:30', NULL);
 INSERT INTO `student` VALUES (85, 9, 18, NULL, NULL, '宋江', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 5, 6, NULL, '2023-04-08 11:50:01', '2023-04-10 02:30:13', NULL);
 INSERT INTO `student` VALUES (86, 7, 19, NULL, NULL, '武松', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-04-08 14:41:05', '2023-05-04 08:06:45', '2023-05-04 08:06:45');
 INSERT INTO `student` VALUES (87, 9, 18, NULL, NULL, '卢俊义', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 11, 1, NULL, '2023-04-08 14:41:05', '2023-04-16 14:00:53', NULL);
 INSERT INTO `student` VALUES (88, 11, 21, NULL, NULL, '王英', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 7, 1, NULL, '2023-04-16 14:05:02', '2023-04-16 14:07:46', NULL);
-INSERT INTO `student` VALUES (89, 12, 22, NULL, NULL, '扈三娘', 'https://static.yirenyian.com/opoc/sysImg/avatar-girl.png', '女', 2, 1, NULL, '2023-04-21 14:25:45', '2023-04-21 14:28:31', NULL);
-INSERT INTO `student` VALUES (90, 7, 1, NULL, NULL, '小张', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 3, 8, NULL, '2023-05-22 15:38:20', '2023-05-22 16:18:57', '2023-05-22 16:18:57');
-INSERT INTO `student` VALUES (91, 7, 3, NULL, NULL, '123', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 6, 1, NULL, '2023-05-22 15:51:10', '2023-05-22 16:18:45', '2023-05-22 16:18:45');
-INSERT INTO `student` VALUES (92, 8, 3, NULL, NULL, '小邱', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 14, 1, NULL, '2023-05-22 15:56:09', '2023-05-22 16:18:46', '2023-05-22 16:18:46');
-INSERT INTO `student` VALUES (93, 10, 3, NULL, NULL, '小🦌', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 7, 8, NULL, '2023-05-22 16:03:55', '2023-05-22 16:18:48', '2023-05-22 16:18:48');
-INSERT INTO `student` VALUES (94, 7, 3, NULL, NULL, '555', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 7, NULL, '2023-05-22 16:04:33', '2023-05-22 16:18:49', '2023-05-22 16:18:49');
-INSERT INTO `student` VALUES (95, 1, 3, NULL, NULL, 'dasd', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 6, 8, NULL, '2023-05-22 16:09:12', '2023-05-22 16:18:51', '2023-05-22 16:18:51');
-INSERT INTO `student` VALUES (96, 8, 1, NULL, NULL, '999', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 6, 7, NULL, '2023-05-22 16:14:44', '2023-05-22 16:18:52', '2023-05-22 16:18:52');
-INSERT INTO `student` VALUES (97, 7, 1, NULL, NULL, 'xiaolu', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 7, 6, NULL, '2023-05-22 16:22:51', NULL, NULL);
+INSERT INTO `student` VALUES (89, 12, 22, NULL, NULL, '扈三娘', 'https://static.yirenyian.com/opoc/sysImg/avatar-girl.png', '女', 2, 1, NULL, '2023-04-21 14:25:45', '2023-06-24 09:57:48', NULL);
+INSERT INTO `student` VALUES (97, 7, 1, NULL, NULL, 'xiaolu', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 7, 6, NULL, '2023-05-22 16:22:51', '2023-06-22 09:40:27', '2023-06-22 09:40:27');
 INSERT INTO `student` VALUES (98, 8, 3, NULL, NULL, '999', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 6, 1, NULL, '2023-05-22 16:25:50', '2023-05-23 09:02:40', NULL);
 INSERT INTO `student` VALUES (99, 1, 1, NULL, NULL, '111', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 8, 1, NULL, '2023-05-22 16:26:12', '2023-05-23 09:45:45', NULL);
 INSERT INTO `student` VALUES (100, 1, 1, NULL, NULL, 'xiaoqiu', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 6, 8, NULL, '2023-05-22 16:38:17', NULL, NULL);
+INSERT INTO `student` VALUES (101, 7, 23, NULL, NULL, '123', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', 5, 6, NULL, '2023-06-22 09:41:32', '2023-06-22 15:04:26', '2023-06-22 15:04:26');
 
 -- ----------------------------
 -- Table structure for studentbasic
@@ -4130,7 +4124,7 @@ CREATE TABLE `studentbasic`  (
   `registeredResidence` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '户籍地',
   `birthplace` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '出生地',
   PRIMARY KEY (`basicId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生基本信息' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 60 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '学生基本信息' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of studentbasic
@@ -4191,6 +4185,7 @@ INSERT INTO `studentbasic` VALUES (55, 97, '', NULL, '', NULL, '890890', '', '',
 INSERT INTO `studentbasic` VALUES (56, 98, '', NULL, '', NULL, '123', '', '', '', '', '', '', '', '', '');
 INSERT INTO `studentbasic` VALUES (57, 99, '', NULL, '', NULL, '222111222', '', '', '', '', '', '', '', '', '');
 INSERT INTO `studentbasic` VALUES (58, 100, '', NULL, '', NULL, '', '', '', '', '', '', '', '', '', '');
+INSERT INTO `studentbasic` VALUES (59, 101, '', NULL, '', NULL, '', '', '', '', '', '', '', '', '', '');
 
 -- ----------------------------
 -- Table structure for studentdevelopment
@@ -4247,7 +4242,7 @@ CREATE TABLE `teacher`  (
   `schoolAdmin` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '是否学校管理员',
   `authorization` varchar(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '是否授权',
   PRIMARY KEY (`teacherId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 35 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '教师表' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '教师表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of teacher
@@ -4263,6 +4258,7 @@ INSERT INTO `teacher` VALUES (31, 12, 'cc', '曹操', '123123', 'https://static.
 INSERT INTO `teacher` VALUES (32, 10, '曹仁', '曹仁', '123456', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', '13712345577', '13712345577@qq.com', '2023-04-12 07:40:18', NULL, NULL, '是', NULL);
 INSERT INTO `teacher` VALUES (33, 10, '糜芳', '糜芳', '123456', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', '', '13712344455', '2023-04-12 07:44:02', NULL, NULL, '否', NULL);
 INSERT INTO `teacher` VALUES (34, 2, 'dw', '典韦', '123456', 'https://static.yirenyian.com/opoc/sysImg/avatar-boy.png', '男', '13212341122', '13212341122@qq.com', '2023-04-16 14:04:01', '2023-05-14 22:44:13', NULL, '是', NULL);
+INSERT INTO `teacher` VALUES (35, 10, 'zzz', 'zzz', '123456', 'https://static.yirenyian.com/opoc/sysImg/avatar-girl.png', '女', '12345678', '2393456651@qq.com', '2023-05-30 18:33:41', NULL, NULL, '否', NULL);
 
 -- ----------------------------
 -- Table structure for transfer
